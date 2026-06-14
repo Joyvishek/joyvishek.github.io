@@ -862,11 +862,7 @@ select option {
   gap: 2rem;
 }
 
-@media (max-width: 900px) {
-  .region-explore-panels {
-    grid-template-columns: 1fr;
-  }
-}
+
 
 .region-list-panel {
   display: flex;
@@ -1181,99 +1177,7 @@ footer {
   padding-top: 1.5rem;
 }
 
-/* Responsiveness Media Queries */
-@media (max-width: 768px) {
-  .hero {
-    padding: 4rem 0 2rem 0;
-  }
-  
-  .hero h1 {
-    font-size: 2.2rem;
-  }
-  
-  .tabs-nav {
-    justify-content: flex-start;
-    overflow-x: auto;
-    white-space: nowrap;
-    padding: 0.35rem;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-  }
-  
-  .tabs-nav::-webkit-scrollbar {
-    display: none;
-  }
-  
-  .tab-btn {
-    flex: 0 0 auto;
-  }
-  
-  .filter-bar {
-    flex-direction: column;
-    align-items: stretch;
-    padding: 1rem;
-  }
-  
-  .filter-group {
-    width: 100%;
-  }
 
-  .time-mode-selector {
-    justify-content: center;
-  }
-}
-
-@media (max-width: 480px) {
-  .nav-container {
-    flex-direction: column;
-    gap: 0.75rem;
-    text-align: center;
-  }
-  
-  .nav-actions {
-    width: 100%;
-    justify-content: space-between;
-  }
-  
-  .hero h1 {
-    font-size: 1.8rem;
-  }
-  
-  .live-match-banner {
-    padding: 1rem;
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .banner-match-teams {
-    font-size: 1.1rem;
-    justify-content: center;
-  }
-  
-  .banner-match-details {
-    text-align: center;
-  }
-  
-  .banner-broadcasters {
-    flex-direction: column;
-    width: 100%;
-  }
-  
-  .banner-broadcaster-btn {
-    text-align: center;
-    width: 100%;
-  }
-  
-  .modal-content {
-    padding: 1.5rem;
-    width: 95%;
-  }
-  
-  .share-actions {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-}
 
 /* Match Live Telemetry / Event Timeline Styles */
 .match-live-telemetry {
@@ -1713,4 +1617,151 @@ footer {
   gap: 0.75rem;
   max-height: 250px;
   overflow-y: auto;
+}
+
+/* Responsiveness Media Queries */
+@media (max-width: 900px) {
+  .region-explore-panels {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding: 4rem 0 2rem 0;
+  }
+  
+  .hero h1 {
+    font-size: 2.2rem;
+  }
+  
+  .tabs-nav {
+    justify-content: flex-start;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 0.35rem;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .tabs-nav::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .tab-btn {
+    flex: 0 0 auto;
+  }
+  
+  .filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1rem;
+  }
+  
+  .filter-group {
+    width: 100%;
+  }
+
+  .time-mode-selector {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 1rem;
+  }
+
+  .nav-container {
+    flex-direction: column;
+    gap: 0.75rem;
+    text-align: center;
+  }
+  
+  .nav-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .hero h1 {
+    font-size: 1.8rem;
+  }
+  
+  .live-match-banner {
+    padding: 1rem;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .banner-match-teams {
+    font-size: 1.1rem;
+    justify-content: center;
+  }
+  
+  .banner-match-details {
+    text-align: center;
+  }
+  
+  .banner-broadcasters {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .banner-broadcaster-btn {
+    text-align: center;
+    width: 100%;
+  }
+  
+  .modal-content {
+    padding: 1.5rem;
+    width: 95%;
+  }
+  
+  .share-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  /* Modal Tabs Scroll on Mobile */
+  .modal-tabs {
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    gap: 0.25rem;
+  }
+  
+  .modal-tabs::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .modal-tab-btn {
+    flex: 0 0 auto;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  /* Match Details Modal layout optimization on mobile */
+  .details-team-display {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .details-team {
+    justify-content: center !important;
+    gap: 0.5rem;
+  }
+  
+  .details-score-wrap {
+    padding: 0.35rem 1rem;
+  }
+  
+  .details-team-name {
+    font-size: 1.1rem;
+  }
+  
+  .details-info-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
 }
