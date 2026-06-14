@@ -9,7 +9,7 @@
   <meta name="keywords" content="FIFA World Cup 2026, Broadcasters, Free to Air, Streaming, Match Schedule, Free Channels">
   
   <!-- Stylesheets -->
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
 
@@ -71,6 +71,9 @@
     <nav class="tabs-nav" aria-label="Portal Navigation Tabs">
       <button class="tab-btn active" data-tab="schedule">
         📅 Match Schedule
+      </button>
+      <button class="tab-btn" data-tab="standings">
+        🏆 Standings
       </button>
       <button class="tab-btn" data-tab="broadcasters">
         📺 Broadcaster Guide
@@ -137,6 +140,18 @@
       <!-- Match Cards Grid -->
       <div class="match-grid" id="match-cards-grid">
         <!-- Dynamically filled -->
+      </div>
+    </section>
+
+    <!-- Tab 5: Group Standings -->
+    <section id="tab-view-standings" class="app-view">
+      <div class="standings-header" style="margin-bottom: 2rem; text-align: center;">
+        <h2 style="font-size: 2rem; margin-bottom: 0.5rem; background: linear-gradient(135deg, var(--accent-color), var(--accent-secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Tournament Standings</h2>
+        <p style="color: var(--text-secondary);">Real-time group stage tables computed dynamically from live API scores.</p>
+      </div>
+      
+      <div class="groups-standings-grid" id="groups-standings-grid">
+        <!-- Dynamically filled with 12 group tables -->
       </div>
     </section>
 
@@ -314,6 +329,24 @@
             <div class="info-item">
               <span class="info-label">Kickoff Time</span>
               <span class="info-value" id="details-info-time">-</span>
+            </div>
+          </div>
+          
+          <div class="modal-form-section" style="margin-top: 1.5rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
+            <h4 style="font-size: 0.85rem; font-weight: 700; margin-bottom: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">Tournament Form (Last 5)</h4>
+            <div class="details-form-display" style="display: flex; flex-direction: column; gap: 0.75rem;">
+              <div class="team-form-row" style="display: flex; align-items: center; justify-content: space-between;">
+                <span class="form-team-name" id="form-home-team-name" style="font-weight: 600; font-size: 0.9rem;">Home Team</span>
+                <div class="form-indicator-list" id="form-home-indicators" style="display: flex; gap: 0.35rem;">
+                  <!-- W-D-L badges -->
+                </div>
+              </div>
+              <div class="team-form-row" style="display: flex; align-items: center; justify-content: space-between;">
+                <span class="form-team-name" id="form-away-team-name" style="font-weight: 600; font-size: 0.9rem;">Away Team</span>
+                <div class="form-indicator-list" id="form-away-indicators" style="display: flex; gap: 0.35rem;">
+                  <!-- W-D-L badges -->
+                </div>
+              </div>
             </div>
           </div>
         </div>

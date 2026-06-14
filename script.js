@@ -169,6 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
     populateDateSelector();
     renderFeaturedMatches();
     renderSchedule();
+    renderStandings();
     checkQueryParameters();
     
     // Refresh live data every 60 seconds
@@ -449,7 +450,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function formatLiveStatus(match) {
     const liveMinute = formatLiveMinute(match);
-    return liveMinute === "NOW" ? "LIVE NOW" : `LIVE - ${liveMinute}`;
+    return liveMinute === "NOW" ? "LIVE" : `LIVE - ${liveMinute}`;
   }
 
   // Refresh only game data (scores, status) periodically
@@ -478,6 +479,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // Re-render live elements
       renderFeaturedMatches();
       renderSchedule();
+      renderStandings();
       if (matchDetailsModal.classList.contains("active") && currentDetailsMatchId !== null) {
         const activeMatch = WORLD_CUP_DATA.matches.find(m => m.id === currentDetailsMatchId);
         if (activeMatch) {
@@ -835,6 +837,12 @@ document.addEventListener("DOMContentLoaded", () => {
     detailsInfoStadium.textContent = match.stadium;
     detailsInfoCity.textContent = match.city;
     detailsInfoTime.textContent = match.datetime ? formatMatchTime(match.datetime, match.city) : "TBD";
+
+    // Populate team form history in the Match Info tab
+    const homeForm = getTeamFormHistory(match.teams.home);
+    const awayForm = getTeamFormHistory(match.teams.away);
+    renderTeamFormRow("form-home-team-name", "form-home-indicators", match.teams.home, homeForm);
+    renderTeamFormRow("form-away-team-name", "form-away-indicators", match.teams.away, awayForm);
 
     // Set broadcasters tab
     const broadcasters = getBroadcastersForCountry(selectedCountry);
@@ -1828,6 +1836,207 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         }, 500);
       }
+    }
+  }
+
+  // --- Dynamic Group Standings Calculation & Rendering ---
+  function renderStandings() {
+    const standingsGrid = document.getElementById("groups-standings-grid");
+    if (!standingsGrid || !apiDataLoaded) return;
+    
+    standingsGrid.innerHTML = "";
+    
+    // Initialize group maps
+    const groups = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"];
+    const groupStandings = {};
+    
+    groups.forEach(g => {
+      groupStandings[g] = {};
+    });
+    
+    // Populate groupStandings with teams
+    Object.values(teamsMap).forEach(team => {
+      const groupLetter = String(team.groups || "").trim().toUpperCase();
+      if (groups.includes(groupLetter)) {
+        groupStandings[groupLetter][team.name_en] = {
+          name: team.name_en,
+          flag: team.flag,
+          fifaCode: team.fifa_code,
+          played: 0,
+          won: 0,
+          drawn: 0,
+          lost: 0,
+          gf: 0,
+          ga: 0,
+          gd: 0,
+          pts: 0
+        };
+      }
+    });
+    
+    // Calculate standings from completed matches
+    WORLD_CUP_DATA.matches.forEach(match => {
+      const groupLetter = String(match.group || "").replace("Group ", "").trim().toUpperCase();
+      if (match.finished && groups.includes(groupLetter)) {
+        const homeTeamName = match.teams.home;
+        const awayTeamName = match.teams.away;
+        
+        const homeRow = groupStandings[groupLetter][homeTeamName];
+        const awayRow = groupStandings[groupLetter][awayTeamName];
+        
+        if (homeRow && awayRow) {
+          homeRow.played += 1;
+          awayRow.played += 1;
+          
+          homeRow.gf += match.homeScore;
+          homeRow.ga += match.awayScore;
+          
+          awayRow.gf += match.awayScore;
+          awayRow.ga += match.homeScore;
+          
+          if (match.homeScore > match.awayScore) {
+            homeRow.won += 1;
+            homeRow.pts += 3;
+            awayRow.lost += 1;
+          } else if (match.homeScore < match.awayScore) {
+            awayRow.won += 1;
+            awayRow.pts += 3;
+            homeRow.lost += 1;
+          } else {
+            homeRow.drawn += 1;
+            homeRow.pts += 1;
+            awayRow.drawn += 1;
+            awayRow.pts += 1;
+          }
+        }
+      }
+    });
+    
+    // Render all groups
+    groups.forEach(groupLetter => {
+      const teamsInGroup = Object.values(groupStandings[groupLetter]);
+      
+      teamsInGroup.forEach(t => {
+        t.gd = t.gf - t.ga;
+      });
+      
+      teamsInGroup.sort((a, b) => {
+        if (b.pts !== a.pts) return b.pts - a.pts;
+        if (b.gd !== a.gd) return b.gd - a.gd;
+        if (b.gf !== a.gf) return b.gf - a.gf;
+        return a.name.localeCompare(b.name);
+      });
+      
+      const card = document.createElement("div");
+      card.className = "group-card";
+      
+      let tableRowsHTML = "";
+      teamsInGroup.forEach((team, index) => {
+        const rank = index + 1;
+        let qualifyClass = "";
+        if (rank <= 2) {
+          qualifyClass = "qualify-top-two";
+        } else if (rank === 3) {
+          qualifyClass = "qualify-third";
+        }
+        
+        const flagImg = team.flag 
+          ? `<img src="${team.flag}" alt="${team.name} flag" onerror="this.style.display='none'">`
+          : `<span>${getTeamFlagEmoji(team.name)}</span>`;
+          
+        tableRowsHTML += `
+          <tr class="${qualifyClass}">
+            <td style="font-weight: 700; color: var(--text-muted); width: 20px;">${rank}</td>
+            <td class="team-cell">
+              ${flagImg}
+              <span title="${team.name}">${team.fifaCode || team.name.substring(0, 3).toUpperCase()}</span>
+            </td>
+            <td>${team.played}</td>
+            <td>${team.won}</td>
+            <td>${team.drawn}</td>
+            <td>${team.lost}</td>
+            <td>${team.gd > 0 ? '+' + team.gd : team.gd}</td>
+            <td class="points-cell">${team.pts}</td>
+          </tr>
+        `;
+      });
+      
+      card.innerHTML = `
+        <h3 class="group-card-title">Group ${groupLetter}</h3>
+        <table class="group-table">
+          <thead>
+            <tr>
+              <th style="width: 20px;">#</th>
+              <th style="text-align: left;">Team</th>
+              <th>P</th>
+              <th>W</th>
+              <th>D</th>
+              <th>L</th>
+              <th>GD</th>
+              <th>PTS</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${tableRowsHTML}
+          </tbody>
+        </table>
+      `;
+      
+      standingsGrid.appendChild(card);
+    });
+  }
+
+  // --- Calculate Team Tournament Form History ---
+  function getTeamFormHistory(teamName) {
+    if (!teamName) return [];
+    
+    const teamMatches = WORLD_CUP_DATA.matches.filter(m => {
+      const hasTeam = m.teams.home === teamName || m.teams.away === teamName;
+      return hasTeam && m.finished && m.stage === "Group Stage";
+    });
+    
+    teamMatches.sort((a, b) => {
+      if (!a.datetime) return 1;
+      if (!b.datetime) return -1;
+      return new Date(a.datetime) - new Date(b.datetime);
+    });
+    
+    // Take the last 5 matches
+    const lastMatches = teamMatches.slice(-5);
+    
+    return lastMatches.map(m => {
+      const isHome = m.teams.home === teamName;
+      const goalsFor = isHome ? m.homeScore : m.awayScore;
+      const goalsAgainst = isHome ? m.awayScore : m.homeScore;
+      
+      if (goalsFor > goalsAgainst) return "W";
+      if (goalsFor < goalsAgainst) return "L";
+      return "D";
+    });
+  }
+
+  function renderTeamFormRow(nameId, indicatorsId, teamName, formArray) {
+    const nameElem = document.getElementById(nameId);
+    const indElem = document.getElementById(indicatorsId);
+    
+    if (nameElem) {
+      nameElem.textContent = teamName;
+    }
+    
+    if (indElem) {
+      indElem.innerHTML = "";
+      if (formArray.length === 0) {
+        indElem.innerHTML = `<span style="font-size:0.75rem;color:var(--text-muted);">No matches played yet</span>`;
+        return;
+      }
+      
+      formArray.forEach(result => {
+        const badge = document.createElement("span");
+        badge.className = `form-badge ${result === 'W' ? 'win' : result === 'L' ? 'loss' : 'draw'}`;
+        badge.textContent = result;
+        badge.title = result === 'W' ? 'Win' : result === 'L' ? 'Loss' : 'Draw';
+        indElem.appendChild(badge);
+      });
     }
   }
 
