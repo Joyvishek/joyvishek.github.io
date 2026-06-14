@@ -1026,6 +1026,81 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  function normalizePlayerPosition(position) {
+    if (!position) return "Unknown";
+    const normalized = position.trim().toLowerCase();
+    const positionMap = {
+      "goalkeeper": "GK",
+      "keeper": "GK",
+      "gk": "GK",
+      "centre back": "CB",
+      "center back": "CB",
+      "centre-back": "CB",
+      "center-back": "CB",
+      "cb": "CB",
+      "right back": "RB",
+      "right-back": "RB",
+      "rb": "RB",
+      "left back": "LB",
+      "left-back": "LB",
+      "lb": "LB",
+      "sweeper": "SW",
+      "stopper": "CB",
+      "defensive midfield": "CDM",
+      "defensive midfielder": "CDM",
+      "holding midfield": "CDM",
+      "holding midfielder": "CDM",
+      "dm": "DM",
+      "cdm": "CDM",
+      "central midfield": "CM",
+      "central midfielder": "CM",
+      "centre midfield": "CM",
+      "centre midfielder": "CM",
+      "cm": "CM",
+      "midfield": "MF",
+      "midfielder": "MF",
+      "attacking midfield": "CAM",
+      "attacking midfielder": "CAM",
+      "am": "AM",
+      "cam": "CAM",
+      "left midfield": "LM",
+      "left midfielder": "LM",
+      "lm": "LM",
+      "right midfield": "RM",
+      "right midfielder": "RM",
+      "rm": "RM",
+      "left wing": "LW",
+      "left winger": "LW",
+      "lw": "LW",
+      "right wing": "RW",
+      "right winger": "RW",
+      "rw": "RW",
+      "left wingback": "LWB",
+      "left wing-back": "LWB",
+      "lwb": "LWB",
+      "right wingback": "RWB",
+      "right wing-back": "RWB",
+      "rwb": "RWB",
+      "centre forward": "CF",
+      "center forward": "CF",
+      "centre-forward": "CF",
+      "center-forward": "CF",
+      "cf": "CF",
+      "striker": "ST",
+      "forward": "ST",
+      "fw": "ST",
+      "st": "ST"
+    };
+    return positionMap[normalized] || position;
+  }
+
+  function getPositionSortWeight(position) {
+    const order = ["GK", "CB", "LB", "RB", "SW", "CDM", "DM", "CM", "MF", "CAM", "AM", "LM", "RM", "LWB", "RWB", "LW", "RW", "CF", "ST", "FW"];
+    const normalized = String(position).toUpperCase();
+    const index = order.indexOf(normalized);
+    return index === -1 ? order.length : index;
+  }
+
   function buildLineupHtml(teamName, players) {
     if (!players || players.length === 0) {
       return `
@@ -1036,10 +1111,25 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
     }
 
-    const playerRows = players.slice(0, 22).map(player => `
+    const normalizedPlayers = players.map(player => {
+      const positionLabel = normalizePlayerPosition(player.strPosition);
+      return {
+        ...player,
+        normalizedPosition: positionLabel
+      };
+    });
+
+    normalizedPlayers.sort((a, b) => {
+      const weightA = getPositionSortWeight(a.normalizedPosition);
+      const weightB = getPositionSortWeight(b.normalizedPosition);
+      if (weightA !== weightB) return weightA - weightB;
+      return a.strPlayer.localeCompare(b.strPlayer, undefined, { sensitivity: 'base' });
+    });
+
+    const playerRows = normalizedPlayers.slice(0, 22).map(player => `
       <div class="lineup-player-row">
         <span>${player.strPlayer}</span>
-        <span>${player.strPosition || "Unknown"}</span>
+        <span>${player.normalizedPosition || "Unknown"}</span>
       </div>
     `).join("");
 
@@ -1102,9 +1192,6 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="details-lineups-grid">
         ${buildLineupHtml(match.teams.home, homePlayers)}
         ${buildLineupHtml(match.teams.away, awayPlayers)}
-      </div>
-      <div style="text-align: center; margin-top: 1rem; font-size: 0.8rem; color: var(--text-muted);">
-        ℹ️ Lineups fetched from TheSportsDB with API key ${THE_SPORTSDB_API_KEY}.
       </div>
     `;
   }
