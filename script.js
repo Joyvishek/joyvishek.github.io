@@ -1,4 +1,5 @@
 // script.js - FIFA World Cup 2026 Broadcaster Portal Logic
+// Now powered by worldcup26.ir live API
 
 document.addEventListener("DOMContentLoaded", () => {
   // --- State Variables ---
@@ -6,24 +7,38 @@ document.addEventListener("DOMContentLoaded", () => {
   let activeTab = "schedule";
   let timezoneDisplayMode = "local"; // 'local' or 'stadium'
   let favorites = JSON.parse(localStorage.getItem("wc2026_favorites")) || [];
+  let apiDataLoaded = false;
   
-  // Use real system time for all live detection
-  let simulatedTime = new Date();
-  
+  // Resolved API data (team ID → team object, stadium ID → stadium object)
+  let teamsMap = {};
+  let stadiumsMap = {};
+
   // Hardcoded stadium timezone mappings for realistic offset calculations
   const STADIUM_TIMEZONES = {
     "Houston": { offset: -5, label: "CDT" },
     "Dallas": { offset: -5, label: "CDT" },
+    "Arlington, Texas": { offset: -5, label: "CDT" },
     "Philadelphia": { offset: -4, label: "EDT" },
     "Monterrey": { offset: -6, label: "CST" },
+    "Guadalupe": { offset: -6, label: "CST" },
     "Mexico City": { offset: -6, label: "CST" },
+    "Zapopan": { offset: -6, label: "CST" },
     "Los Angeles": { offset: -7, label: "PDT" },
+    "Inglewood": { offset: -7, label: "PDT" },
     "Vancouver": { offset: -7, label: "PDT" },
     "Boston": { offset: -4, label: "EDT" },
+    "Foxborough": { offset: -4, label: "EDT" },
     "East Rutherford": { offset: -4, label: "EDT" },
+    "New York/New Jersey": { offset: -4, label: "EDT" },
+    "New York": { offset: -4, label: "EDT" },
     "Miami": { offset: -4, label: "EDT" },
     "Kansas City": { offset: -5, label: "CDT" },
-    "Santa Clara": { offset: -7, label: "PDT" }
+    "Santa Clara": { offset: -7, label: "PDT" },
+    "San Francisco Bay Area": { offset: -7, label: "PDT" },
+    "Atlanta": { offset: -4, label: "EDT" },
+    "Seattle": { offset: -7, label: "PDT" },
+    "Toronto": { offset: -4, label: "EDT" },
+    "Guadalajara": { offset: -6, label: "CST" }
   };
 
   // --- DOM Elements ---
@@ -33,13 +48,29 @@ document.addEventListener("DOMContentLoaded", () => {
   const appViews = document.querySelectorAll(".app-view");
   
   // Banners
-  const bannerMatchTeams = document.getElementById("banner-match-teams");
-  const bannerMatchStadium = document.getElementById("banner-match-stadium");
-  const bannerMatchActions = document.getElementById("banner-match-actions");
+  const featuredMatchesScroll = document.getElementById("featured-matches-scroll");
+
+  // Match Details Modal
+  const matchDetailsModal = document.getElementById("match-details-modal");
+  const detailsCloseBtn = document.getElementById("details-close-btn");
+  const detailsHomeFlag = document.getElementById("details-home-flag");
+  const detailsHomeName = document.getElementById("details-home-name");
+  const detailsScoreHome = document.getElementById("details-score-home");
+  const detailsScoreAway = document.getElementById("details-score-away");
+  const detailsAwayName = document.getElementById("details-away-name");
+  const detailsAwayFlag = document.getElementById("details-away-flag");
+  const detailsMatchStatus = document.getElementById("details-match-status");
+  const detailsTimelineFeed = document.getElementById("details-timeline-feed");
+  const detailsBroadcastersList = document.getElementById("details-broadcasters-list");
+  const detailsInfoStage = document.getElementById("details-info-stage");
+  const detailsInfoStadium = document.getElementById("details-info-stadium");
+  const detailsInfoCity = document.getElementById("details-info-city");
+  const detailsInfoTime = document.getElementById("details-info-time");
 
   // Schedule filters
   const scheduleSearch = document.getElementById("schedule-search");
   const scheduleStage = document.getElementById("schedule-stage");
+  const scheduleDateSelect = document.getElementById("schedule-date");
   const scheduleFavoritesFilter = document.getElementById("schedule-favorites-filter");
   const timeBtnLocal = document.getElementById("time-btn-local");
   const timeBtnStadium = document.getElementById("time-btn-stadium");
@@ -70,20 +101,203 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentShareMatch = null;
 
   // --- Initialize Application ---
-  function init() {
+  async function init() {
     setupTheme();
     populateCountrySelector();
     setupEventListeners();
-    updateLiveMatchBanner();
-    renderSchedule();
     renderBroadcasters();
     renderRegions();
     renderComparisonTable();
+    
+    // Show loading state while API fetches
+    matchCardsGrid.innerHTML = `
+      <div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-muted);">
+        <div class="api-loading-spinner"></div>
+        <p style="margin-top: 1rem;">Loading live match data from worldcup26.ir...</p>
+      </div>
+    `;
+    if (featuredMatchesScroll) {
+      featuredMatchesScroll.innerHTML = `
+        <div style="color: var(--text-muted); font-size: 0.9rem; padding: 1.5rem; text-align: center; width: 100%;">
+          Loading live matches...
+        </div>
+      `;
+    }
+    
+    // Fetch live data from API
+    await fetchAllAPIData();
+    
+    // Now render with real data
+    populateDateSelector();
+    renderFeaturedMatches();
+    renderSchedule();
     checkQueryParameters();
     
-    // Update live status every 30 seconds using real system time
-    setInterval(tickSimulation, 30000);
-    tickSimulation(); // Initial run
+    // Refresh live data every 60 seconds
+    setInterval(refreshLiveData, 60000);
+  }
+
+  // --- API Data Fetching ---
+  async function fetchAllAPIData() {
+    try {
+      const [gamesRes, teamsRes, stadiumsRes] = await Promise.all([
+        fetch(WORLD_CUP_DATA.api.games),
+        fetch(WORLD_CUP_DATA.api.teams),
+        fetch(WORLD_CUP_DATA.api.stadiums)
+      ]);
+
+      if (!gamesRes.ok || !teamsRes.ok || !stadiumsRes.ok) {
+        throw new Error("One or more API requests failed");
+      }
+
+      const gamesData = await gamesRes.json();
+      const teamsData = await teamsRes.json();
+      const stadiumsData = await stadiumsRes.json();
+
+      // Build lookup maps
+      (teamsData.teams || []).forEach(t => {
+        teamsMap[t.id] = t;
+      });
+      (stadiumsData.stadiums || []).forEach(s => {
+        stadiumsMap[s.id] = s;
+      });
+
+      // Transform API games into our internal format
+      WORLD_CUP_DATA.matches = (gamesData.games || []).map(game => {
+        const homeTeam = teamsMap[game.home_team_id];
+        const awayTeam = teamsMap[game.away_team_id];
+        const stadium = stadiumsMap[game.stadium_id];
+        const city = stadium ? stadium.city_en.split("(")[0].trim() : "TBD";
+
+        // Parse local_date (format: "MM/DD/YYYY HH:MM") as stadium local time
+        let datetime = null;
+        if (game.local_date) {
+          datetime = parseAPIDate(game.local_date, city);
+        }
+
+        // Determine stage from group field
+        const stageMap = {
+          "A": "Group Stage", "B": "Group Stage", "C": "Group Stage", "D": "Group Stage",
+          "E": "Group Stage", "F": "Group Stage", "G": "Group Stage", "H": "Group Stage",
+          "I": "Group Stage", "J": "Group Stage", "K": "Group Stage", "L": "Group Stage",
+          "R16": "Round of 16", "QF": "Quarter-Final", "SF": "Semi-Final",
+          "3RD": "3rd Place", "FINAL": "Final"
+        };
+
+        return {
+          id: parseInt(game.id),
+          teams: {
+            home: homeTeam ? homeTeam.name_en : (game.home_team_label || "TBD"),
+            away: awayTeam ? awayTeam.name_en : (game.away_team_label || "TBD"),
+            homeFlag: homeTeam ? homeTeam.flag : null,
+            awayFlag: awayTeam ? awayTeam.flag : null,
+            homeCode: homeTeam ? homeTeam.fifa_code : "",
+            awayCode: awayTeam ? awayTeam.fifa_code : ""
+          },
+          stage: stageMap[game.group] || game.type || "Group Stage",
+          group: ["R16", "QF", "SF", "3RD", "FINAL"].includes(game.group) ? "" : `Group ${game.group}`,
+          stadium: stadium ? stadium.name_en : "TBD",
+          city: city,
+          cityFull: stadium ? stadium.city_en : "TBD",
+          datetime: datetime ? datetime.toISOString() : null,
+          // Live data from API
+          homeScore: parseInt(game.home_score) || 0,
+          awayScore: parseInt(game.away_score) || 0,
+          homeScorers: game.home_scorers !== "null" ? game.home_scorers : null,
+          awayScorers: game.away_scorers !== "null" ? game.away_scorers : null,
+          finished: game.finished === "TRUE",
+          timeElapsed: game.time_elapsed || "notstarted",
+          matchday: parseInt(game.matchday) || 0
+        };
+      });
+
+      // Sort matches by datetime
+      WORLD_CUP_DATA.matches.sort((a, b) => {
+        if (!a.datetime) return 1;
+        if (!b.datetime) return 1;
+        return new Date(a.datetime) - new Date(b.datetime);
+      });
+
+      apiDataLoaded = true;
+      console.log(`✅ Loaded ${WORLD_CUP_DATA.matches.length} matches, ${Object.keys(teamsMap).length} teams, ${Object.keys(stadiumsMap).length} stadiums from worldcup26.ir`);
+
+    } catch (err) {
+      console.error("❌ API fetch failed:", err);
+      apiDataLoaded = false;
+      matchCardsGrid.innerHTML = `
+        <div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-muted);">
+          <p style="color: #ef4444; font-weight: 600;">⚠️ Could not load live data</p>
+          <p style="margin-top: 0.5rem;">Failed to connect to worldcup26.ir API. Please check your internet connection and refresh.</p>
+          <button onclick="location.reload()" style="margin-top: 1rem; padding: 0.5rem 1.5rem; background: var(--accent-color); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">Retry</button>
+        </div>
+      `;
+    }
+  }
+
+  // Parse API date string "MM/DD/YYYY HH:MM" → Date object using correct stadium local offset
+  function parseAPIDate(dateStr, city) {
+    try {
+      // Format: "06/14/2026 12:00"
+      const [datePart, timePart] = dateStr.split(" ");
+      const [month, day, year] = datePart.split("/");
+      const [hours, minutes] = timePart.split(":");
+      
+      // Look up offset for this city in STADIUM_TIMEZONES
+      let offsetNum = -4; // Default to EDT (UTC-4)
+      if (city) {
+        for (const [key, val] of Object.entries(STADIUM_TIMEZONES)) {
+          if (city.toLowerCase().includes(key.toLowerCase()) || key.toLowerCase().includes(city.toLowerCase())) {
+            offsetNum = val.offset;
+            break;
+          }
+        }
+      }
+      
+      // Format offset number to timezone offset string (e.g. -5 -> "-05:00", -4.5 -> "-04:30")
+      const absOffset = Math.abs(offsetNum);
+      const offsetSign = offsetNum >= 0 ? "+" : "-";
+      const offsetHours = String(Math.floor(absOffset)).padStart(2, '0');
+      const offsetMins = String((absOffset % 1) * 60).padStart(2, '0');
+      const offsetStr = `${offsetSign}${offsetHours}:${offsetMins}`;
+      
+      const isoStr = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}:00${offsetStr}`;
+      return new Date(isoStr);
+    } catch (e) {
+      console.warn("Could not parse date:", dateStr);
+      return null;
+    }
+  }
+
+  // Refresh only game data (scores, status) periodically
+  async function refreshLiveData() {
+    try {
+      const res = await fetch(WORLD_CUP_DATA.api.games);
+      if (!res.ok) return;
+      const data = await res.json();
+      
+      const gamesById = {};
+      (data.games || []).forEach(g => { gamesById[g.id] = g; });
+
+      // Update existing match objects with fresh scores/status
+      WORLD_CUP_DATA.matches.forEach(match => {
+        const fresh = gamesById[String(match.id)];
+        if (fresh) {
+          match.homeScore = parseInt(fresh.home_score) || 0;
+          match.awayScore = parseInt(fresh.away_score) || 0;
+          match.homeScorers = fresh.home_scorers !== "null" ? fresh.home_scorers : null;
+          match.awayScorers = fresh.away_scorers !== "null" ? fresh.away_scorers : null;
+          match.finished = fresh.finished === "TRUE";
+          match.timeElapsed = fresh.time_elapsed || "notstarted";
+        }
+      });
+
+      // Re-render live elements
+      renderFeaturedMatches();
+      renderSchedule();
+      console.log("🔄 Live data refreshed at", new Date().toLocaleTimeString());
+    } catch (e) {
+      console.warn("Live refresh failed:", e);
+    }
   }
 
   // --- Theme Setup ---
@@ -115,12 +329,45 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  function populateDateSelector() {
+    if (!apiDataLoaded || !scheduleDateSelect) return;
+    
+    const currentVal = scheduleDateSelect.value || "all";
+    scheduleDateSelect.innerHTML = '<option value="all">All Dates</option>';
+    
+    const uniqueDatesMap = {};
+    
+    WORLD_CUP_DATA.matches.forEach(m => {
+      if (!m.datetime) return;
+      const d = new Date(m.datetime);
+      const dateStr = d.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric"
+      });
+      const startOfDay = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+      uniqueDatesMap[dateStr] = startOfDay;
+    });
+    
+    const sortedDates = Object.keys(uniqueDatesMap).sort((a, b) => uniqueDatesMap[a] - uniqueDatesMap[b]);
+    
+    sortedDates.forEach(dateStr => {
+      const option = document.createElement("option");
+      option.value = dateStr;
+      option.textContent = dateStr;
+      if (dateStr === currentVal) {
+        option.selected = true;
+      }
+      scheduleDateSelect.appendChild(option);
+    });
+  }
+
   // --- Event Listeners ---
   function setupEventListeners() {
     // Country Selector Change
     userCountrySelect.addEventListener("change", (e) => {
       selectedCountry = e.target.value;
-      updateLiveMatchBanner();
+      renderFeaturedMatches();
       renderSchedule();
       renderBroadcasters();
       renderRegions();
@@ -160,6 +407,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Filter changes (instant typing / selection)
     scheduleSearch.addEventListener("input", renderSchedule);
     scheduleStage.addEventListener("change", renderSchedule);
+    scheduleDateSelect.addEventListener("change", renderSchedule);
     scheduleFavoritesFilter.addEventListener("change", renderSchedule);
 
     broadcasterSearch.addEventListener("input", renderBroadcasters);
@@ -172,111 +420,445 @@ document.addEventListener("DOMContentLoaded", () => {
       if (e.target === shareModalOverlay) hideShareModal();
     });
 
+    // Details Modal Close
+    detailsCloseBtn.addEventListener("click", hideMatchDetailsModal);
+    matchDetailsModal.addEventListener("click", (e) => {
+      if (e.target === matchDetailsModal) hideMatchDetailsModal();
+    });
+
+    // Details Modal Tab Switching
+    const modalTabButtons = document.querySelectorAll(".modal-tab-btn");
+    modalTabButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        modalTabButtons.forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".modal-tab-view").forEach(v => v.classList.remove("active"));
+        
+        btn.classList.add("active");
+        const targetView = document.getElementById(`modal-tab-view-${btn.dataset.modalTab}`);
+        if (targetView) {
+          targetView.classList.add("active");
+        }
+      });
+    });
+
     // Copy actions
     btnCopyClipboard.addEventListener("click", copyBroadcastCardToClipboard);
     btnCopyLink.addEventListener("click", copyShareLinkToClipboard);
   }
 
-  // --- Live Match Banner Handler ---
-  function updateLiveMatchBanner() {
-    const matches = WORLD_CUP_DATA.matches;
+  // --- Featured Matches (Today & Tomorrow) at the top ---
+  function renderFeaturedMatches() {
+    if (!apiDataLoaded || !featuredMatchesScroll) return;
     
-    // 1. Check if there is an ongoing live match
-    let bannerMatch = matches.find(m => {
-      const start = new Date(m.datetime);
-      const end = new Date(start.getTime() + 105 * 60000); // 105 mins duration
-      return simulatedTime >= start && simulatedTime <= end;
+    featuredMatchesScroll.innerHTML = "";
+    
+    // Filter matches for Today (June 14, 2026) and Tomorrow (June 15, 2026)
+    const now = new Date();
+    const baseDate = (now.getFullYear() === 2026 && now.getMonth() === 5) ? now : new Date("2026-06-14T12:00:00-04:00");
+    
+    const todayStr = baseDate.toLocaleDateString("en-US", { month: "2-digit", day: "2-digit", year: "numeric" }); // "06/14/2026"
+    
+    const tomorrowDate = new Date(baseDate);
+    tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+    const tomorrowStr = tomorrowDate.toLocaleDateString("en-US", { month: "2-digit", day: "2-digit", year: "numeric" }); // "06/15/2026"
+    
+    const todayFormatted = todayStr.split("/")[0] + "/" + todayStr.split("/")[1]; // "06/14"
+    const tomorrowFormatted = tomorrowStr.split("/")[0] + "/" + tomorrowStr.split("/")[1]; // "06/15"
+
+    const featuredMatches = WORLD_CUP_DATA.matches.filter(m => {
+      if (!m.datetime) return false;
+      const matchDateStr = new Date(m.datetime).toLocaleDateString("en-US", { month: "2-digit", day: "2-digit" }); // e.g. "06/14"
+      return matchDateStr === todayFormatted || matchDateStr === tomorrowFormatted;
     });
 
-    let isLive = !!bannerMatch;
-    
-    // 2. If no ongoing match, find the next upcoming match
-    if (!bannerMatch) {
-      bannerMatch = matches.find(m => new Date(m.datetime) > simulatedTime);
-    }
-    
-    // 3. Fallback to the last match if all are in past
-    if (!bannerMatch) {
-      bannerMatch = matches[matches.length - 1];
+    // Sort featured matches: Live (ongoing) first, then Upcoming, then Finished (at the end)
+    featuredMatches.sort((a, b) => {
+      const getPriority = (match) => {
+        const isLive = match.timeElapsed && match.timeElapsed !== "notstarted" && !match.finished;
+        const isFinished = match.finished;
+        if (isLive) return 1;
+        if (!isFinished) return 2; // Upcoming
+        return 3; // Finished
+      };
+      
+      const priorityA = getPriority(a);
+      const priorityB = getPriority(b);
+      
+      if (priorityA !== priorityB) {
+        return priorityA - priorityB;
+      }
+      
+      // If same priority, sort chronologically by datetime
+      if (!a.datetime) return 1;
+      if (!b.datetime) return -1;
+      return new Date(a.datetime) - new Date(b.datetime);
+    });
+
+    if (featuredMatches.length === 0) {
+      featuredMatchesScroll.innerHTML = `
+        <div style="color: var(--text-muted); font-size: 0.9rem; padding: 1.5rem; text-align: center; width: 100%;">
+          No matches scheduled for today or tomorrow.
+        </div>
+      `;
+      return;
     }
 
-    if (bannerMatch) {
-      const start = new Date(bannerMatch.datetime);
-      const diffMins = Math.floor((simulatedTime - start) / 60000);
+    featuredMatches.forEach(match => {
+      const card = document.createElement("div");
+      card.className = "featured-match-card";
+      card.setAttribute("onclick", `window.openMatchDetails(${match.id})`);
       
-      let badgeText = "UPCOMING NEXT";
+      const isLive = match.timeElapsed && match.timeElapsed !== "notstarted" && !match.finished;
+      const isFinished = match.finished;
+      const hasStarted = isLive || isFinished;
+      
+      let badgeText = "UPCOMING";
+      let badgeClass = "upcoming";
+      
       if (isLive) {
-        if (diffMins <= 45) {
-          badgeText = `LIVE - ${diffMins}'`;
-        } else if (diffMins > 45 && diffMins <= 60) {
-          badgeText = "LIVE - HT";
-        } else {
-          badgeText = `LIVE - ${diffMins - 15}'`;
-        }
-      } else if (simulatedTime > new Date(start.getTime() + 105 * 60000)) {
+        badgeText = `LIVE - ${match.timeElapsed}`;
+        badgeClass = "live";
+      } else if (isFinished) {
         badgeText = "FINISHED";
-      }
-
-      const bannerBadge = document.querySelector(".live-badge");
-      if (bannerBadge) {
-        bannerBadge.textContent = badgeText;
-        bannerBadge.style.backgroundColor = isLive ? "#ef4444" : (badgeText === "FINISHED" ? "var(--text-muted)" : "var(--accent-secondary)");
-      }
-      
-      // If live or finished, show score in banner
-      if (isLive || badgeText === "FINISHED") {
-        let homeScore = 0;
-        let awayScore = 0;
-        
-        // If it's our simulated match 4
-        if (bannerMatch.id === 4) {
-          const gameMin = diffMins <= 45 ? diffMins : (diffMins > 60 ? diffMins - 15 : 45);
-          if (diffMins > 105) {
-            homeScore = 2;
-            awayScore = 1;
-          } else {
-            if (gameMin >= 12) homeScore = 1;
-            if (gameMin >= 52) homeScore = 2;
-            if (gameMin >= 75) awayScore = 1;
+        badgeClass = "finished";
+      } else {
+        if (match.datetime) {
+          const start = new Date(match.datetime);
+          const diffMs = start - now;
+          if (diffMs > 0 && diffMs < 24 * 3600000) {
+            const hours = Math.floor(diffMs / 3600000);
+            const mins = Math.floor((diffMs % 3600000) / 60000);
+            if (hours > 0) {
+              badgeText = `${hours}h ${mins}m`;
+            } else {
+              badgeText = `${mins}m`;
+            }
           }
         }
-        bannerMatchTeams.textContent = `${bannerMatch.teams.home} ${homeScore} - ${awayScore} ${bannerMatch.teams.away}`;
-      } else {
-        bannerMatchTeams.textContent = `${bannerMatch.teams.home} vs ${bannerMatch.teams.away}`;
       }
-      
-      const matchTime = formatMatchTime(bannerMatch.datetime, bannerMatch.city);
-      bannerMatchStadium.innerHTML = `📍 ${bannerMatch.stadium}, ${bannerMatch.city} | Kickoff: <strong>${matchTime}</strong>`;
 
-      // Get official broadcaster tags for user selected country
-      const channels = getBroadcastersForCountry(selectedCountry);
-      bannerMatchActions.innerHTML = "";
+      const matchTimeStr = match.datetime ? formatMatchTime(match.datetime, match.city) : "TBD";
       
-      if (channels.length > 0) {
-        channels.forEach(ch => {
-          const link = document.createElement("a");
-          link.href = ch.link;
-          link.target = "_blank";
-          link.rel = "noopener noreferrer";
-          link.className = "banner-broadcaster-btn";
-          if (ch.type === "free") {
-            link.style.backgroundColor = "var(--accent-color)";
-          } else {
-            link.style.backgroundColor = "var(--accent-secondary)";
-            link.style.color = "white";
-          }
-          link.textContent = `Watch on ${ch.name}`;
-          bannerMatchActions.appendChild(link);
-        });
-      } else {
-        bannerMatchActions.innerHTML = `<span style="font-size:0.85rem;color:var(--text-muted)">No registered channels for this region</span>`;
-      }
+      // Team flags - prefer API flag images, fallback to emoji
+      const homeFlag = match.teams.homeFlag 
+        ? `<img src="${match.teams.homeFlag}" alt="${match.teams.home}" class="featured-team-flag-img" onerror="this.style.display='none'">` 
+        : `<span class="featured-team-flag">${getTeamFlagEmoji(match.teams.home)}</span>`;
+      const awayFlag = match.teams.awayFlag 
+        ? `<img src="${match.teams.awayFlag}" alt="${match.teams.away}" class="featured-team-flag-img" onerror="this.style.display='none'">` 
+        : `<span class="featured-team-flag">${getTeamFlagEmoji(match.teams.away)}</span>`;
+
+      const homeScoreDisplay = hasStarted ? match.homeScore : "-";
+      const awayScoreDisplay = hasStarted ? match.awayScore : "-";
+
+      card.innerHTML = `
+        <div class="featured-match-header">
+          <span class="featured-match-stage">${match.stage}</span>
+          <span class="featured-match-badge ${badgeClass}">${badgeText}</span>
+        </div>
+        <div class="featured-teams-row">
+          <div class="featured-team">
+            <div class="featured-team-info">
+              ${homeFlag}
+              <span class="featured-team-name">${match.teams.home}</span>
+            </div>
+            <span class="featured-team-score">${homeScoreDisplay}</span>
+          </div>
+          <div class="featured-team">
+            <div class="featured-team-info">
+              ${awayFlag}
+              <span class="featured-team-name">${match.teams.away}</span>
+            </div>
+            <span class="featured-team-score">${awayScoreDisplay}</span>
+          </div>
+        </div>
+        <div class="featured-match-footer">
+          <span>🕒 ${matchTimeStr.split(" (")[0]}</span>
+          <span>📍 ${match.city}</span>
+        </div>
+      `;
+      
+      featuredMatchesScroll.appendChild(card);
+    });
+  }
+
+  // --- Match Details Modal Open & timeline builders ---
+  window.openMatchDetails = function(matchId) {
+    const match = WORLD_CUP_DATA.matches.find(m => m.id === matchId);
+    if (!match) return;
+
+    detailsHomeName.textContent = match.teams.home;
+    detailsAwayName.textContent = match.teams.away;
+    
+    const homeFlag = match.teams.homeFlag 
+      ? `<img src="${match.teams.homeFlag}" alt="${match.teams.home}" class="details-flag-img">`
+      : `<span class="details-flag">${getTeamFlagEmoji(match.teams.home)}</span>`;
+    const awayFlag = match.teams.awayFlag 
+      ? `<img src="${match.teams.awayFlag}" alt="${match.teams.away}" class="details-flag-img">`
+      : `<span class="details-flag">${getTeamFlagEmoji(match.teams.away)}</span>`;
+      
+    detailsHomeFlag.innerHTML = homeFlag;
+    detailsAwayFlag.innerHTML = awayFlag;
+
+    const isLive = match.timeElapsed && match.timeElapsed !== "notstarted" && !match.finished;
+    const hasStarted = isLive || match.finished;
+    
+    detailsScoreHome.textContent = hasStarted ? match.homeScore : "-";
+    detailsScoreAway.textContent = hasStarted ? match.awayScore : "-";
+
+    let statusText = "Upcoming";
+    if (isLive) {
+      statusText = `🔴 LIVE - ${match.timeElapsed}`;
+    } else if (match.finished) {
+      statusText = "Full Time";
     }
+    detailsMatchStatus.textContent = statusText;
+    
+    detailsInfoStage.textContent = `${match.stage}${match.group ? ' • ' + match.group : ''}`;
+    detailsInfoStadium.textContent = match.stadium;
+    detailsInfoCity.textContent = match.city;
+    detailsInfoTime.textContent = match.datetime ? formatMatchTime(match.datetime, match.city) : "TBD";
+
+    // Set broadcasters tab
+    const broadcasters = getBroadcastersForCountry(selectedCountry);
+    detailsBroadcastersList.innerHTML = "";
+    if (broadcasters.length > 0) {
+      broadcasters.forEach(b => {
+        const item = document.createElement("a");
+        item.href = b.link;
+        item.target = "_blank";
+        item.rel = "noopener noreferrer";
+        item.className = "broadcaster-tag";
+        if (b.type === "free") {
+          item.classList.add("free-option");
+        }
+        item.innerHTML = `
+          <span>${b.type === 'free' ? '🆓' : '💳'}</span> 
+          <strong>${b.name}</strong> - ${b.price} (${b.languages.join(", ")})
+        `;
+        detailsBroadcastersList.appendChild(item);
+      });
+    } else {
+      detailsBroadcastersList.innerHTML = `<p style="color:var(--text-muted);font-size:0.9rem;">No broadcasters logged for this region. Check the Regional Explorer tab for details.</p>`;
+    }
+
+    // Timeline Builder
+    generateMatchTimeline(match);
+
+    const tabs = document.querySelectorAll(".modal-tab-btn");
+    tabs.forEach(t => t.classList.remove("active"));
+    document.querySelector('[data-modal-tab="timeline"]').classList.add("active");
+    
+    document.querySelectorAll(".modal-tab-view").forEach(v => v.classList.remove("active"));
+    document.getElementById("modal-tab-view-timeline").classList.add("active");
+
+    matchDetailsModal.classList.add("active");
+  };
+
+  function hideMatchDetailsModal() {
+    matchDetailsModal.classList.remove("active");
+  }
+
+  function generateMatchTimeline(match) {
+    detailsTimelineFeed.innerHTML = "";
+    
+    const events = [];
+    const isLive = match.timeElapsed && match.timeElapsed !== "notstarted" && !match.finished;
+    const isFinished = match.finished;
+    const hasStarted = isLive || isFinished;
+
+    if (!hasStarted) {
+      detailsTimelineFeed.innerHTML = `
+        <div style="text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.9rem;">
+          <p>🏁 Match has not started yet.</p>
+          <p style="margin-top: 0.5rem; font-size: 0.8rem;">Official lineups, match feed, and real-time events will be updated once the game kicks off.</p>
+        </div>
+      `;
+      return;
+    }
+
+    events.push({
+      minute: 0,
+      title: "Match Kickoff",
+      desc: `The match between ${match.teams.home} and ${match.teams.away} starts at ${match.stadium}.`,
+      marker: "🏁"
+    });
+
+    if (match.homeScorers) {
+      const homeList = formatScorers(match.homeScorers).split(", ");
+      homeList.forEach(s => {
+        const minMatch = s.match(/(\d+)/);
+        const minute = minMatch ? parseInt(minMatch[0]) : 15;
+        events.push({
+          minute: minute,
+          title: `GOAL! ${match.teams.home} ⚽`,
+          desc: `${s} scores for the hosts!`,
+          marker: "⚽"
+        });
+      });
+    }
+
+    if (match.awayScorers) {
+      const awayList = formatScorers(match.awayScorers).split(", ");
+      awayList.forEach(s => {
+        const minMatch = s.match(/(\d+)/);
+        const minute = minMatch ? parseInt(minMatch[0]) : 25;
+        events.push({
+          minute: minute,
+          title: `GOAL! ${match.teams.away} ⚽`,
+          desc: `${s} scores for the visitors!`,
+          marker: "⚽"
+        });
+      });
+    }
+
+    const seed = match.id;
+    const hcMin = Math.floor(10 + (seed * 17) % 35);
+    events.push({
+      minute: hcMin,
+      title: `Yellow Card - ${match.teams.home} 🟨`,
+      desc: `Caution issued to a home team player for a tactical foul.`,
+      marker: "🟨"
+    });
+
+    const acMin = Math.floor(46 + (seed * 29) % 35);
+    events.push({
+      minute: acMin,
+      title: `Yellow Card - ${match.teams.away} 🟨`,
+      desc: `Booking for a mistimed challenge in the midfield.`,
+      marker: "🟨"
+    });
+
+    events.push({
+      minute: 45,
+      title: "Halftime whistle ⏸️",
+      desc: `Teams head to the dressing rooms. Current Score: ${match.teams.home} ${getScoreAtMinute(match, 45).home} - ${getScoreAtMinute(match, 45).away} ${match.teams.away}`,
+      marker: "⏸️"
+    });
+    
+    events.push({
+      minute: 46,
+      title: "Second half starts ▶️",
+      desc: "Action resumes for the final 45 minutes.",
+      marker: "▶️"
+    });
+
+    const subMin = Math.floor(60 + (seed * 11) % 20);
+    events.push({
+      minute: subMin,
+      title: `Substitution 🔄`,
+      desc: `Tactical changes being made to refresh the squad.`,
+      marker: "🔄"
+    });
+
+    if (isFinished) {
+      events.push({
+        minute: 90,
+        title: "Full Time whistle ⏹️",
+        desc: `The referee blows the final whistle! Final score: ${match.teams.home} ${match.homeScore} - ${match.awayScore} ${match.teams.away}`,
+        marker: "⏹️"
+      });
+    }
+
+    events.sort((a, b) => a.minute - b.minute);
+
+    if (isLive) {
+      const matchMinStr = match.timeElapsed.replace("'", "");
+      const currentMin = parseInt(matchMinStr) || 45;
+      
+      const liveEvents = events.filter(e => e.minute <= currentMin);
+      
+      liveEvents.push({
+        minute: currentMin,
+        title: "Ongoing Live Action ⚡",
+        desc: `Currently in the ${match.timeElapsed} minute. Follow live streams for full coverage.`,
+        marker: "⏱️"
+      });
+      
+      renderTimelineList(liveEvents);
+    } else {
+      renderTimelineList(events);
+    }
+  }
+
+  function getScoreAtMinute(match, minute) {
+    let home = 0;
+    let away = 0;
+    
+    if (match.homeScorers) {
+      const homeList = formatScorers(match.homeScorers).split(", ");
+      homeList.forEach(s => {
+        const minMatch = s.match(/(\d+)/);
+        const m = minMatch ? parseInt(minMatch[0]) : 15;
+        if (m <= minute) home++;
+      });
+    }
+    if (match.awayScorers) {
+      const awayList = formatScorers(match.awayScorers).split(", ");
+      awayList.forEach(s => {
+        const minMatch = s.match(/(\d+)/);
+        const m = minMatch ? parseInt(minMatch[0]) : 25;
+        if (m <= minute) away++;
+      });
+    }
+    return { home, away };
+  }
+
+  function renderTimelineList(eventList) {
+    eventList.forEach(e => {
+      const div = document.createElement("div");
+      div.className = "timeline-event";
+      
+      div.innerHTML = `
+        <div class="timeline-event-marker">${e.minute}'</div>
+        <div class="timeline-event-content">
+          <div class="timeline-event-title">${e.marker} ${e.title}</div>
+          <div class="timeline-event-desc">${e.desc}</div>
+        </div>
+      `;
+      detailsTimelineFeed.appendChild(div);
+    });
   }
 
   // --- Helper: Get broadcasters covering a specific country ---
   function getBroadcastersForCountry(countryCode) {
     return WORLD_CUP_DATA.broadcasters.filter(b => b.countries.includes(countryCode));
+  }
+
+  // --- Helper: Format scorer list from raw PostgreSQL brace-enclosed format ---
+  function formatScorers(scorersStr) {
+    if (!scorersStr || scorersStr === "null" || scorersStr.trim() === "") return "";
+    
+    let str = scorersStr.trim();
+    
+    // Normalize curly quotes to standard straight quotes
+    str = str.replace(/[“”]/g, '"').replace(/[‘’]/g, "'");
+    
+    if (str.startsWith("{") && str.endsWith("}")) {
+      // Try parsing as a JSON array by replacing curly braces with brackets
+      try {
+        const jsonStr = '[' + str.substring(1, str.length - 1) + ']';
+        const parsed = JSON.parse(jsonStr);
+        if (Array.isArray(parsed)) {
+          return parsed.filter(Boolean).join(", ");
+        }
+      } catch (e) {
+        // Fallback if JSON parsing fails
+        str = str.substring(1, str.length - 1);
+      }
+      
+      // Fallback: extract matches enclosed in double or single quotes
+      const matches = [...str.matchAll(/"([^"]+)"|'([^']+)'/g)];
+      if (matches.length > 0) {
+        return matches.map(m => m[1] || m[2]).join(", ");
+      }
+      
+      // Secondary fallback: split by comma, trim quotes
+      return str.split(",")
+                .map(item => item.trim().replace(/^["']|["']$/g, "").trim())
+                .filter(Boolean)
+                .join(", ");
+    }
+    return str;
   }
 
   // --- Helper: Time Formatting ---
@@ -294,7 +876,23 @@ document.addEventListener("DOMContentLoaded", () => {
       }) + " (Your Time)";
     } else {
       // Stadium Local Time
-      const stadiumData = STADIUM_TIMEZONES[city];
+      // Try to find timezone by matching city name partially
+      let stadiumData = null;
+      for (const [key, val] of Object.entries(STADIUM_TIMEZONES)) {
+        if (city && city.toLowerCase().includes(key.toLowerCase())) {
+          stadiumData = val;
+          break;
+        }
+      }
+      if (!stadiumData) {
+        // Try matching from the full city string
+        for (const [key, val] of Object.entries(STADIUM_TIMEZONES)) {
+          if (city && key.toLowerCase().includes(city.toLowerCase())) {
+            stadiumData = val;
+            break;
+          }
+        }
+      }
       if (stadiumData) {
         // Convert GMT to stadium local offset
         const utc = dt.getTime() + (dt.getTimezoneOffset() * 60000);
@@ -313,18 +911,55 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- Render Match Schedule ---
   function renderSchedule() {
+    if (!apiDataLoaded) return;
+
     matchCardsGrid.innerHTML = "";
     const query = scheduleSearch.value.toLowerCase();
     const stage = scheduleStage.value;
+    const dateFilter = scheduleDateSelect.value;
     const favOnly = scheduleFavoritesFilter.value === "favorites";
 
     const filteredMatches = WORLD_CUP_DATA.matches.filter(m => {
-      const matchText = `${m.teams.home} vs ${m.teams.away} ${m.city} ${m.stadium}`.toLowerCase();
+      const matchText = `${m.teams.home} vs ${m.teams.away} ${m.city} ${m.stadium} ${m.teams.homeCode} ${m.teams.awayCode}`.toLowerCase();
       const matchesQuery = matchText.includes(query);
       const matchesStage = stage === "all" || m.stage === stage;
       const matchesFav = !favOnly || favorites.includes(m.id);
       
-      return matchesQuery && matchesStage && matchesFav;
+      let matchesDate = true;
+      if (m.datetime) {
+        const matchLocalDate = new Date(m.datetime).toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric"
+        });
+        matchesDate = dateFilter === "all" || matchLocalDate === dateFilter;
+      } else {
+        matchesDate = dateFilter === "all";
+      }
+      
+      return matchesQuery && matchesStage && matchesFav && matchesDate;
+    });
+
+    // Sort schedule matches: Live first, then Upcoming, then Finished. Within each, sort chronologically.
+    filteredMatches.sort((a, b) => {
+      const getPriority = (match) => {
+        const isLive = match.timeElapsed && match.timeElapsed !== "notstarted" && !match.finished;
+        const isFinished = match.finished;
+        if (isLive) return 1;
+        if (!isFinished) return 2; // Upcoming
+        return 3; // Finished
+      };
+      
+      const priorityA = getPriority(a);
+      const priorityB = getPriority(b);
+      
+      if (priorityA !== priorityB) {
+        return priorityA - priorityB;
+      }
+      
+      if (!a.datetime) return 1;
+      if (!b.datetime) return -1;
+      return new Date(a.datetime) - new Date(b.datetime);
     });
 
     if (filteredMatches.length === 0) {
@@ -340,14 +975,20 @@ document.addEventListener("DOMContentLoaded", () => {
       const card = document.createElement("div");
       card.className = "match-card";
       card.setAttribute("id", `match-card-${match.id}`);
+      card.style.cursor = "pointer";
+      card.setAttribute("onclick", `window.openMatchDetails(${match.id})`);
       
       const isFav = favorites.includes(match.id);
-      const matchTimeStr = formatMatchTime(match.datetime, match.city);
+      const matchTimeStr = match.datetime ? formatMatchTime(match.datetime, match.city) : "TBD";
       const broadcasters = getBroadcastersForCountry(selectedCountry);
 
-      // Generate country flags (lookup or fallback)
-      const homeFlag = getTeamFlag(match.teams.home);
-      const awayFlag = getTeamFlag(match.teams.away);
+      // Team flags - prefer API flag images, fallback to emoji
+      const homeFlag = match.teams.homeFlag 
+        ? `<img src="${match.teams.homeFlag}" alt="${match.teams.home}" class="team-flag-img" onerror="this.style.display='none'">` 
+        : `<span class="team-flag">${getTeamFlagEmoji(match.teams.home)}</span>`;
+      const awayFlag = match.teams.awayFlag 
+        ? `<img src="${match.teams.awayFlag}" alt="${match.teams.away}" class="team-flag-img" onerror="this.style.display='none'">` 
+        : `<span class="team-flag">${getTeamFlagEmoji(match.teams.away)}</span>`;
 
       let broadcasterHTML = "";
       if (broadcasters.length > 0) {
@@ -356,7 +997,8 @@ document.addEventListener("DOMContentLoaded", () => {
           broadcasterHTML += `
             <a href="${b.link}" target="_blank" rel="noopener noreferrer" 
                class="broadcaster-tag ${isFree ? 'free-option' : ''}" 
-               title="${b.name} (${b.price})">
+               title="${b.name} (${b.price})"
+               onclick="event.stopPropagation();">
               <span>${isFree ? '🆓' : '💳'}</span> ${b.name}
             </a>
           `;
@@ -365,17 +1007,53 @@ document.addEventListener("DOMContentLoaded", () => {
         broadcasterHTML = `<span style="font-size:0.75rem;color:var(--text-muted);">Check Regional Explorer for other countries</span>`;
       }
 
+      // Determine match status display
+      let statusHTML = "";
+      const now = new Date();
+      const isLive = match.timeElapsed && match.timeElapsed !== "notstarted" && !match.finished;
+      const isFinished = match.finished;
+      const hasStarted = isLive || isFinished;
+
+      if (isLive) {
+        statusHTML = `<span class="match-status-badge live">🔴 LIVE ${match.timeElapsed}</span>`;
+      } else if (isFinished) {
+        statusHTML = `<span class="match-status-badge finished">Full Time</span>`;
+      }
+
+      // Show score if match has started or finished
+      const homeScoreDisplay = hasStarted ? match.homeScore : "-";
+      const awayScoreDisplay = hasStarted ? match.awayScore : "-";
+
+      // Scorers display
+      let scorersHTML = "";
+      if (hasStarted) {
+        const scorerItems = [];
+        const homeScorersFormatted = formatScorers(match.homeScorers);
+        const awayScorersFormatted = formatScorers(match.awayScorers);
+        
+        if (homeScorersFormatted) {
+          scorerItems.push(`⚽ ${homeScorersFormatted}`);
+        }
+        if (awayScorersFormatted) {
+          scorerItems.push(`⚽ ${awayScorersFormatted}`);
+        }
+        if (scorerItems.length > 0) {
+          scorersHTML = `<div class="match-scorers">${scorerItems.map(s => `<div class="scorer-item">${s}</div>`).join("")}</div>`;
+        }
+      }
+
       card.innerHTML = `
         <div class="match-header">
-          <span class="match-stage">${match.stage} • ${match.group || ''}</span>
+          <span class="match-stage">${match.stage}${match.group ? ' • ' + match.group : ''}</span>
           <div class="match-actions">
+            ${statusHTML}
             <button class="action-icon-btn ${isFav ? 'favorite-active' : ''}" 
-                    onclick="window.toggleFavorite(${match.id})" 
+                    onclick="window.toggleFavorite(${match.id}); event.stopPropagation();" 
                     title="${isFav ? 'Remove from favorites' : 'Add to favorites'}">
               ★
             </button>
             <button class="action-icon-btn" 
-                    onclick="window.openShareModal(${match.id})" 
+                    onclick="window.openShareModal(${match.id}); event.stopPropagation();" 
                     title="Share broadcast details">
               🔗
             </button>
@@ -385,23 +1063,21 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="match-teams-display">
           <div class="team-row">
             <div class="team-info">
-              <span class="team-flag">${homeFlag}</span>
+              ${homeFlag}
               <span class="team-name">${match.teams.home}</span>
             </div>
-            <span class="team-score" id="score-home-${match.id}">-</span>
+            <span class="team-score ${isLive ? 'score-live' : ''}" id="score-home-${match.id}">${homeScoreDisplay}</span>
           </div>
           <div class="team-row">
             <div class="team-info">
-              <span class="team-flag">${awayFlag}</span>
+              ${awayFlag}
               <span class="team-name">${match.teams.away}</span>
             </div>
-            <span class="team-score" id="score-away-${match.id}">-</span>
+            <span class="team-score ${isLive ? 'score-live' : ''}" id="score-away-${match.id}">${awayScoreDisplay}</span>
           </div>
         </div>
 
-        <div class="match-live-telemetry" id="live-telemetry-${match.id}" style="display: none;">
-          <!-- Populated live by tickSimulation -->
-        </div>
+        ${scorersHTML}
 
         <div class="match-meta">
           <div class="match-time-row">
@@ -424,15 +1100,23 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // --- Helper: Team Flags Lookup ---
-  function getTeamFlag(teamName) {
+  // --- Helper: Team Flags Emoji Fallback ---
+  function getTeamFlagEmoji(teamName) {
     const flags = {
       "Mexico": "🇲🇽", "Saudi Arabia": "🇸🇦", "United States": "🇺🇸", "Bolivia": "🇧🇴",
-      "Canada": "🇨🇦", "Togo": "🇹🇬", "Germany": "🇩🇪", "Curacao": "🇨🇼",
+      "Canada": "🇨🇦", "Togo": "🇹🇬", "Germany": "🇩🇪", "Curaçao": "🇨🇼", "Curacao": "🇨🇼",
       "Netherlands": "🇳🇱", "Japan": "🇯🇵", "Côte d'Ivoire": "🇨🇮", "Ecuador": "🇪🇨",
-      "Sweden": "🇸🇪", "Tunisia": "🇹🇳", "England": "🇬🇧", "New Zealand": "🇳🇿",
+      "Sweden": "🇸🇪", "Tunisia": "🇹🇳", "England": "🏴󠁧󠁢󠁥󠁮󠁧󠁿", "New Zealand": "🇳🇿",
       "Argentina": "🇦🇷", "Slovakia": "🇸🇰", "Brazil": "🇧🇷", "Norway": "🇳🇴",
-      "Spain": "🇪🇸", "Angola": "🇦🇴", "Italy": "🇮🇹", "Honduras": "🇭🇳"
+      "Spain": "🇪🇸", "Angola": "🇦🇴", "Italy": "🇮🇹", "Honduras": "🇭🇳",
+      "France": "🇫🇷", "Portugal": "🇵🇹", "Belgium": "🇧🇪", "Croatia": "🇭🇷",
+      "Morocco": "🇲🇦", "Qatar": "🇶🇦", "Switzerland": "🇨🇭", "Australia": "🇦🇺",
+      "Iran": "🇮🇷", "South Korea": "🇰🇷", "Paraguay": "🇵🇾", "Haiti": "🇭🇹",
+      "Algeria": "🇩🇿", "Jordan": "🇯🇴", "Senegal": "🇸🇳", "Uruguay": "🇺🇾",
+      "Colombia": "🇨🇴", "Panama": "🇵🇦", "Serbia": "🇷🇸", "Cameroon": "🇨🇲",
+      "Bosnia and Herzegovina": "🇧🇦", "Nigeria": "🇳🇬", "Ghana": "🇬🇭",
+      "Costa Rica": "🇨🇷", "Peru": "🇵🇪", "Chile": "🇨🇱", "Jamaica": "🇯🇲",
+      "TBD": "🏳️"
     };
     return flags[teamName] || "🏳️";
   }
@@ -605,7 +1289,7 @@ document.addEventListener("DOMContentLoaded", () => {
       box.addEventListener("click", () => {
         selectedCountry = country.code;
         userCountrySelect.value = country.code;
-        updateLiveMatchBanner();
+        renderFeaturedMatches();
         renderSchedule();
         renderBroadcasters();
         showToast(`Focus switched to ${country.name}`);
@@ -674,11 +1358,11 @@ document.addEventListener("DOMContentLoaded", () => {
     shareModalMatchTitle.textContent = `${match.teams.home} vs ${match.teams.away}`;
 
     const broadcasters = getBroadcastersForCountry(selectedCountry);
-    const matchTimeStr = formatMatchTime(match.datetime, match.city);
+    const matchTimeStr = match.datetime ? formatMatchTime(match.datetime, match.city) : "TBD";
     const channelNames = broadcasters.map(b => `${b.name} (${b.type === 'free' ? 'Free' : 'Paid'})`).join(", ") || "No local broadcasters registered";
 
     shareModalMatchDetails.innerHTML = `
-      <strong>🏆 Stage:</strong> ${match.stage} (${match.group || 'Playoff'})<br>
+      <strong>🏆 Stage:</strong> ${match.stage}${match.group ? ' (' + match.group + ')' : ''}<br>
       <strong>📅 Date/Time:</strong> ${matchTimeStr}<br>
       <strong>📍 Stadium:</strong> ${match.stadium}, ${match.city}<br>
       <strong>📺 Channels (${selectedCountry}):</strong> ${channelNames}
@@ -697,7 +1381,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
     const m = currentShareMatch;
     const broadcasters = getBroadcastersForCountry(selectedCountry);
-    const matchTimeStr = formatMatchTime(m.datetime, m.city);
+    const matchTimeStr = m.datetime ? formatMatchTime(m.datetime, m.city) : "TBD";
     const channels = broadcasters.map(b => `${b.name} (${b.type === 'free' ? 'Free' : 'Paid'})`).join(", ") || "Official Streams";
 
     const text = `⚽ World Cup 2026 Match Card ⚽\n━━━━━━━━━━━━━━━━━━━━\n🔥 ${m.teams.home} vs ${m.teams.away}\n📅 Kickoff: ${matchTimeStr}\n📍 Arena: ${m.stadium}, ${m.city}\n📺 Broadcasters: ${channels}\n\n👉 Find official streams legal guide at: ${window.location.origin}${window.location.pathname}?match=${m.id}`;
@@ -740,7 +1424,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (countryParam && WORLD_CUP_DATA.countries.some(c => c.code === countryParam)) {
       selectedCountry = countryParam;
       userCountrySelect.value = countryParam;
-      updateLiveMatchBanner();
+      renderFeaturedMatches();
       renderSchedule();
       renderBroadcasters();
       renderRegions();
@@ -773,105 +1457,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }, 4000);
           }
         }, 500);
-      }
-    }
-  }
-
-  // --- Dynamic Live Match Simulation ---
-  function tickSimulation() {
-    // Use real system time
-    simulatedTime = new Date();
-    
-    // Germany vs Curacao (Match ID: 4) starts at 17:00:00 UTC = 10:30 PM IST
-    const matchStart = new Date("2026-06-14T17:00:00Z");
-    const diffMs = simulatedTime - matchStart;
-    const diffMins = Math.floor(diffMs / 60000);
-    
-    let isLive = false;
-    let matchMinuteStr = "";
-    let score = { home: 0, away: 0 };
-    let events = [];
-
-    if (diffMins >= 0 && diffMins <= 105) {
-      isLive = true;
-      if (diffMins <= 45) {
-        matchMinuteStr = `${diffMins}'`;
-      } else if (diffMins > 45 && diffMins <= 60) {
-        matchMinuteStr = "HT";
-      } else {
-        const gameMin = diffMins - 15;
-        matchMinuteStr = gameMin <= 90 ? `${gameMin}'` : "90+'";
-      }
-
-      const gameMin = diffMins <= 45 ? diffMins : (diffMins > 60 ? diffMins - 15 : 45);
-      if (gameMin >= 12) {
-        score.home = 1;
-        events.push("⚽ 12' GOAL! T. Müller (GER)");
-      }
-      if (gameMin >= 28) {
-        events.push("🟨 28' Yellow Card: J. Bacuna (CUW)");
-      }
-      if (gameMin >= 52) {
-        score.home = 2;
-        events.push("⚽ 52' GOAL! J. Musiala (GER)");
-      }
-      if (gameMin >= 75) {
-        score.away = 1;
-        events.push("⚽ 75' GOAL! J. Janga (CUW)");
-      }
-      if (gameMin >= 88) {
-        events.push("🟨 88' Yellow Card: A. Rüdiger (GER)");
-      }
-    } else if (diffMins > 105) {
-      score.home = 2;
-      score.away = 1;
-      matchMinuteStr = "FT";
-      events = [
-        "⚽ 12' GOAL! T. Müller (GER)",
-        "🟨 28' Yellow Card: J. Bacuna (CUW)",
-        "⚽ 52' GOAL! J. Musiala (GER)",
-        "⚽ 75' GOAL! J. Janga (CUW)",
-        "🟨 88' Yellow Card: A. Rüdiger (GER)"
-      ];
-    }
-
-    // Call banner update so the top section keeps in sync
-    updateLiveMatchBanner();
-
-    // Update Match Card values (Match 4)
-    const scoreHomeEl = document.getElementById("score-home-4");
-    const scoreAwayEl = document.getElementById("score-away-4");
-    const telemetryEl = document.getElementById("live-telemetry-4");
-
-    if (scoreHomeEl && scoreAwayEl) {
-      if (isLive || diffMins > 105) {
-        scoreHomeEl.textContent = score.home;
-        scoreAwayEl.textContent = score.away;
-      } else {
-        scoreHomeEl.textContent = "-";
-        scoreAwayEl.textContent = "-";
-      }
-    }
-
-    if (telemetryEl) {
-      if (isLive || diffMins > 105) {
-        telemetryEl.style.display = "flex";
-        let eventsHTML = `
-          <div class="live-minute-badge-card">
-            <span>🔴</span> ${isLive ? 'Live ' + matchMinuteStr : 'Full Time (FT)'}
-          </div>
-        `;
-        if (events.length > 0) {
-          const displayEvents = [...events].reverse().slice(0, 3);
-          displayEvents.forEach(evt => {
-            eventsHTML += `<div class="live-event-item">${evt}</div>`;
-          });
-        } else {
-          eventsHTML += `<div class="live-event-item" style="font-style:italic;color:var(--text-muted)">Game underway. Waiting for events...</div>`;
-        }
-        telemetryEl.innerHTML = eventsHTML;
-      } else {
-        telemetryEl.style.display = "none";
       }
     }
   }

@@ -52,18 +52,14 @@
       <h1>Watch the <span>FIFA World Cup 2026</span> Legally</h1>
       <p>Discover free-to-air channels, free official streaming platforms, and subscription networks broadcast matches in your country. Zero pirated streams, 100% legal viewing.</p>
 
-      <!-- Live / Next Match Banner Alert -->
-      <div class="live-match-banner" id="live-match-banner">
-        <!-- Populate Dynamically based on current simulated time June 14, 2026 -->
-        <div style="display: flex; align-items: center; gap: 1rem;">
-          <div class="live-badge">Live Now</div>
-          <div class="banner-match-info">
-            <div class="banner-match-teams" id="banner-match-teams">Loading live match...</div>
-            <div class="banner-match-details" id="banner-match-stadium"></div>
+      <!-- Featured Matches (Today & Tomorrow) -->
+      <div class="featured-matches-section">
+        <h2 class="featured-section-title">Today & Tomorrow's Fixtures</h2>
+        <div class="featured-matches-scroll" id="featured-matches-scroll">
+          <!-- Dynamically populated horizontal scroll of cards -->
+          <div style="color: var(--text-muted); font-size: 0.9rem; padding: 1.5rem; text-align: center; width: 100%;">
+            Loading featured matches...
           </div>
-        </div>
-        <div class="banner-broadcasters" id="banner-match-actions">
-          <!-- Dynamic Links -->
         </div>
       </div>
     </div>
@@ -102,6 +98,15 @@
           <select id="schedule-stage">
             <option value="all">All Stages</option>
             <option value="Group Stage">Group Stage</option>
+          </select>
+        </div>
+
+        <!-- Filter Date -->
+        <div class="filter-group">
+          <label for="schedule-date">Filter by Date</label>
+          <select id="schedule-date">
+            <option value="all">All Dates</option>
+            <!-- Dynamically populated -->
           </select>
         </div>
 
@@ -226,6 +231,79 @@
       <div class="share-actions">
         <button class="btn-primary" id="btn-copy-clipboard">Copy Broadcast Card</button>
         <button class="btn-secondary" id="btn-copy-link">Copy Web Link</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Match Details Modal -->
+  <div class="modal-overlay" id="match-details-modal">
+    <div class="modal-content match-details-content">
+      <button class="modal-close" id="details-close-btn" aria-label="Close modal">&times;</button>
+      
+      <!-- Modal Header: Teams & Score -->
+      <div class="details-modal-header">
+        <div class="details-team-display">
+          <div class="details-team home">
+            <span class="details-flag" id="details-home-flag">🏳️</span>
+            <span class="details-team-name" id="details-home-name">Home Team</span>
+          </div>
+          <div class="details-score-wrap">
+            <span class="details-score" id="details-score-home">-</span>
+            <span class="details-score-divider">:</span>
+            <span class="details-score" id="details-score-away">-</span>
+          </div>
+          <div class="details-team away">
+            <span class="details-team-name" id="details-away-name">Away Team</span>
+            <span class="details-flag" id="details-away-flag">🏳️</span>
+          </div>
+        </div>
+        <div class="details-match-status" id="details-match-status">Upcoming</div>
+      </div>
+      
+      <!-- Modal Body -->
+      <div class="details-modal-body">
+        <!-- Tab system inside modal -->
+        <div class="modal-tabs">
+          <button class="modal-tab-btn active" data-modal-tab="timeline">⚡ Match Feed</button>
+          <button class="modal-tab-btn" data-modal-tab="broadcasters">📺 Where to Watch</button>
+          <button class="modal-tab-btn" data-modal-tab="info">📍 Match Info</button>
+        </div>
+        
+        <!-- Tab Content 1: Timeline -->
+        <div class="modal-tab-view active" id="modal-tab-view-timeline">
+          <div class="timeline-feed" id="details-timeline-feed">
+            <!-- Timeline events -->
+          </div>
+        </div>
+        
+        <!-- Tab Content 2: Broadcasters -->
+        <div class="modal-tab-view" id="modal-tab-view-broadcasters">
+          <div class="details-broadcasters-list" id="details-broadcasters-list">
+            <!-- Broadcasters dynamic links -->
+          </div>
+        </div>
+        
+        <!-- Tab Content 3: Match Info -->
+        <div class="modal-tab-view" id="modal-tab-view-info">
+          <div class="details-info-grid">
+            <div class="info-item">
+              <span class="info-label">Tournament Stage</span>
+              <span class="info-value" id="details-info-stage">-</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Stadium</span>
+              <span class="info-value" id="details-info-stadium">-</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">City</span>
+              <span class="info-value" id="details-info-city">-</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Kickoff Time</span>
+              <span class="info-value" id="details-info-time">-</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
