@@ -783,7 +783,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const minute = minMatch ? parseInt(minMatch[0]) : 15;
         events.push({
           minute: minute,
-          minuteLabel: "GOAL",
           title: `GOAL! ${match.teams.home} ⚽`,
           desc: `${s} scores for the hosts!`,
           marker: "⚽"
@@ -798,7 +797,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const minute = minMatch ? parseInt(minMatch[0]) : 25;
         events.push({
           minute: minute,
-          minuteLabel: "GOAL",
           title: `GOAL! ${match.teams.away} ⚽`,
           desc: `${s} scores for the visitors!`,
           marker: "⚽"
@@ -827,18 +825,14 @@ document.addEventListener("DOMContentLoaded", () => {
       const liveStatusEvent = {
         minute: currentMin || "",
         minuteLabel: currentMin === null ? "LIVE" : null,
-        title: currentMin === null ? "Match Live" : "Ongoing Live Action ⚡",
+        title: currentMin === null ? "⏱️ Match Live" : "Ongoing Live Action ⚡",
         desc: currentMin === null
           ? "The API marks this match as live, but it has not published the current clock minute. Goal events above are official API updates."
           : `Currently in the ${formatLiveMinute(match)} minute. Follow live streams for full coverage.`,
         marker: "⏱️"
       };
 
-      if (currentMin === null) {
-        liveEvents.unshift(liveStatusEvent);
-      } else {
-        liveEvents.push(liveStatusEvent);
-      }
+      liveEvents.push(liveStatusEvent);
       
       renderTimelineList(liveEvents);
     } else {
