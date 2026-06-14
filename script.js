@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let favorites = JSON.parse(localStorage.getItem("wc2026_favorites")) || [];
   let apiDataLoaded = false;
   let currentDetailsMatchId = null;
+  let lineupsLoadedMatchId = null;
   
   // Resolved API data (team ID → team object, stadium ID → stadium object)
   let teamsMap = {};
@@ -67,6 +68,41 @@ document.addEventListener("DOMContentLoaded", () => {
   const detailsInfoStadium = document.getElementById("details-info-stadium");
   const detailsInfoCity = document.getElementById("details-info-city");
   const detailsInfoTime = document.getElementById("details-info-time");
+  const detailsLineupsContainer = document.getElementById("details-lineups-container");
+
+  const THE_SPORTSDB_API_KEY = "123";
+  const SPORTSDB_API_BASE = `https://www.thesportsdb.com/api/v1/json/${THE_SPORTSDB_API_KEY}`;
+  const teamSearchCache = {};
+  const teamRosterCache = {};
+  const SPORTSDB_TEAM_NAME_OVERRIDES = {
+    "Korea Republic": "South Korea",
+    "Korea DPR": "North Korea",
+    "United States": "USA",
+    "Côte d'Ivoire": "Ivory Coast",
+    "Republic of Ireland": "Ireland",
+    "DR Congo": "Congo DR",
+    "United Arab Emirates": "UAE",
+    "Saint Kitts and Nevis": "St Kitts and Nevis",
+    "Trinidad and Tobago": "Trinidad & Tobago",
+    "Bosnia and Herzegovina": "Bosnia-Herzegovina",
+    "Chinese Taipei": "Taiwan",
+    "Curaçao": "Curacao",
+    "Curacao": "Curacao",
+    "Hong Kong SAR": "Hong Kong",
+    "Guinea Bissau": "Guinea-Bissau",
+    "Guinea-Bissau": "Guinea-Bissau",
+    "Solomon Islands": "Solomon Islands",
+    "Saint Vincent and the Grenadines": "St Vincent & The Grenadines",
+    "Antigua and Barbuda": "Antigua and Barbuda",
+    "Saint Lucia": "St Lucia",
+    "Sao Tome and Principe": "Sao Tome & Principe",
+    "Czech Republic": "Czech Republic"
+  };
+
+  // Debug: Check if all elements are found
+  console.log("✅ DOM Elements Loaded:");
+  console.log("  - detailsLineupsContainer:", detailsLineupsContainer ? "✓ Found" : "✗ NOT FOUND");
+  console.log("  - matchDetailsModal:", matchDetailsModal ? "✓ Found" : "✗ NOT FOUND");
 
   // Schedule filters
   const scheduleSearch = document.getElementById("schedule-search");
@@ -183,9 +219,9 @@ document.addEventListener("DOMContentLoaded", () => {
   async function fetchAllAPIData() {
     try {
       const [gamesRes, teamsRes, stadiumsRes] = await Promise.all([
-        fetch(WORLD_CUP_DATA.api.games),
-        fetch(WORLD_CUP_DATA.api.teams),
-        fetch(WORLD_CUP_DATA.api.stadiums)
+        fetchWithRetry(WORLD_CUP_DATA.api.games),
+        fetchWithRetry(WORLD_CUP_DATA.api.teams),
+        fetchWithRetry(WORLD_CUP_DATA.api.stadiums)
       ]);
 
       if (!gamesRes.ok || !teamsRes.ok || !stadiumsRes.ok) {
@@ -269,10 +305,43 @@ document.addEventListener("DOMContentLoaded", () => {
       matchCardsGrid.innerHTML = `
         <div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-muted);">
           <p style="color: #ef4444; font-weight: 600;">⚠️ Could not load live data</p>
-          <p style="margin-top: 0.5rem;">Failed to connect to worldcup26.ir API. Please check your internet connection and refresh.</p>
-          <button onclick="location.reload()" style="margin-top: 1rem; padding: 0.5rem 1.5rem; background: var(--accent-color); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">Retry</button>
+          <p style="margin-top: 0.5rem;">Failed to connect to worldcup26.ir API. Please check your internet connection and retry.</p>
+          <button id="retry-api-load" style="margin-top: 1rem; padding: 0.5rem 1.5rem; background: var(--accent-color); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">Retry</button>
         </div>
       `;
+
+      const retryBtn = document.getElementById("retry-api-load");
+      if (retryBtn) {
+        retryBtn.addEventListener("click", async () => {
+          await retryInitialDataLoad();
+        });
+      }
+    }
+  }
+
+  async function retryInitialDataLoad() {
+    if (matchCardsGrid) {
+      matchCardsGrid.innerHTML = `
+        <div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-muted);">
+          <div class="api-loading-spinner"></div>
+          <p style="margin-top: 1rem;">Retrying live match data...</p>
+        </div>
+      `;
+    }
+    if (featuredMatchesScroll) {
+      featuredMatchesScroll.innerHTML = `
+        <div style="color: var(--text-muted); font-size: 0.9rem; padding: 1.5rem; text-align: center; width: 100%;">
+          Retrying live matches...
+        </div>
+      `;
+    }
+
+    await fetchAllAPIData();
+    if (apiDataLoaded) {
+      populateDateSelector();
+      renderFeaturedMatches();
+      renderSchedule();
+      checkQueryParameters();
     }
   }
 
@@ -308,6 +377,39 @@ document.addEventListener("DOMContentLoaded", () => {
       console.warn("Could not parse date:", dateStr);
       return null;
     }
+  }
+
+  function wait(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  async function fetchWithRetry(resource, init = {}, retries = 3, retryDelay = 600) {
+    let attempt = 0;
+    let lastError = null;
+
+    while (attempt <= retries) {
+      try {
+        const response = await fetch(resource, init);
+        if (response.ok) {
+          return response;
+        }
+
+        if (attempt === retries || (response.status < 500 && response.status !== 429)) {
+          return response;
+        }
+
+        lastError = new Error(`Fetch failed with status ${response.status}`);
+      } catch (error) {
+        lastError = error;
+      }
+
+      const delay = retryDelay * Math.pow(2, attempt);
+      console.warn(`Retrying fetch (${attempt + 1}/${retries}) for ${resource} in ${delay}ms`);
+      await wait(delay);
+      attempt += 1;
+    }
+
+    throw lastError || new Error("Fetch failed after retries");
   }
 
   function getTimeElapsedValue(match) {
@@ -353,7 +455,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Refresh only game data (scores, status) periodically
   async function refreshLiveData() {
     try {
-      const res = await fetch(WORLD_CUP_DATA.api.games);
+      const res = await fetchWithRetry(WORLD_CUP_DATA.api.games);
       if (!res.ok) return;
       const data = await res.json();
       
@@ -381,6 +483,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (activeMatch) {
           updateMatchDetailsContent(activeMatch);
           generateMatchTimeline(activeMatch);
+          renderMatchLineups(activeMatch);
         }
       }
       console.log("🔄 Live data refreshed at", new Date().toLocaleTimeString());
@@ -515,7 +618,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Details Modal Tab Switching
     const modalTabButtons = document.querySelectorAll(".modal-tab-btn");
     modalTabButtons.forEach(btn => {
-      btn.addEventListener("click", () => {
+      btn.addEventListener("click", async () => {
         modalTabButtons.forEach(b => b.classList.remove("active"));
         document.querySelectorAll(".modal-tab-view").forEach(v => v.classList.remove("active"));
         
@@ -523,6 +626,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const targetView = document.getElementById(`modal-tab-view-${btn.dataset.modalTab}`);
         if (targetView) {
           targetView.classList.add("active");
+        }
+
+        if (btn.dataset.modalTab === "lineups" && currentDetailsMatchId !== null && lineupsLoadedMatchId !== currentDetailsMatchId) {
+          const activeMatch = WORLD_CUP_DATA.matches.find(m => m.id === currentDetailsMatchId);
+          if (activeMatch) {
+            await renderMatchLineups(activeMatch);
+            lineupsLoadedMatchId = currentDetailsMatchId;
+          }
         }
       });
     });
@@ -669,7 +780,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // --- Match Details Modal Open & timeline builders ---
-  window.openMatchDetails = function(matchId) {
+  window.openMatchDetails = async function(matchId) {
     const match = WORLD_CUP_DATA.matches.find(m => m.id === matchId);
     if (!match) return;
 
@@ -679,14 +790,17 @@ document.addEventListener("DOMContentLoaded", () => {
     // Timeline Builder
     generateMatchTimeline(match);
 
+    // Open modal early so the user sees content while lineups load only on demand
     const tabs = document.querySelectorAll(".modal-tab-btn");
     tabs.forEach(t => t.classList.remove("active"));
     document.querySelector('[data-modal-tab="timeline"]').classList.add("active");
     
     document.querySelectorAll(".modal-tab-view").forEach(v => v.classList.remove("active"));
     document.getElementById("modal-tab-view-timeline").classList.add("active");
-
     matchDetailsModal.classList.add("active");
+
+    detailsLineupsContainer.innerHTML = "";
+    lineupsLoadedMatchId = null;
   };
 
   function updateMatchDetailsContent(match) {
@@ -749,6 +863,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function hideMatchDetailsModal() {
     matchDetailsModal.classList.remove("active");
     currentDetailsMatchId = null;
+    lineupsLoadedMatchId = null;
   }
 
   function generateMatchTimeline(match) {
@@ -854,6 +969,144 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
       detailsTimelineFeed.appendChild(div);
     });
+  }
+
+  function normalizeSportsDBTeamName(teamName) {
+    return SPORTSDB_TEAM_NAME_OVERRIDES[teamName] || teamName;
+  }
+
+  async function fetchSportsDBTeamId(teamName) {
+    const normalized = normalizeSportsDBTeamName(teamName);
+    if (teamSearchCache[normalized] !== undefined) {
+      return teamSearchCache[normalized];
+    }
+
+    try {
+      const res = await fetchWithRetry(`${SPORTSDB_API_BASE}/searchteams.php?t=${encodeURIComponent(normalized)}`);
+      if (!res.ok) {
+        console.warn("TheSportsDB team lookup failed", normalized, res.status);
+        teamSearchCache[normalized] = null;
+        return null;
+      }
+
+      const data = await res.json();
+      const teams = data.teams || [];
+      const foundTeam = teams.find(t => t.strTeam.toLowerCase() === normalized.toLowerCase()) || teams[0];
+      const teamId = foundTeam ? foundTeam.idTeam : null;
+      teamSearchCache[normalized] = teamId;
+      return teamId;
+    } catch (error) {
+      console.warn("TheSportsDB team lookup error", normalized, error);
+      teamSearchCache[normalized] = null;
+      return null;
+    }
+  }
+
+  async function fetchSportsDBPlayersForTeam(teamName) {
+    const teamId = await fetchSportsDBTeamId(teamName);
+    if (!teamId) return null;
+    if (teamRosterCache[teamId]) return teamRosterCache[teamId];
+
+    try {
+      const res = await fetchWithRetry(`${SPORTSDB_API_BASE}/lookup_all_players.php?id=${teamId}`);
+      if (!res.ok) {
+        console.warn("TheSportsDB roster lookup failed", teamId, res.status);
+        teamRosterCache[teamId] = null;
+        return null;
+      }
+
+      const data = await res.json();
+      const players = (data.player || []).filter(p => p.strPlayer && p.strPosition);
+      teamRosterCache[teamId] = players;
+      return players;
+    } catch (error) {
+      console.warn("TheSportsDB roster lookup error", teamId, error);
+      teamRosterCache[teamId] = null;
+      return null;
+    }
+  }
+
+  function buildLineupHtml(teamName, players) {
+    if (!players || players.length === 0) {
+      return `
+        <div class="lineup-team-block">
+          <h4 class="lineup-team-title">${teamName}</h4>
+          <div class="lineup-empty">No lineup data found for ${teamName}.</div>
+        </div>
+      `;
+    }
+
+    const playerRows = players.slice(0, 22).map(player => `
+      <div class="lineup-player-row">
+        <span>${player.strPlayer}</span>
+        <span>${player.strPosition || "Unknown"}</span>
+      </div>
+    `).join("");
+
+    return `
+      <div class="lineup-team-block">
+        <h4 class="lineup-team-title">${teamName}</h4>
+        <div class="lineup-player-list">${playerRows}</div>
+      </div>
+    `;
+  }
+
+  async function renderMatchLineups(match) {
+    if (!detailsLineupsContainer) {
+      console.error("❌ detailsLineupsContainer element not found!");
+      return;
+    }
+
+    const isLive = isMatchLive(match);
+    const hasStarted = isLive || match.finished;
+
+    detailsLineupsContainer.innerHTML = `
+      <div class="lineups-loading-indicator">
+        <div class="lineups-spinner"></div>
+        <div>
+          <p>🔄 Loading lineups from TheSportsDB...</p>
+        </div>
+      </div>
+    `;
+
+    if (!hasStarted) {
+      detailsLineupsContainer.innerHTML = `
+        <div style="text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.9rem;">
+          <p>🗂️ Lineups not yet available</p>
+          <p style="margin-top: 0.5rem; font-size: 0.8rem;">Official team sheets appear after kickoff.</p>
+        </div>
+      `;
+      return;
+    }
+
+    let homePlayers = null;
+    let awayPlayers = null;
+
+    try {
+      [homePlayers, awayPlayers] = await Promise.all([
+        fetchSportsDBPlayersForTeam(match.teams.home),
+        fetchSportsDBPlayersForTeam(match.teams.away)
+      ]);
+    } catch (error) {
+      console.warn("Lineups fetch failed", error);
+      detailsLineupsContainer.innerHTML = `
+        <div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:0.95rem;">
+          <p>⚠️ Unable to load lineups right now.</p>
+          <p style="margin-top:0.5rem;font-size:0.85rem;">Please refresh the match details or try again later.</p>
+        </div>
+      `;
+      return;
+    }
+
+    detailsLineupsContainer.innerHTML = `
+      <div class="details-lineups-grid">
+        ${buildLineupHtml(match.teams.home, homePlayers)}
+        ${buildLineupHtml(match.teams.away, awayPlayers)}
+      </div>
+      <div style="text-align: center; margin-top: 1rem; font-size: 0.8rem; color: var(--text-muted);">
+        ℹ️ Lineups fetched from TheSportsDB with API key ${THE_SPORTSDB_API_KEY}.
+      </div>
+    `;
   }
 
   // --- Helper: Get broadcasters covering a specific country ---

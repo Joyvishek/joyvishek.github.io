@@ -270,6 +270,7 @@
         <!-- Tab system inside modal -->
         <div class="modal-tabs">
           <button class="modal-tab-btn active" data-modal-tab="timeline">⚡ Match Feed</button>
+          <button class="modal-tab-btn" data-modal-tab="lineups">👥 Lineups</button>
           <button class="modal-tab-btn" data-modal-tab="broadcasters">📺 Where to Watch</button>
           <button class="modal-tab-btn" data-modal-tab="info">📍 Match Info</button>
         </div>
@@ -281,14 +282,21 @@
           </div>
         </div>
         
-        <!-- Tab Content 2: Broadcasters -->
+        <!-- Tab Content 2: Lineups -->
+        <div class="modal-tab-view" id="modal-tab-view-lineups">
+          <div class="details-lineups-container" id="details-lineups-container">
+            <!-- Lineups will be populated here -->
+          </div>
+        </div>
+        
+        <!-- Tab Content 3: Broadcasters -->
         <div class="modal-tab-view" id="modal-tab-view-broadcasters">
           <div class="details-broadcasters-list" id="details-broadcasters-list">
             <!-- Broadcasters dynamic links -->
           </div>
         </div>
         
-        <!-- Tab Content 3: Match Info -->
+        <!-- Tab Content 4: Match Info -->
         <div class="modal-tab-view" id="modal-tab-view-info">
           <div class="details-info-grid">
             <div class="info-item">
