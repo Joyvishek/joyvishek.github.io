@@ -151,13 +151,14 @@ document.addEventListener("DOMContentLoaded", () => {
     matchCardsGrid.innerHTML = `
       <div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-muted);">
         <div class="api-loading-spinner"></div>
-        <p style="margin-top: 1rem;">Loading live match data from worldcup26.ir...</p>
+        <p style="margin-top: 1rem;">Loading live match data</p>
       </div>
     `;
     if (featuredMatchesScroll) {
       featuredMatchesScroll.innerHTML = `
-        <div style="color: var(--text-muted); font-size: 0.9rem; padding: 1.5rem; text-align: center; width: 100%;">
-          Loading live matches...
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); font-size: 0.9rem; padding: 1.5rem; text-align: center; width: 100%; gap: 0.75rem;">
+          <div class="api-loading-spinner"></div>
+          <span>Loading live matches</span>
         </div>
       `;
     }
