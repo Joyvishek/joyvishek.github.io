@@ -1,33 +1,264 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Joyvishek</title>
-    <link href="assets/img/icon.png" rel="icon">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-        }
-        .imgbox {
-            display: grid;
-            height: 100%;
-            background-color: #000;
-        }
-        .center-fit {
-            max-width: 100%;
-            max-height: 100vh;
-            margin: auto;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>FIFA World Cup 2026 Broadcaster & Viewing Guide | Official Free & Paid Channels</title>
+  <meta name="description" content="Discover legal broadcasters, free-to-air channels, free streaming platforms, and subscription channels carrying the FIFA World Cup 2026 worldwide. Local timezone scheduling included.">
+  <meta name="keywords" content="FIFA World Cup 2026, Broadcasters, Free to Air, Streaming, Match Schedule, Free Channels">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="imgbox">
-        <a class="center-fit" download="joyvishek_cv.pdf" href="assets/img/joyvishek_2022.pdf" target="_blank">
-            <img class="center-fit" src='assets/img/resume.png'>
-        </a>
+
+  <!-- Header Section -->
+  <header>
+    <div class="container nav-container">
+      <a href="#" class="logo-section" id="brand-logo">
+        <!-- Custom Pitch/Globe/Trophy SVG Icon -->
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+          <path d="M12 2C14.5 5 14.5 19 12 22M12 2C9.5 5 9.5 19 12 22" stroke="currentColor" stroke-width="2" />
+          <path d="M2.5 9H21.5M2.5 15H21.5" stroke="currentColor" stroke-width="2" />
+          <circle cx="12" cy="12" r="3" fill="var(--accent-color)" />
+        </svg>
+        <span class="logo-text">KICKOFF 26</span>
+      </a>
+
+      <div class="nav-actions">
+        <!-- Country Selector (Dynamic List) -->
+        <div class="country-selector-wrap">
+          <span>🌍</span>
+          <select id="user-country-select" aria-label="Select Country">
+            <!-- Dynamically populated -->
+          </select>
+        </div>
+
+        <!-- Theme Toggle -->
+        <button class="theme-toggle-btn" id="theme-toggle" title="Toggle Light/Dark Theme">
+          <span class="toggle-icon">🌙</span>
+        </button>
+      </div>
     </div>
+  </header>
+
+  <!-- Hero / Tournament Overview Section -->
+  <section class="hero">
+    <div class="hero-overlay-div"></div>
+    <div class="container hero-content">
+      <span class="hero-badge">🏆 Official Broadcaster Portal</span>
+      <h1>Watch the <span>FIFA World Cup 2026</span> Legally</h1>
+      <p>Discover free-to-air channels, free official streaming platforms, and subscription networks broadcast matches in your country. Zero pirated streams, 100% legal viewing.</p>
+
+      <!-- Live / Next Match Banner Alert -->
+      <div class="live-match-banner" id="live-match-banner">
+        <!-- Populate Dynamically based on current simulated time June 14, 2026 -->
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <div class="live-badge">Live Now</div>
+          <div class="banner-match-info">
+            <div class="banner-match-teams" id="banner-match-teams">Loading live match...</div>
+            <div class="banner-match-details" id="banner-match-stadium"></div>
+          </div>
+        </div>
+        <div class="banner-broadcasters" id="banner-match-actions">
+          <!-- Dynamic Links -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main class="container">
+    
+    <!-- Application Tabs Nav -->
+    <nav class="tabs-nav" aria-label="Portal Navigation Tabs">
+      <button class="tab-btn active" data-tab="schedule">
+        📅 Match Schedule
+      </button>
+      <button class="tab-btn" data-tab="broadcasters">
+        📺 Broadcaster Guide
+      </button>
+      <button class="tab-btn" data-tab="regions">
+        🌍 Regional Explorer
+      </button>
+      <button class="tab-btn" data-tab="comparison">
+        📊 Compare Services
+      </button>
+    </nav>
+
+    <!-- Tab 1: Match Schedule Dashboard -->
+    <section id="tab-view-schedule" class="app-view active">
+      <div class="filter-bar">
+        <!-- Search -->
+        <div class="filter-group">
+          <label for="schedule-search">Search Match or Team</label>
+          <input type="text" id="schedule-search" placeholder="Type team name, city...">
+        </div>
+
+        <!-- Filter Stage -->
+        <div class="filter-group">
+          <label for="schedule-stage">Tournament Stage</label>
+          <select id="schedule-stage">
+            <option value="all">All Stages</option>
+            <option value="Group Stage">Group Stage</option>
+          </select>
+        </div>
+
+        <!-- Timezone Selector -->
+        <div class="filter-group" style="min-width: 140px; flex: 0 0 auto;">
+          <label>Timezone Display</label>
+          <div class="time-mode-selector">
+            <button class="time-mode-btn active" id="time-btn-local">My Local</button>
+            <button class="time-mode-btn" id="time-btn-stadium">Stadium</button>
+          </div>
+        </div>
+
+        <!-- Bookmarked Filter -->
+        <div class="filter-group" style="min-width: 140px; flex: 0 0 auto;">
+          <label>Favorites</label>
+          <select id="schedule-favorites-filter">
+            <option value="all">Show All</option>
+            <option value="favorites">Favorites Only (⭐)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Match Cards Grid -->
+      <div class="match-grid" id="match-cards-grid">
+        <!-- Dynamically filled -->
+      </div>
+    </section>
+
+    <!-- Tab 2: Broadcaster Directory -->
+    <section id="tab-view-broadcasters" class="app-view">
+      <div class="filter-bar">
+        <!-- Search -->
+        <div class="filter-group">
+          <label for="broadcaster-search">Search Broadcasters</label>
+          <input type="text" id="broadcaster-search" placeholder="Type network name...">
+        </div>
+
+        <!-- Access Type Filter -->
+        <div class="filter-group">
+          <label for="broadcaster-access">Access Level</label>
+          <select id="broadcaster-access">
+            <option value="all">All Access Types</option>
+            <option value="free">Free & Free-to-Air Only</option>
+            <option value="paid">Subscription/Paid Only</option>
+          </select>
+        </div>
+
+        <!-- Medium Type Filter -->
+        <div class="filter-group">
+          <label for="broadcaster-medium">Platform Medium</label>
+          <select id="broadcaster-medium">
+            <option value="all">All Platforms</option>
+            <option value="TV">Television (TV)</option>
+            <option value="Web">Web Streaming</option>
+            <option value="App">Mobile/Smart App</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Grid of Broadcaster Cards -->
+      <div class="broadcaster-grid" id="broadcaster-cards-grid">
+        <!-- Dynamically filled -->
+      </div>
+    </section>
+
+    <!-- Tab 3: Regional Broadcaster Explorer -->
+    <section id="tab-view-regions" class="app-view">
+      <div class="region-guide-section">
+        <div class="region-explore-panels">
+          <!-- Left: Region list buttons -->
+          <div class="region-list-panel" id="regions-list-panel">
+            <!-- Populated via script.js -->
+          </div>
+
+          <!-- Right: Details of selected region -->
+          <div class="region-details-panel" id="region-details-panel">
+            <!-- Dynamic output -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 4: Broadcaster Comparison Guide -->
+    <section id="tab-view-comparison" class="app-view">
+      <div class="comparison-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Broadcaster</th>
+              <th>Primary Countries</th>
+              <th>Access Tier</th>
+              <th>Cost Model</th>
+              <th>Platforms Supported</th>
+              <th>Key Languages</th>
+              <th>Official Portal</th>
+            </tr>
+          </thead>
+          <tbody id="comparison-table-body">
+            <!-- Table rows populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Share Match Details Modal -->
+  <div class="modal-overlay" id="share-modal-overlay">
+    <div class="modal-content">
+      <button class="modal-close" id="modal-close-btn" aria-label="Close modal">&times;</button>
+      <h3 class="modal-title">Share Match Broadcast Info</h3>
+      
+      <div class="share-card-preview">
+        <div class="share-title" id="share-modal-match-title">USA vs Germany</div>
+        <div class="share-details" id="share-modal-match-details">
+          Date: June 14, 2026<br>
+          Kickoff: 12:00 PM CDT<br>
+          Official Streams: FOX Sports (US), BBC (UK), SBS (Australia).
+        </div>
+      </div>
+
+      <div class="share-actions">
+        <button class="btn-primary" id="btn-copy-clipboard">Copy Broadcast Card</button>
+        <button class="btn-secondary" id="btn-copy-link">Copy Web Link</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification System -->
+  <div class="toast" id="toast-notify">Copied to clipboard!</div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-col">
+        <h3>FIFA World Cup 2026 Portal</h3>
+        <p>Your ultimate viewing map for the 23rd edition of the World Cup in Canada, Mexico, and the United States. Supporting clean, legal streaming and local broadcasting rights.</p>
+      </div>
+      <div class="footer-col">
+        <h3>Official Resources</h3>
+        <ul class="footer-links">
+          <li><a href="https://www.fifa.com" target="_blank" rel="noopener noreferrer">Official FIFA Website</a></li>
+          <li><a href="https://www.fifa.com/fifaplus" target="_blank" rel="noopener noreferrer">FIFA+ Stream Portal</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>Portal Info</h3>
+        <p>No account required. Favorites are stored locally inside your browser's private state storage.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 KICKOFF 26. Built as an open aggregation portal. Broadcaster names and logos are trademarks of their respective owners.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="data.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
