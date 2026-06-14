@@ -474,7 +474,7 @@ const WORLD_CUP_DATA = {
       group: "Group C",
       stadium: "NRG Stadium",
       city: "Houston",
-      datetime: "2026-06-14T14:00:00Z" // Current Day Live Match (26th minute at 14:26:45 UTC)
+      datetime: "2026-06-14T17:00:00Z" // Real kickoff: 12:00 PM CDT / 10:30 PM IST
     },
     {
       id: 5,

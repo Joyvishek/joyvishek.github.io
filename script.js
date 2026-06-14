@@ -1,15 +1,14 @@
 // script.js - FIFA World Cup 2026 Broadcaster Portal Logic
 
 document.addEventListener("DOMContentLoaded", () => {
-  // --- State Variables & Simulation Clock ---
+  // --- State Variables ---
   let selectedCountry = "US";
   let activeTab = "schedule";
   let timezoneDisplayMode = "local"; // 'local' or 'stadium'
   let favorites = JSON.parse(localStorage.getItem("wc2026_favorites")) || [];
   
-  // Ticking simulated time starting at June 14, 2026 (local time 20:06:24 = 14:36:24 UTC)
-  let simulatedTime = new Date("2026-06-14T20:06:24+05:30");
-  const initialRealTime = Date.now();
+  // Use real system time for all live detection
+  let simulatedTime = new Date();
   
   // Hardcoded stadium timezone mappings for realistic offset calculations
   const STADIUM_TIMEZONES = {
@@ -82,8 +81,8 @@ document.addEventListener("DOMContentLoaded", () => {
     renderComparisonTable();
     checkQueryParameters();
     
-    // Start simulation interval (runs every 1.5 seconds, ticking simulated clock 30 seconds forward each tick)
-    setInterval(tickSimulation, 1500);
+    // Update live status every 30 seconds using real system time
+    setInterval(tickSimulation, 30000);
     tickSimulation(); // Initial run
   }
 
@@ -180,26 +179,74 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- Live Match Banner Handler ---
   function updateLiveMatchBanner() {
-    // Find upcoming/live matches relative to Simulated Time
     const matches = WORLD_CUP_DATA.matches;
-    let nextMatch = matches.find(m => new Date(m.datetime) >= simulatedTime);
     
-    // Fallback to the first match if all are in past
-    if (!nextMatch) {
-      nextMatch = matches[matches.length - 1];
+    // 1. Check if there is an ongoing live match
+    let bannerMatch = matches.find(m => {
+      const start = new Date(m.datetime);
+      const end = new Date(start.getTime() + 105 * 60000); // 105 mins duration
+      return simulatedTime >= start && simulatedTime <= end;
+    });
+
+    let isLive = !!bannerMatch;
+    
+    // 2. If no ongoing match, find the next upcoming match
+    if (!bannerMatch) {
+      bannerMatch = matches.find(m => new Date(m.datetime) > simulatedTime);
+    }
+    
+    // 3. Fallback to the last match if all are in past
+    if (!bannerMatch) {
+      bannerMatch = matches[matches.length - 1];
     }
 
-    if (nextMatch) {
-      const isLive = Math.abs(new Date(nextMatch.datetime) - simulatedTime) < 7200000; // within 2 hrs
-      const badgeText = isLive ? "LIVE NOW" : "UPCOMING NEXT";
-      document.querySelector(".live-badge").textContent = badgeText;
-      document.querySelector(".live-badge").style.backgroundColor = isLive ? "#ef4444" : "var(--accent-secondary)";
+    if (bannerMatch) {
+      const start = new Date(bannerMatch.datetime);
+      const diffMins = Math.floor((simulatedTime - start) / 60000);
       
-      bannerMatchTeams.textContent = `${nextMatch.teams.home} vs ${nextMatch.teams.away}`;
+      let badgeText = "UPCOMING NEXT";
+      if (isLive) {
+        if (diffMins <= 45) {
+          badgeText = `LIVE - ${diffMins}'`;
+        } else if (diffMins > 45 && diffMins <= 60) {
+          badgeText = "LIVE - HT";
+        } else {
+          badgeText = `LIVE - ${diffMins - 15}'`;
+        }
+      } else if (simulatedTime > new Date(start.getTime() + 105 * 60000)) {
+        badgeText = "FINISHED";
+      }
+
+      const bannerBadge = document.querySelector(".live-badge");
+      if (bannerBadge) {
+        bannerBadge.textContent = badgeText;
+        bannerBadge.style.backgroundColor = isLive ? "#ef4444" : (badgeText === "FINISHED" ? "var(--text-muted)" : "var(--accent-secondary)");
+      }
       
-      const stadiumInfo = STADIUM_TIMEZONES[nextMatch.city];
-      const matchTime = formatMatchTime(nextMatch.datetime, nextMatch.city);
-      bannerMatchStadium.innerHTML = `📍 ${nextMatch.stadium}, ${nextMatch.city} | Kickoff: <strong>${matchTime}</strong>`;
+      // If live or finished, show score in banner
+      if (isLive || badgeText === "FINISHED") {
+        let homeScore = 0;
+        let awayScore = 0;
+        
+        // If it's our simulated match 4
+        if (bannerMatch.id === 4) {
+          const gameMin = diffMins <= 45 ? diffMins : (diffMins > 60 ? diffMins - 15 : 45);
+          if (diffMins > 105) {
+            homeScore = 2;
+            awayScore = 1;
+          } else {
+            if (gameMin >= 12) homeScore = 1;
+            if (gameMin >= 52) homeScore = 2;
+            if (gameMin >= 75) awayScore = 1;
+          }
+        }
+        bannerMatchTeams.textContent = `${bannerMatch.teams.home} ${homeScore} - ${awayScore} ${bannerMatch.teams.away}`;
+      } else {
+        bannerMatchTeams.textContent = `${bannerMatch.teams.home} vs ${bannerMatch.teams.away}`;
+      }
+      
+      const matchTime = formatMatchTime(bannerMatch.datetime, bannerMatch.city);
+      bannerMatchStadium.innerHTML = `📍 ${bannerMatch.stadium}, ${bannerMatch.city} | Kickoff: <strong>${matchTime}</strong>`;
 
       // Get official broadcaster tags for user selected country
       const channels = getBroadcastersForCountry(selectedCountry);
@@ -732,14 +779,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- Dynamic Live Match Simulation ---
   function tickSimulation() {
-    // Advance simulated time relative to page load time (20x speed for demonstration)
-    const elapsedRealMs = Date.now() - initialRealTime;
-    const simulatedMsOffset = elapsedRealMs * 20; 
-    const baseSimulatedTime = new Date("2026-06-14T20:06:24+05:30");
-    simulatedTime = new Date(baseSimulatedTime.getTime() + simulatedMsOffset);
+    // Use real system time
+    simulatedTime = new Date();
     
-    // Germany vs Curacao (Match ID: 4) starts at 14:00:00 UTC = 19:30:00 IST
-    const matchStart = new Date("2026-06-14T14:00:00Z");
+    // Germany vs Curacao (Match ID: 4) starts at 17:00:00 UTC = 10:30 PM IST
+    const matchStart = new Date("2026-06-14T17:00:00Z");
     const diffMs = simulatedTime - matchStart;
     const diffMins = Math.floor(diffMs / 60000);
     
@@ -791,29 +835,8 @@ document.addEventListener("DOMContentLoaded", () => {
       ];
     }
 
-    // Update Live Banner
-    const bannerBadge = document.querySelector(".live-badge");
-    if (bannerBadge) {
-      if (isLive) {
-        bannerBadge.textContent = `LIVE - ${matchMinuteStr}`;
-        bannerBadge.style.backgroundColor = "#ef4444";
-      } else if (diffMins < 0) {
-        bannerBadge.textContent = "UPCOMING NEXT";
-        bannerBadge.style.backgroundColor = "var(--accent-secondary)";
-      } else {
-        bannerBadge.textContent = "FINISHED";
-        bannerBadge.style.backgroundColor = "var(--text-muted)";
-      }
-    }
-    
-    const bannerTeams = document.getElementById("banner-match-teams");
-    if (bannerTeams) {
-      if (isLive || diffMins > 105) {
-        bannerTeams.textContent = `Germany ${score.home} - ${score.away} Curacao`;
-      } else {
-        bannerTeams.textContent = "Germany vs Curacao";
-      }
-    }
+    // Call banner update so the top section keeps in sync
+    updateLiveMatchBanner();
 
     // Update Match Card values (Match 4)
     const scoreHomeEl = document.getElementById("score-home-4");
