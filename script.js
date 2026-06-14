@@ -3,11 +3,12 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   // --- State Variables ---
-  let selectedCountry = "US";
+  let selectedCountry = "IN";
   let activeTab = "schedule";
   let timezoneDisplayMode = "local"; // 'local' or 'stadium'
   let favorites = JSON.parse(localStorage.getItem("wc2026_favorites")) || [];
   let apiDataLoaded = false;
+  let currentDetailsMatchId = null;
   
   // Resolved API data (team ID → team object, stadium ID → stadium object)
   let teamsMap = {};
@@ -103,6 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- Initialize Application ---
   async function init() {
     setupTheme();
+    initializeCountryPreference();
     populateCountrySelector();
     setupEventListeners();
     renderBroadcasters();
@@ -135,6 +137,46 @@ document.addEventListener("DOMContentLoaded", () => {
     
     // Refresh live data every 60 seconds
     setInterval(refreshLiveData, 60000);
+  }
+
+  function getSupportedCountry(code) {
+    return WORLD_CUP_DATA.countries.find(c => c.code === code);
+  }
+
+  function setSelectedCountry(code, options = {}) {
+    if (!getSupportedCountry(code)) return false;
+
+    selectedCountry = code;
+    if (userCountrySelect) {
+      userCountrySelect.value = code;
+    }
+    if (options.persist) {
+      localStorage.setItem("wc2026_selected_country", code);
+    }
+    return true;
+  }
+
+  function renderCountryScopedViews() {
+    renderFeaturedMatches();
+    renderSchedule();
+    renderBroadcasters();
+    renderRegions();
+  }
+
+  function getCountryParam() {
+    const params = new URLSearchParams(window.location.search);
+    const countryParam = params.get("country");
+    return countryParam ? countryParam.toUpperCase() : "";
+  }
+
+  function initializeCountryPreference() {
+    const countryParam = getCountryParam();
+    if (setSelectedCountry(countryParam)) return;
+
+    const savedCountry = localStorage.getItem("wc2026_selected_country");
+    if (setSelectedCountry(savedCountry)) {
+      return;
+    }
   }
 
   // --- API Data Fetching ---
@@ -268,6 +310,46 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  function getTimeElapsedValue(match) {
+    return String(match.timeElapsed || "").trim().toLowerCase();
+  }
+
+  function isMatchLive(match) {
+    const elapsed = getTimeElapsedValue(match);
+    return Boolean(elapsed && elapsed !== "notstarted" && elapsed !== "finished" && !match.finished);
+  }
+
+  function getLiveMinute(match) {
+    const elapsed = getTimeElapsedValue(match);
+    const explicitMinute = elapsed.match(/\d+/);
+    if (explicitMinute) {
+      return parseInt(explicitMinute[0], 10);
+    }
+
+    return null;
+  }
+
+  function formatLiveMinute(match) {
+    const elapsed = String(match.timeElapsed || "").trim();
+    if (/\d/.test(elapsed)) {
+      return elapsed.includes("'") ? elapsed : `${elapsed}'`;
+    }
+
+    const minute = getLiveMinute(match);
+    if (minute === null) {
+      return "NOW";
+    }
+    if (minute > 90) {
+      return `90+${minute - 90}'`;
+    }
+    return `${minute}'`;
+  }
+
+  function formatLiveStatus(match) {
+    const liveMinute = formatLiveMinute(match);
+    return liveMinute === "NOW" ? "LIVE NOW" : `LIVE - ${liveMinute}`;
+  }
+
   // Refresh only game data (scores, status) periodically
   async function refreshLiveData() {
     try {
@@ -294,6 +376,13 @@ document.addEventListener("DOMContentLoaded", () => {
       // Re-render live elements
       renderFeaturedMatches();
       renderSchedule();
+      if (matchDetailsModal.classList.contains("active") && currentDetailsMatchId !== null) {
+        const activeMatch = WORLD_CUP_DATA.matches.find(m => m.id === currentDetailsMatchId);
+        if (activeMatch) {
+          updateMatchDetailsContent(activeMatch);
+          generateMatchTimeline(activeMatch);
+        }
+      }
       console.log("🔄 Live data refreshed at", new Date().toLocaleTimeString());
     } catch (e) {
       console.warn("Live refresh failed:", e);
@@ -366,11 +455,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function setupEventListeners() {
     // Country Selector Change
     userCountrySelect.addEventListener("change", (e) => {
-      selectedCountry = e.target.value;
-      renderFeaturedMatches();
-      renderSchedule();
-      renderBroadcasters();
-      renderRegions();
+      setSelectedCountry(e.target.value, { persist: true });
+      renderCountryScopedViews();
       showToast(`Switched view to ${WORLD_CUP_DATA.countries.find(c => c.code === selectedCountry).name}`);
     });
 
@@ -466,6 +552,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const tomorrowFormatted = tomorrowStr.split("/")[0] + "/" + tomorrowStr.split("/")[1]; // "06/15"
 
     const featuredMatches = WORLD_CUP_DATA.matches.filter(m => {
+      if (isMatchLive(m)) return true;
       if (!m.datetime) return false;
       const matchDateStr = new Date(m.datetime).toLocaleDateString("en-US", { month: "2-digit", day: "2-digit" }); // e.g. "06/14"
       return matchDateStr === todayFormatted || matchDateStr === tomorrowFormatted;
@@ -474,7 +561,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Sort featured matches: Live (ongoing) first, then Upcoming, then Finished (at the end)
     featuredMatches.sort((a, b) => {
       const getPriority = (match) => {
-        const isLive = match.timeElapsed && match.timeElapsed !== "notstarted" && !match.finished;
+        const isLive = isMatchLive(match);
         const isFinished = match.finished;
         if (isLive) return 1;
         if (!isFinished) return 2; // Upcoming
@@ -508,7 +595,7 @@ document.addEventListener("DOMContentLoaded", () => {
       card.className = "featured-match-card";
       card.setAttribute("onclick", `window.openMatchDetails(${match.id})`);
       
-      const isLive = match.timeElapsed && match.timeElapsed !== "notstarted" && !match.finished;
+      const isLive = isMatchLive(match);
       const isFinished = match.finished;
       const hasStarted = isLive || isFinished;
       
@@ -516,7 +603,7 @@ document.addEventListener("DOMContentLoaded", () => {
       let badgeClass = "upcoming";
       
       if (isLive) {
-        badgeText = `LIVE - ${match.timeElapsed}`;
+        badgeText = formatLiveStatus(match);
         badgeClass = "live";
       } else if (isFinished) {
         badgeText = "FINISHED";
@@ -586,6 +673,23 @@ document.addEventListener("DOMContentLoaded", () => {
     const match = WORLD_CUP_DATA.matches.find(m => m.id === matchId);
     if (!match) return;
 
+    currentDetailsMatchId = matchId;
+    updateMatchDetailsContent(match);
+
+    // Timeline Builder
+    generateMatchTimeline(match);
+
+    const tabs = document.querySelectorAll(".modal-tab-btn");
+    tabs.forEach(t => t.classList.remove("active"));
+    document.querySelector('[data-modal-tab="timeline"]').classList.add("active");
+    
+    document.querySelectorAll(".modal-tab-view").forEach(v => v.classList.remove("active"));
+    document.getElementById("modal-tab-view-timeline").classList.add("active");
+
+    matchDetailsModal.classList.add("active");
+  };
+
+  function updateMatchDetailsContent(match) {
     detailsHomeName.textContent = match.teams.home;
     detailsAwayName.textContent = match.teams.away;
     
@@ -599,7 +703,7 @@ document.addEventListener("DOMContentLoaded", () => {
     detailsHomeFlag.innerHTML = homeFlag;
     detailsAwayFlag.innerHTML = awayFlag;
 
-    const isLive = match.timeElapsed && match.timeElapsed !== "notstarted" && !match.finished;
+    const isLive = isMatchLive(match);
     const hasStarted = isLive || match.finished;
     
     detailsScoreHome.textContent = hasStarted ? match.homeScore : "-";
@@ -607,7 +711,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let statusText = "Upcoming";
     if (isLive) {
-      statusText = `🔴 LIVE - ${match.timeElapsed}`;
+      statusText = `🔴 ${formatLiveStatus(match)}`;
     } else if (match.finished) {
       statusText = "Full Time";
     }
@@ -640,29 +744,18 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       detailsBroadcastersList.innerHTML = `<p style="color:var(--text-muted);font-size:0.9rem;">No broadcasters logged for this region. Check the Regional Explorer tab for details.</p>`;
     }
-
-    // Timeline Builder
-    generateMatchTimeline(match);
-
-    const tabs = document.querySelectorAll(".modal-tab-btn");
-    tabs.forEach(t => t.classList.remove("active"));
-    document.querySelector('[data-modal-tab="timeline"]').classList.add("active");
-    
-    document.querySelectorAll(".modal-tab-view").forEach(v => v.classList.remove("active"));
-    document.getElementById("modal-tab-view-timeline").classList.add("active");
-
-    matchDetailsModal.classList.add("active");
-  };
+  }
 
   function hideMatchDetailsModal() {
     matchDetailsModal.classList.remove("active");
+    currentDetailsMatchId = null;
   }
 
   function generateMatchTimeline(match) {
     detailsTimelineFeed.innerHTML = "";
     
     const events = [];
-    const isLive = match.timeElapsed && match.timeElapsed !== "notstarted" && !match.finished;
+    const isLive = isMatchLive(match);
     const isFinished = match.finished;
     const hasStarted = isLive || isFinished;
 
@@ -690,6 +783,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const minute = minMatch ? parseInt(minMatch[0]) : 15;
         events.push({
           minute: minute,
+          minuteLabel: "GOAL",
           title: `GOAL! ${match.teams.home} ⚽`,
           desc: `${s} scores for the hosts!`,
           marker: "⚽"
@@ -704,51 +798,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const minute = minMatch ? parseInt(minMatch[0]) : 25;
         events.push({
           minute: minute,
+          minuteLabel: "GOAL",
           title: `GOAL! ${match.teams.away} ⚽`,
           desc: `${s} scores for the visitors!`,
           marker: "⚽"
         });
       });
     }
-
-    const seed = match.id;
-    const hcMin = Math.floor(10 + (seed * 17) % 35);
-    events.push({
-      minute: hcMin,
-      title: `Yellow Card - ${match.teams.home} 🟨`,
-      desc: `Caution issued to a home team player for a tactical foul.`,
-      marker: "🟨"
-    });
-
-    const acMin = Math.floor(46 + (seed * 29) % 35);
-    events.push({
-      minute: acMin,
-      title: `Yellow Card - ${match.teams.away} 🟨`,
-      desc: `Booking for a mistimed challenge in the midfield.`,
-      marker: "🟨"
-    });
-
-    events.push({
-      minute: 45,
-      title: "Halftime whistle ⏸️",
-      desc: `Teams head to the dressing rooms. Current Score: ${match.teams.home} ${getScoreAtMinute(match, 45).home} - ${getScoreAtMinute(match, 45).away} ${match.teams.away}`,
-      marker: "⏸️"
-    });
-    
-    events.push({
-      minute: 46,
-      title: "Second half starts ▶️",
-      desc: "Action resumes for the final 45 minutes.",
-      marker: "▶️"
-    });
-
-    const subMin = Math.floor(60 + (seed * 11) % 20);
-    events.push({
-      minute: subMin,
-      title: `Substitution 🔄`,
-      desc: `Tactical changes being made to refresh the squad.`,
-      marker: "🔄"
-    });
 
     if (isFinished) {
       events.push({
@@ -762,45 +818,32 @@ document.addEventListener("DOMContentLoaded", () => {
     events.sort((a, b) => a.minute - b.minute);
 
     if (isLive) {
-      const matchMinStr = match.timeElapsed.replace("'", "");
-      const currentMin = parseInt(matchMinStr) || 45;
+      const currentMin = getLiveMinute(match);
       
-      const liveEvents = events.filter(e => e.minute <= currentMin);
+      const liveEvents = currentMin === null
+        ? events.filter(e => e.minute === 0 || e.title.includes("GOAL!"))
+        : events.filter(e => e.minute <= currentMin);
       
-      liveEvents.push({
-        minute: currentMin,
-        title: "Ongoing Live Action ⚡",
-        desc: `Currently in the ${match.timeElapsed} minute. Follow live streams for full coverage.`,
+      const liveStatusEvent = {
+        minute: currentMin || "",
+        minuteLabel: currentMin === null ? "LIVE" : null,
+        title: currentMin === null ? "Match Live" : "Ongoing Live Action ⚡",
+        desc: currentMin === null
+          ? "The API marks this match as live, but it has not published the current clock minute. Goal events above are official API updates."
+          : `Currently in the ${formatLiveMinute(match)} minute. Follow live streams for full coverage.`,
         marker: "⏱️"
-      });
+      };
+
+      if (currentMin === null) {
+        liveEvents.unshift(liveStatusEvent);
+      } else {
+        liveEvents.push(liveStatusEvent);
+      }
       
       renderTimelineList(liveEvents);
     } else {
       renderTimelineList(events);
     }
-  }
-
-  function getScoreAtMinute(match, minute) {
-    let home = 0;
-    let away = 0;
-    
-    if (match.homeScorers) {
-      const homeList = formatScorers(match.homeScorers).split(", ");
-      homeList.forEach(s => {
-        const minMatch = s.match(/(\d+)/);
-        const m = minMatch ? parseInt(minMatch[0]) : 15;
-        if (m <= minute) home++;
-      });
-    }
-    if (match.awayScorers) {
-      const awayList = formatScorers(match.awayScorers).split(", ");
-      awayList.forEach(s => {
-        const minMatch = s.match(/(\d+)/);
-        const m = minMatch ? parseInt(minMatch[0]) : 25;
-        if (m <= minute) away++;
-      });
-    }
-    return { home, away };
   }
 
   function renderTimelineList(eventList) {
@@ -809,7 +852,7 @@ document.addEventListener("DOMContentLoaded", () => {
       div.className = "timeline-event";
       
       div.innerHTML = `
-        <div class="timeline-event-marker">${e.minute}'</div>
+        <div class="timeline-event-marker">${e.minuteLabel || `${e.minute}'`}</div>
         <div class="timeline-event-content">
           <div class="timeline-event-title">${e.marker} ${e.title}</div>
           <div class="timeline-event-desc">${e.desc}</div>
@@ -943,7 +986,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Sort schedule matches: Live first, then Upcoming, then Finished. Within each, sort chronologically.
     filteredMatches.sort((a, b) => {
       const getPriority = (match) => {
-        const isLive = match.timeElapsed && match.timeElapsed !== "notstarted" && !match.finished;
+        const isLive = isMatchLive(match);
         const isFinished = match.finished;
         if (isLive) return 1;
         if (!isFinished) return 2; // Upcoming
@@ -1009,13 +1052,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Determine match status display
       let statusHTML = "";
-      const now = new Date();
-      const isLive = match.timeElapsed && match.timeElapsed !== "notstarted" && !match.finished;
+      const isLive = isMatchLive(match);
       const isFinished = match.finished;
       const hasStarted = isLive || isFinished;
 
       if (isLive) {
-        statusHTML = `<span class="match-status-badge live">🔴 LIVE ${match.timeElapsed}</span>`;
+        statusHTML = `<span class="match-status-badge live">🔴 ${formatLiveStatus(match)}</span>`;
       } else if (isFinished) {
         statusHTML = `<span class="match-status-badge finished">Full Time</span>`;
       }
@@ -1287,8 +1329,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // Make clickable to switch main app country focus
       box.style.cursor = "pointer";
       box.addEventListener("click", () => {
-        selectedCountry = country.code;
-        userCountrySelect.value = country.code;
+        setSelectedCountry(country.code, { persist: true });
         renderFeaturedMatches();
         renderSchedule();
         renderBroadcasters();
@@ -1420,14 +1461,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const params = new URLSearchParams(window.location.search);
     
     // Country parameter
-    const countryParam = params.get("country");
-    if (countryParam && WORLD_CUP_DATA.countries.some(c => c.code === countryParam)) {
-      selectedCountry = countryParam;
-      userCountrySelect.value = countryParam;
-      renderFeaturedMatches();
-      renderSchedule();
-      renderBroadcasters();
-      renderRegions();
+    const countryParam = params.get("country") ? params.get("country").toUpperCase() : "";
+    if (setSelectedCountry(countryParam)) {
+      renderCountryScopedViews();
     }
 
     // Match parameter
