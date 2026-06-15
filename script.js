@@ -949,7 +949,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const liveStatusEvent = {
         minute: currentMin || "",
         minuteLabel: currentMin === null ? "LIVE" : null,
-        title: currentMin === null ? "⏱️ Match Live" : "Ongoing Live Action ⚡",
+        title: currentMin === null ? "Match Live ⏱️" : "Ongoing Live Action ⚡",
         desc: currentMin === null
           ? "The API marks this match as live, but it has not published the current clock minute. Goal events above are official API updates."
           : `Currently in the ${formatLiveMinute(match)} minute. Follow live streams for full coverage.`,
