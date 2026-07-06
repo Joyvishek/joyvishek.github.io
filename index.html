@@ -1,390 +1,660 @@
-<!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<!doctype html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>FIFA World Cup 2026 Broadcaster & Viewing Guide | Official Free & Paid Channels</title>
-  <meta name="description" content="Discover legal broadcasters, free-to-air channels, free streaming platforms, and subscription channels carrying the FIFA World Cup 2026 worldwide. Local timezone scheduling included.">
-  <meta name="keywords" content="FIFA World Cup 2026, Broadcasters, Free to Air, Streaming, Match Schedule, Free Channels">
-  <meta name="author" content="Joyvishek">
-  
-  <!-- Stylesheets -->
-  <link rel="stylesheet" href="style.css?v=3">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Joyvishek Ghosh — AI Architect &amp; Module Lead</title>
+<meta name="description" content="Joyvishek Ghosh — AI Architect and Module Lead. Agentic AI orchestration, MCP tool platforms, RAG, computer vision, and enterprise full-stack systems.">
+<style>
+  :root{
+    --paper:#edefea;
+    --panel:#ffffff;
+    --ink:#16191e;
+    --slate:#565f6b;
+    --faint:#8b93a0;
+    --rule:#d5d8d2;
+    --rule2:#e4e6e0;
+    --blueprint:#1e64b0;
+    --blueprint-deep:#123f73;
+    --blueprint-wash:#e5edf6;
+    --redline:#b23a2e;
+    --redline-wash:#f6e7e4;
+    --ok:#1d6b4c;
+    --grid:rgba(30,100,176,.055);
+    --ink-panel:#12161d;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --grotesk:"Helvetica Neue",Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{
+    margin:0;color:var(--ink);background:var(--paper);
+    font-family:var(--sans);font-size:16.5px;line-height:1.62;
+    -webkit-font-smoothing:antialiased;
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),
+                     linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:26px 26px;
+  }
+  .wrap{max-width:1000px;margin:0 auto;padding:0 26px;}
+  a{color:var(--blueprint);text-decoration:none}
+  a:hover{text-decoration:underline}
+  :focus-visible{outline:2px solid var(--blueprint);outline-offset:2px}
+
+  nav.index{position:sticky;top:0;z-index:20;background:rgba(237,239,234,.92);
+    backdrop-filter:blur(6px);border-bottom:1px solid var(--rule);}
+  nav.index .inner{max-width:1000px;margin:0 auto;padding:9px 26px;display:flex;
+    gap:6px 18px;flex-wrap:wrap;align-items:center;}
+  nav.index .brand{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--blueprint-deep);font-weight:700;margin-right:6px;}
+  nav.index a{font-family:var(--mono);font-size:.7rem;letter-spacing:.03em;color:var(--slate);}
+  nav.index a:hover{color:var(--blueprint);text-decoration:none}
+  nav.index .cta{margin-left:auto;border:1px solid var(--blueprint);color:var(--blueprint-deep);
+    padding:5px 10px;border-radius:3px;}
+  nav.index .cta:hover{background:var(--blueprint-wash);text-decoration:none}
+
+  header.mast{padding:64px 0 34px;}
+  .eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--blueprint);font-weight:600;margin:0 0 18px;display:inline-flex;align-items:center;gap:8px;}
+  .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--ok);
+    box-shadow:0 0 0 3px rgba(29,107,76,.15);}
+  h1{font-family:var(--grotesk);font-weight:800;letter-spacing:-.02em;line-height:1.02;
+    font-size:clamp(2.4rem,6vw,4.1rem);margin:0 0 18px;text-wrap:balance;}
+  h1 .thin{font-weight:400;color:var(--slate);}
+  h1 .accent{color:var(--blueprint-deep);}
+  .dek{font-size:1.24rem;line-height:1.5;color:var(--slate);max-width:60ch;margin:0;}
+  .dek b{color:var(--ink);font-weight:600;}
+
+  .hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px;}
+  .btn{font-family:var(--mono);font-size:.78rem;letter-spacing:.03em;padding:11px 16px;
+    border:1.5px solid var(--ink);border-radius:2px;display:inline-flex;align-items:center;gap:8px;
+    background:var(--panel);color:var(--ink);font-weight:600;}
+  .btn:hover{text-decoration:none;background:var(--ink);color:var(--paper);}
+  .btn.primary{border-color:var(--blueprint-deep);background:var(--blueprint-deep);color:#fff;}
+  .btn.primary:hover{background:var(--blueprint);border-color:var(--blueprint);}
+
+  .titleblock{margin-top:38px;border:1.5px solid var(--ink);background:var(--panel);
+    display:grid;grid-template-columns:repeat(4,1fr);}
+  .titleblock .cell{padding:12px 15px;border-right:1px solid var(--rule);border-top:1px solid var(--rule);}
+  .titleblock .cell:nth-child(-n+4){border-top:none;}
+  .titleblock .cell:nth-child(4n){border-right:none;}
+  .titleblock .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--faint);margin:0 0 4px;}
+  .titleblock .v{font-family:var(--mono);font-size:.86rem;color:var(--ink);font-weight:600;}
+  @media(max-width:640px){.titleblock{grid-template-columns:repeat(2,1fr)}
+    .titleblock .cell:nth-child(-n+4){border-top:1px solid var(--rule)}
+    .titleblock .cell:nth-child(-n+2){border-top:none}
+    .titleblock .cell:nth-child(2n){border-right:none}
+    .titleblock .cell:nth-child(4n-1){border-right:1px solid var(--rule)}}
+
+  .stats{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px;}
+  .stat{flex:1 1 150px;background:var(--panel);border:1px solid var(--rule);border-top:3px solid var(--blueprint);
+    padding:14px 16px;}
+  .stat .n{font-family:var(--grotesk);font-weight:800;font-size:1.7rem;letter-spacing:-.02em;
+    font-variant-numeric:tabular-nums;}
+  .stat .l{font-size:.82rem;color:var(--slate);margin-top:2px;}
+
+  section{padding:52px 0;border-top:1px solid var(--rule);}
+  .sheet{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--redline);font-weight:600;margin:0 0 8px;}
+  h2{font-family:var(--grotesk);font-weight:800;letter-spacing:-.015em;line-height:1.08;
+    font-size:clamp(1.5rem,3.4vw,2.15rem);margin:0 0 14px;text-wrap:balance;}
+  h3{font-family:var(--grotesk);font-weight:700;font-size:1.12rem;margin:0 0 8px;letter-spacing:-.01em;}
+  p{margin:0 0 15px;max-width:68ch;}
+  .lead{font-size:1.12rem;color:var(--slate);max-width:64ch;}
+  strong{font-weight:650;}
+  em{font-style:normal;background:var(--blueprint-wash);padding:.02em .3em;border-radius:3px;}
+  code{font-family:var(--mono);font-size:.85em;background:#e7e9e3;border:1px solid var(--rule);
+    border-radius:4px;padding:.05em .36em;color:var(--blueprint-deep);}
+  ul.clean{padding-left:0;list-style:none;margin:0 0 15px;max-width:68ch;}
+  ul.clean li{position:relative;padding-left:22px;margin:8px 0;}
+  ul.clean li::before{content:"";position:absolute;left:2px;top:.62em;width:8px;height:8px;
+    border:1.5px solid var(--blueprint);transform:rotate(45deg);}
+
+  .section-head{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:28px;flex-wrap:wrap;}
+  .section-copy{max-width:420px;color:var(--slate);font-size:.96rem;margin:0;}
+
+  .callout{border:1px solid var(--rule);border-left:4px solid var(--redline);background:var(--panel);
+    padding:16px 18px;margin:20px 0;}
+  .callout .h{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--redline);font-weight:700;margin:0 0 6px;}
+  .callout p{margin:0;font-size:.96rem;}
+
+  .scroll{overflow-x:auto;border:1px solid var(--rule);border-radius:2px;margin:14px 0;background:var(--panel);}
+
+  /* project cards */
+  .projects{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;}
+  @media(max-width:720px){.projects{grid-template-columns:1fr}}
+  .project{position:relative;background:var(--panel);border:1px solid var(--rule);padding:22px;min-height:270px;}
+  .project::before{content:"";position:absolute;inset:0;border-top:3px solid var(--blueprint);pointer-events:none;}
+  .project:nth-child(2)::before{border-color:var(--redline);}
+  .project .kicker{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--faint);margin:0 0 6px;}
+  .project h3{font-size:1.2rem;margin-bottom:8px;}
+  .project p{font-size:.94rem;color:var(--slate);}
+  .tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:16px;}
+  .tag{border:1px solid var(--rule);background:#e7e9e3;color:var(--blueprint-deep);
+    padding:5px 9px;font-size:.7rem;font-family:var(--mono);font-weight:700;border-radius:2px;}
+
+  /* diagram */
+  .diagram{background:var(--ink-panel);border-radius:4px;padding:26px 22px;margin:18px 0;color:#dfe4ec;
+    background-image:linear-gradient(rgba(120,160,220,.06) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(120,160,220,.06) 1px,transparent 1px);
+    background-size:24px 24px;}
+  .band{display:flex;flex-direction:column;gap:12px;}
+  .tier{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch;justify-content:center;}
+  .box{font-family:var(--mono);font-size:.78rem;border:1px solid #37425a;
+    border-radius:4px;padding:10px 13px;background:#1a2130;color:#cfd8e6;text-align:center;
+    flex:0 1 auto;min-width:96px;}
+  .box .s{display:block;font-size:.64rem;color:#8a97ad;margin-top:3px;letter-spacing:.03em;}
+  .box.accent{border-color:var(--blueprint);background:#15304f;color:#cfe0f4;}
+  .box.data{border-color:#3f5a44;background:#16281c;color:#c9e0cd;}
+  .box.edge{border-color:#5a4a2f;background:#2a2113;color:#e6d3a6;}
+  .tierlabel{font-family:var(--mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;
+    color:#7f8ba1;text-align:center;margin-top:4px;}
+  .flowdown{text-align:center;color:#5f6b82;font-size:1.1rem;line-height:1;margin:-4px 0;}
+
+  .pipe{display:flex;align-items:stretch;gap:0;min-width:640px;}
+  .pstep{flex:1;background:var(--panel);border:1px solid var(--rule);border-top:3px solid var(--blueprint);
+    padding:12px 12px;position:relative;}
+  .pstep + .pstep{border-left:none;}
+  .pstep .no{font-family:var(--mono);font-size:.62rem;color:var(--faint);letter-spacing:.1em;}
+  .pstep .nm{font-family:var(--grotesk);font-weight:700;font-size:.92rem;margin:2px 0 4px;}
+  .pstep .ds{font-size:.78rem;color:var(--slate);margin-top:6px;line-height:1.4;}
+
+  .grid2{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:16px 0;}
+  @media(max-width:900px){.grid2{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:600px){.grid2{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--rule);border-radius:2px;padding:18px 19px;}
+  .card .card-icon{width:36px;height:36px;display:grid;place-items:center;margin-bottom:12px;
+    border:1px solid var(--blueprint);color:var(--blueprint-deep);font-family:var(--mono);
+    font-weight:800;font-size:.72rem;border-radius:3px;background:var(--blueprint-wash);}
+  .card h3{margin:0 0 6px;font-size:1.02rem;}
+  .card p{font-size:.92rem;margin:0;color:var(--slate);}
+
+  /* skills */
+  .skills{display:grid;gap:12px;}
+  .skill-band{display:grid;grid-template-columns:180px 1fr;gap:18px;align-items:start;
+    padding:16px 18px;border:1px solid var(--rule);background:var(--panel);}
+  @media(max-width:640px){.skill-band{grid-template-columns:1fr}}
+  .skill-band h3{margin:0;color:var(--redline);font-size:.9rem;font-family:var(--mono);
+    letter-spacing:.06em;text-transform:uppercase;}
+
+  /* timeline */
+  .timeline{display:grid;gap:14px;}
+  .timeline-item{display:grid;grid-template-columns:190px 1fr;gap:22px;padding:20px;
+    position:relative;border:1px solid var(--rule);background:var(--panel);}
+  @media(max-width:640px){.timeline-item{grid-template-columns:1fr}.timeline-item::before{display:none}}
+  .timeline-item::before{content:"";position:absolute;top:20px;bottom:20px;left:calc(20px + 190px + 11px);width:1px;background:var(--rule);}
+  .date{color:var(--blueprint-deep);font-weight:800;text-transform:uppercase;font-size:.76rem;
+    font-family:var(--mono);letter-spacing:.04em;}
+  .role{color:var(--redline);font-weight:700;margin-top:4px;font-size:.92rem;overflow-wrap:break-word;}
+  .timeline-item h3{font-size:1.04rem;margin-bottom:6px;}
+  .timeline-item p{font-size:.92rem;color:var(--slate);margin:0 0 10px;}
+  .timeline-item ul.clean{margin:0;max-width:none;}
+  .timeline-item ul.clean li{font-size:.9rem;color:var(--slate);margin:6px 0;}
+  .timeline-item .subhead{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--blueprint-deep);font-weight:700;margin:14px 0 6px;}
+  .timeline-item .subhead:first-of-type{margin-top:0;}
+
+  /* education */
+  .edu-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+  @media(max-width:640px){.edu-grid{grid-template-columns:1fr}}
+  .edu-card{border:1px solid var(--rule);background:var(--panel);border-top:3px solid var(--redline);padding:16px 18px;}
+  .edu-card .yr{font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--redline);font-weight:700;}
+  .edu-card h3{font-size:.98rem;margin:6px 0 2px;}
+  .edu-card p{margin:0;font-size:.86rem;color:var(--slate);}
+
+  .misc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:18px;}
+  @media(max-width:640px){.misc-grid{grid-template-columns:1fr}}
+
+  .contact{position:relative;border:1.5px solid var(--ink);background:var(--panel);
+    padding:clamp(24px,5vw,44px);}
+  .contact-grid{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;}
+  @media(max-width:720px){.contact-grid{grid-template-columns:1fr}}
+  .contact h2{margin-top:0;}
+  .contact p{max-width:640px;color:var(--slate);font-size:1.02rem;}
+  .contact-actions{display:flex;gap:10px;flex-wrap:wrap;}
+
+  footer{margin-top:20px;border-top:2px solid var(--ink);padding:30px 0 60px;}
+  .footgrid{border:1.5px solid var(--ink);display:grid;grid-template-columns:2fr 1fr 1fr;background:var(--panel);}
+  .footgrid .cell{padding:14px 16px;border-right:1px solid var(--rule);}
+  .footgrid .cell:last-child{border-right:none;}
+  .footgrid .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);}
+  .footgrid .v{font-family:var(--mono);font-size:.82rem;color:var(--ink);margin-top:3px;}
+  @media(max-width:640px){.footgrid{grid-template-columns:1fr}.footgrid .cell{border-right:none;border-bottom:1px solid var(--rule)}}
+  .note{font-size:.8rem;color:var(--faint);margin-top:14px;}
+</style>
 </head>
 <body>
 
-  <!-- Header Section -->
-  <header>
-    <div class="container nav-container">
-      <a href="#" class="logo-section" id="brand-logo">
-        <!-- Custom Pitch/Globe/Trophy SVG Icon -->
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
-          <path d="M12 2C14.5 5 14.5 19 12 22M12 2C9.5 5 9.5 19 12 22" stroke="currentColor" stroke-width="2" />
-          <path d="M2.5 9H21.5M2.5 15H21.5" stroke="currentColor" stroke-width="2" />
-          <circle cx="12" cy="12" r="3" fill="var(--accent-color)" />
-        </svg>
-        <span class="logo-text">KICKOFF 26</span>
-      </a>
+<nav class="index" aria-label="Document index">
+  <div class="inner">
+    <span class="brand">Joyvishek Ghosh</span>
+    <a href="#overview">Overview</a>
+    <a href="#projects">Projects</a>
+    <a href="#architecture">Architecture</a>
+    <a href="#skills">Skills</a>
+    <a href="#timeline">Experience</a>
+    <a href="#education">Education</a>
+    <a class="cta" href="mailto:joyvishekghosh@gmail.com">Contact</a>
+  </div>
+</nav>
 
-      <div class="nav-actions">
-        <!-- Country Selector (Dynamic List) -->
-        <div class="country-selector-wrap">
-          <span>🌍</span>
-          <select id="user-country-select" aria-label="Select Country">
-            <!-- Dynamically populated -->
-          </select>
-        </div>
+<div class="wrap">
 
-        <!-- Theme Toggle -->
-        <button class="theme-toggle-btn" id="theme-toggle" title="Toggle Light/Dark Theme">
-          <span class="toggle-icon">🌙</span>
-        </button>
-      </div>
+  <header class="mast" id="top">
+    <p class="eyebrow"><span class="dot"></span>Module Lead · operating as AI Architect &amp; Orchestrator</p>
+    <h1>I build <span class="accent">agentic AI</span><br><span class="thin">for enterprise systems.</span></h1>
+    <p class="dek">8+ years across <b>full-stack engineering</b> and <b>applied AI</b> — designing tool-calling
+      orchestration, retrieval-augmented reasoning, computer vision pipelines, and the backend platforms that
+      let AI agents act safely inside real production systems.</p>
+
+    <div class="hero-actions">
+      <a class="btn primary" href="#projects">View the work →</a>
+      <a class="btn" href="mailto:joyvishekghosh@gmail.com">joyvishekghosh@gmail.com</a>
+      <a class="btn" href="tel:+919804143262">(+91) 98041 43262</a>
+    </div>
+
+    <div class="titleblock" role="group" aria-label="Profile summary">
+      <div class="cell"><p class="k">Role</p><p class="v">AI Architect / Module Lead</p></div>
+      <div class="cell"><p class="k">Experience</p><p class="v">8 Years</p></div>
+      <div class="cell"><p class="k">Base</p><p class="v">Kolkata, India</p></div>
+      <div class="cell"><p class="k">Focus</p><p class="v">Agentic AI Platforms</p></div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="n">8+</div><div class="l">years building production software &amp; AI systems</div></div>
+      <div class="stat"><div class="n">10+</div><div class="l">domain-scoped AI tool services shipped in one platform</div></div>
+      <div class="stat"><div class="n">3</div><div class="l">retrieval sources fused for grounded answers</div></div>
+      <div class="stat"><div class="n">12–15</div><div class="l">engineers guided as module lead</div></div>
     </div>
   </header>
 
-  <!-- Hero / Tournament Overview Section -->
-  <section class="hero">
-    <div class="hero-overlay-div"></div>
-    <div class="container hero-content">
-      <span class="hero-badge">🏆 Official Broadcaster Portal</span>
-      <h1>Watch the <span>FIFA World Cup 2026</span> Legally</h1>
-      <p>Discover free-to-air channels, free official streaming platforms, and subscription networks broadcast matches in your country. Zero pirated streams, 100% legal viewing.</p>
+  <!-- 01 -->
+  <section id="overview">
+    <p class="sheet">01 · Who I am</p>
+    <h2>Product engineer first, AI architect by demand</h2>
+    <p class="lead">I lead a product module day-to-day and, alongside it, design and build the AI layer the
+      product runs on — the orchestration, the tool boundaries, and the retrieval that make an LLM
+      trustworthy enough to take real actions.</p>
+    <p>My work sits at the intersection of three things: enterprise full-stack delivery (the systems that
+      already work and can't break), applied AI (LLM tool-calling, RAG, computer vision), and team
+      leadership (turning an architecture into something 12–15 engineers can actually ship).</p>
 
-      <!-- Featured Matches (Today & Tomorrow) -->
-      <div class="featured-matches-section">
-        <h2 class="featured-section-title">Today & Tomorrow's Fixtures</h2>
-        <div class="featured-matches-scroll" id="featured-matches-scroll">
-          <!-- Dynamically populated horizontal scroll of cards -->
-          <div style="color: var(--text-muted); font-size: 0.9rem; padding: 1.5rem; text-align: center; width: 100%;">
-            Loading featured matches...
+    <div class="callout">
+      <p class="h">Operating principle</p>
+      <p>AI should never be a demo layer bolted onto a product. It needs auth context, typed contracts,
+        retries, graceful degradation, and domain services underneath it — the same rigor as any other
+        production system.</p>
+    </div>
+  </section>
+
+  <!-- 02 -->
+  <section id="projects">
+    <p class="sheet">02 · Ongoing work</p>
+    <div class="section-head">
+      <h2 style="margin:0">Two systems, one orchestration story</h2>
+      <p class="section-copy">A platform of independent AI tool services, and the reasoning layer that
+        discovers and drives them — designed so either side can evolve without breaking the other.</p>
+    </div>
+
+    <div class="projects">
+      <article class="project">
+        <p class="kicker">Platform · Tool Services</p>
+        <h3>Domain-scoped agentic tool platform</h3>
+        <p>Architected a modular platform of independent AI tool services, each owning one enterprise
+          capability — knowledge-graph retrieval, facility actions, document Q&amp;A, long-term memory,
+          location intelligence, web/media search, data export, and usage analytics.</p>
+        <p>Every service exposes typed tools with structured errors, health probes, and externalized config
+          behind a common contract, so an AI agent can discover and call capabilities without knowing how
+          any one of them is implemented.</p>
+        <div class="tags">
+          <span class="tag">Tool-Calling Contracts</span><span class="tag">FastAPI</span>
+          <span class="tag">Event-Driven SSE</span><span class="tag">Docker</span><span class="tag">Vision (YOLO)</span>
+        </div>
+      </article>
+
+      <article class="project">
+        <p class="kicker">Platform · Orchestration</p>
+        <h3>RAG orchestration &amp; reasoning layer</h3>
+        <p>Evolved a conversational AI application into the orchestration layer for the whole platform: it
+          discovers tools dynamically at runtime, forwards authenticated request context, and routes calls
+          with per-service failure isolation so one dependency going down never takes the rest with it.</p>
+        <p>Fuses graph retrieval, vector search, and cached memory into one grounded reasoning loop, so the
+          model answers from real enterprise data instead of guessing.</p>
+        <div class="tags">
+          <span class="tag">LLM Tool-Calling</span><span class="tag">GraphRAG</span>
+          <span class="tag">Vector Search</span><span class="tag">Caching</span><span class="tag">Streaming</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- 03 -->
+  <section id="architecture">
+    <p class="sheet">03 · System design</p>
+    <div class="section-head">
+      <h2 style="margin:0">From reasoning to real-world action</h2>
+      <p class="section-copy">Orchestration and execution are deliberately separated, so the reasoning
+        layer never needs to know how a capability is implemented — only what it's called and what it
+        returns.</p>
+    </div>
+
+    <div class="scroll">
+      <div class="diagram">
+        <div class="band">
+          <div class="tier"><div class="box accent">Client / Agent<span class="s">chat, voice, API</span></div>
+            <div class="box accent">Authenticated Gateway<span class="s">JWT · request context</span></div></div>
+          <div class="tierlabel">access plane</div>
+          <div class="flowdown">↓</div>
+          <div class="tier"><div class="box accent">Reasoning Orchestrator<span class="s">tool-calling loop</span></div></div>
+          <div class="flowdown">↓</div>
+          <div class="tier">
+            <div class="box data">Knowledge Graph</div>
+            <div class="box data">Vector Search</div>
+            <div class="box data">Cache / Memory</div>
           </div>
+          <div class="tierlabel">retrieval plane</div>
+          <div class="flowdown">↓</div>
+          <div class="tier">
+            <div class="box">Facility Actions</div><div class="box">Document Q&amp;A</div>
+            <div class="box">Vision</div><div class="box">Location</div>
+            <div class="box">Search</div><div class="box">Export</div><div class="box">Analytics</div>
+          </div>
+          <div class="tierlabel">domain tool services — isolated, independently deployable</div>
+          <div class="flowdown">↓</div>
+          <div class="tier"><div class="box edge">Enterprise APIs<span class="s">backend systems, object storage, external services</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="margin-top:26px">Why it holds up under change</h3>
+    <p>Each tool service is independently deployable and fails without taking the others down — the
+      orchestrator treats an unreachable service as a structured error, not a crash. That isolation is what
+      let the platform swap and re-architect individual services over time without ever pausing the product
+      it powers.</p>
+  </section>
+
+  <!-- 04 -->
+  <section aria-label="Core strengths">
+    <p class="sheet">04 · Core strengths</p>
+    <div class="grid2">
+      <div class="card">
+        <div class="card-icon">AI</div>
+        <h3>Agentic AI Orchestration</h3>
+        <p>LLM tool-calling loops, multi-source retrieval fusion, conversational agent design, and grounded
+          knowledge actions that cite their source instead of guessing.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">CV</div>
+        <h3>Vision &amp; Document Intelligence</h3>
+        <p>YOLO-based object &amp; region detection, OCR pipelines, and document/blueprint parsing that turn
+          unstructured visual content into queryable facts.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">FS</div>
+        <h3>Full-Stack Delivery</h3>
+        <p>React, Next.js, Angular, NestJS, Node.js, PostgreSQL, MongoDB, Redis, Kafka, and Docker — shipped
+          in production, not prototypes.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 -->
+  <section id="skills">
+    <p class="sheet">05 · Technical toolkit</p>
+    <h2>Built across AI, backend, and product layers</h2>
+    <div class="skills">
+      <div class="skill-band">
+        <h3>AI / ML</h3>
+        <div class="tags"><span class="tag">LLMs</span><span class="tag">RAG</span><span class="tag">Agent Tool-Calling</span><span class="tag">Rasa</span><span class="tag">Ollama</span><span class="tag">Hugging Face Transformers</span><span class="tag">YOLOv8 / v11</span><span class="tag">VGG16</span><span class="tag">ResNets</span><span class="tag">OCR</span><span class="tag">Object Detection</span><span class="tag">Instance Segmentation</span></div>
+      </div>
+      <div class="skill-band">
+        <h3>Backend</h3>
+        <div class="tags"><span class="tag">Python</span><span class="tag">FastAPI</span><span class="tag">Node.js</span><span class="tag">NestJS</span><span class="tag">Loopback Framework</span><span class="tag">MVC Framework</span><span class="tag">PostgreSQL</span><span class="tag">MongoDB</span><span class="tag">Redis</span><span class="tag">Kafka</span><span class="tag">gRPC</span><span class="tag">Socket.IO</span><span class="tag">Docker</span></div>
+      </div>
+      <div class="skill-band">
+        <h3>Frontend</h3>
+        <div class="tags"><span class="tag">React.js</span><span class="tag">Next.js</span><span class="tag">Angular / AngularJS</span><span class="tag">JavaScript</span><span class="tag">TypeScript</span><span class="tag">Turbo.js</span><span class="tag">Model Federation</span><span class="tag">PSPDFKit</span><span class="tag">PDFTron</span><span class="tag">Pdf-lib</span><span class="tag">PDF.js</span><span class="tag">Signature Pad</span></div>
+      </div>
+      <div class="skill-band">
+        <h3>Data / Search</h3>
+        <div class="tags"><span class="tag">Graph Databases</span><span class="tag">Vector Search</span><span class="tag">ClickHouse</span><span class="tag">pgvector</span><span class="tag">Elasticsearch</span><span class="tag">Solr</span><span class="tag">MongoDB</span><span class="tag">Object Storage</span><span class="tag">Google Maps &amp; Geo</span></div>
+      </div>
+      <div class="skill-band">
+        <h3>Languages</h3>
+        <div class="tags"><span class="tag">English</span><span class="tag">Hindi</span><span class="tag">Bengali</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 -->
+  <section id="timeline">
+    <p class="sheet">06 · Experience</p>
+    <h2>Engineering leadership with hands-on architecture</h2>
+    <div class="timeline">
+      <article class="timeline-item">
+        <div>
+          <div class="date">Sep 2024 — Present</div>
+          <div class="role">ARC Document Solutions</div>
+        </div>
+        <div>
+          <h3>Module Lead, operating as AI Architect &amp; Orchestrator</h3>
+          <p>Leading a 12–15 engineer team on enterprise module delivery while architecting the AI layer
+            alongside it — agentic orchestration, retrieval-augmented reasoning, computer vision, knowledge
+            actions, caching, scheduling, and the backend workflows underneath.</p>
+
+          <p class="subhead">Frontend</p>
+          <ul class="clean">
+            <li>Implemented role-based access control across multiple modules (Equipment, Compliance, Forms,
+              Pin), strengthening system security and permission management.</li>
+            <li>Implemented a Mutation Observer bridge for seamless React (host) ↔ Angular (remote)
+              communication, enabling real-time updates and synchronization across frameworks.</li>
+            <li>Forms: upgraded PSPDFKit integration, added Share Link functionality, built a 1.0 → 2.0
+              conversion path, and enabled report downloads; integrated Pdf-lib, PDF.js, and Signature Pad to
+              build a PSPDFKit/PDFTron-equivalent viewer.</li>
+            <li>Equipment: built bulk import and wired it into Compliance/Forms maintenance &amp; inspection
+              workflows.</li>
+            <li>Compliance: led the 1.0 → 2.0 data migration and introduced a dynamic survey feature.</li>
+            <li>Campus: integrated Google Maps for location-based search and built custom interaction widgets.</li>
+          </ul>
+
+          <p class="subhead">Backend</p>
+          <ul class="clean">
+            <li>Integrated PostgreSQL into Forms and Compliance for reliable data management.</li>
+            <li>Designed and optimized REST APIs powering new frontend functionality across modules.</li>
+            <li>Built bulk upload for Equipment, activity tracking for Forms, and a notification email
+              service for workflow alerts.</li>
+            <li>Used Redis for caching in Forms and built recurring task scheduling across Forms, Pin,
+              Equipment, and Compliance.</li>
+            <li>Built backend services for a document-capture/forms module using clean and onion architecture
+              on NestJS; identified and remediated security vulnerabilities in dependency packages.</li>
+          </ul>
+
+          <p class="subhead">Artificial Intelligence</p>
+          <ul class="clean">
+            <li>Architected a modular platform of independent AI tool services, each owning one enterprise
+              capability — knowledge-graph retrieval, facility actions, document Q&amp;A, long-term memory,
+              location intelligence, web/media search, data export, and usage analytics — behind a common,
+              typed tool-calling contract with structured errors and health probes.</li>
+            <li>Evolved a conversational AI application into the orchestration layer for the whole platform:
+              it discovers tools dynamically at runtime, forwards authenticated request context, and routes
+              calls with per-service failure isolation so one dependency going down never takes the rest with
+              it.</li>
+            <li>Fused knowledge-graph retrieval, vector search, and cached memory into one grounded reasoning
+              loop (GraphRAG), so the model answers from real enterprise data instead of guessing.</li>
+            <li>Engineered an agentic AI system (Rasa + Python) to automate facility management workflows and
+              cut manual intervention.</li>
+            <li>Integrated LLMs — Llama via Ollama and Hugging Face Transformers — for complex reasoning and
+              natural-language understanding.</li>
+            <li>Built custom NLP components: real-time feedback sentiment analysis and a context-aware spell
+              checker for form data integrity.</li>
+            <li>Implemented knowledge-based actions so the agent can query internal documentation and give
+              grounded, factual answers.</li>
+            <li>Designed a high-concurrency, event-driven architecture (Kafka + Zookeeper) for async messaging
+              between AI agents and core services; used Redis as a distributed cache for session and
+              knowledge-base retrieval.</li>
+            <li>Advanced OCR pipelines (Surya OCR, Tesseract) for high-fidelity text/layout extraction from
+              blueprints and technical manuals.</li>
+            <li>Trained and deployed YOLO models for building annotation and equipment detection, plus
+              YOLOv11-based instance segmentation for floor-area and structural-boundary isolation.</li>
+            <li>Designed an architectural-drawing intelligence platform that reads a construction drawing set
+              — both the graphics and the text that describes them (title blocks, keynotes, legends,
+              schedules, dimensions) — and answers plain-language questions with a citation back to the exact
+              sheet, combining a vision-language model, a knowledge graph, and hybrid semantic search so each
+              source checks the others.</li>
+            <li>Built the query path as retrieve-then-traverse GraphRAG — hybrid (keyword + vector) retrieval
+              seeds a bounded graph traversal, a reranker orders candidates, and the model answers only from
+              that grounded context — backed by a fully event-driven ingestion pipeline (split → OCR → vision
+              → entity resolution → graph write → embed → index → notify) with every model self-hosted and no
+              third-party API in the data path.</li>
+          </ul>
+        </div>
+      </article>
+      <article class="timeline-item">
+        <div>
+          <div class="date">Jun 2023 — Sep 2024</div>
+          <div class="role">Trigent Software</div>
+        </div>
+        <div>
+          <h3>Full Stack Developer</h3>
+          <ul class="clean">
+            <li>Developed and shipped new features, driving a 20% increase in user engagement.</li>
+            <li>Collaborated cross-functionally to resolve 15% more technical issues within tight deadlines.</li>
+            <li>Applied agile methodologies, improving project completion time by 30%.</li>
+            <li>Built client- and server-side applications for ARC Document Solutions with React, Next.js,
+              NestJS, Redux, Node.js, PostgreSQL, MongoDB, NLP, and computer vision (YOLOv8), plus Redis,
+              Socket.IO, Solr, and Elasticsearch integrations.</li>
+            <li>Used Molecular microservices for jobs/worker nodes, and Turbo.js for micro-frontend
+              integration across client applications.</li>
+          </ul>
+        </div>
+      </article>
+      <article class="timeline-item">
+        <div>
+          <div class="date">Feb 2021 — Mar 2023</div>
+          <div class="role">Pemari Technology Private Limited</div>
+        </div>
+        <div>
+          <h3>Artificial Intelligence Consultant</h3>
+          <ul class="clean">
+            <li>Built a React-based chatbot for Broadcom's Clarity PPM, plus a Meteor admin panel to manage it.</li>
+            <li>Maintained the stack across React, Meteor, Node.js, MongoDB, and JavaScript.</li>
+            <li>Set up an automated Docker image build/delivery pipeline into a private registry.</li>
+            <li>Used the Rasa framework to build conversation models for user interaction.</li>
+            <li>Built chatbot utterance templates — tables, charts, links, images, video, guided flows,
+              ratings, buttons, carousels.</li>
+            <li>Used multithreading/multiprocessing in the Node.js admin panel, and multitenancy for
+              per-client database isolation.</li>
+            <li>Used GraphQL to interact with the Rasa framework, with Apollo Server as admin-panel middleware.</li>
+            <li>Led delivery on a 6-person team.</li>
+          </ul>
+        </div>
+      </article>
+      <article class="timeline-item">
+        <div>
+          <div class="date">Mar 2019 — May 2019</div>
+          <div class="role">Fleapo Corporation</div>
+        </div>
+        <div>
+          <h3>Full Stack Developer</h3>
+          <ul class="clean">
+            <li>Discussed progress with customers, gathered feedback, and addressed concerns directly.</li>
+            <li>Reviewed code, debugged issues, and shipped fixes.</li>
+            <li>Built websites (incl. Realbooks) with Angular 9, Node.js, and MongoDB.</li>
+            <li>Built a T-shirt e-commerce site with Angular, MongoDB, and Node.js.</li>
+          </ul>
+        </div>
+      </article>
+      <article class="timeline-item">
+        <div>
+          <div class="date">Mar 2017 — Mar 2019</div>
+          <div class="role">TheoreX Edutech LLP</div>
+        </div>
+        <div>
+          <h3>Full Stack Software Developer</h3>
+          <ul class="clean">
+            <li>Discussed progress with customers and addressed concerns across project stages; reviewed code
+              and debugged issues in AngularJS, Node.js, MongoDB, HTML5, and CSS3.</li>
+            <li>Coordinated with engineers to evaluate and improve software/hardware interfaces.</li>
+            <li>Contributed ideas in team meetings and delivered updates on deadlines, design, and
+              enhancements.</li>
+          </ul>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- 06b -->
+  <section id="education">
+    <p class="sheet">07 · Education</p>
+    <h2>Formal education</h2>
+    <div class="edu-grid">
+      <div class="edu-card">
+        <p class="yr">2023</p>
+        <h3>PG Diploma</h3>
+        <p>International Institute of Information Technology, Bangalore</p>
+      </div>
+      <div class="edu-card">
+        <p class="yr">2017</p>
+        <h3>B.Tech / B.E.</h3>
+        <p>West Bengal University of Technology (WBUT)</p>
+      </div>
+      <div class="edu-card">
+        <p class="yr">2013</p>
+        <h3>12th — English</h3>
+        <p>CISCE (ICSE/ISC)</p>
+      </div>
+      <div class="edu-card">
+        <p class="yr">2011</p>
+        <h3>10th — English</h3>
+        <p>CISCE (ICSE/ISC)</p>
+      </div>
+    </div>
+
+    <div class="misc-grid">
+      <div class="card">
+        <h3>Personal</h3>
+        <p>Kolkata, India</p>
+      </div>
+      <div class="card">
+        <h3>Hobbies</h3>
+        <p>POC on different AI models · Computer games</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 -->
+  <section aria-label="Contact">
+    <p class="sheet">08 · Get in touch</p>
+    <div class="contact">
+      <div class="contact-grid">
+        <div>
+          <h2>AI architect mindset, module-lead ownership.</h2>
+          <p>I bring production delivery, product context, AI orchestration, full-stack engineering, and
+            team leadership together — the mix it takes to turn enterprise AI from a demo into a system
+            people actually rely on.</p>
+        </div>
+        <div class="contact-actions">
+          <a class="btn primary" href="mailto:joyvishekghosh@gmail.com">Email Me</a>
+          <a class="btn" href="tel:+919804143262">Call</a>
         </div>
       </div>
     </div>
   </section>
 
-  <main class="container">
-    
-    <!-- Application Tabs Nav -->
-    <nav class="tabs-nav" aria-label="Portal Navigation Tabs">
-      <button class="tab-btn active" data-tab="schedule">
-        📅 Match Schedule
-      </button>
-      <button class="tab-btn" data-tab="standings">
-        🏆 Standings
-      </button>
-      <button class="tab-btn" data-tab="broadcasters">
-        📺 Broadcaster Guide
-      </button>
-      <button class="tab-btn" data-tab="regions">
-        🌍 Regional Explorer
-      </button>
-      <button class="tab-btn" data-tab="comparison">
-        📊 Compare Services
-      </button>
-    </nav>
-
-    <!-- Tab 1: Match Schedule Dashboard -->
-    <section id="tab-view-schedule" class="app-view active">
-      <div class="filter-bar">
-        <!-- Search -->
-        <div class="filter-group">
-          <label for="schedule-search">Search Match or Team</label>
-          <input type="text" id="schedule-search" placeholder="Type team name, city...">
-        </div>
-
-        <!-- Filter Stage -->
-        <div class="filter-group">
-          <label for="schedule-stage">Tournament Stage</label>
-          <select id="schedule-stage">
-            <option value="all">All Stages</option>
-            <option value="Group Stage">Group Stage</option>
-            <option value="Round of 16">Round of 16</option>
-            <option value="Quarter-Final">Quarter-Final</option>
-            <option value="Semi-Final">Semi-Final</option>
-            <option value="3rd Place">3rd Place</option>
-            <option value="Final">Final</option>
-          </select>
-        </div>
-
-        <!-- Filter Date -->
-        <div class="filter-group">
-          <label for="schedule-date">Filter by Date</label>
-          <select id="schedule-date">
-            <option value="all">All Dates</option>
-            <!-- Dynamically populated -->
-          </select>
-        </div>
-
-        <!-- Timezone Selector -->
-        <div class="filter-group" style="min-width: 140px; flex: 0 0 auto;">
-          <label>Timezone Display</label>
-          <div class="time-mode-selector">
-            <button class="time-mode-btn active" id="time-btn-local">My Local</button>
-            <button class="time-mode-btn" id="time-btn-stadium">Stadium</button>
-          </div>
-        </div>
-
-        <!-- Bookmarked Filter -->
-        <div class="filter-group" style="min-width: 140px; flex: 0 0 auto;">
-          <label>Favorites</label>
-          <select id="schedule-favorites-filter">
-            <option value="all">Show All</option>
-            <option value="favorites">Favorites Only (⭐)</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Match Cards Grid -->
-      <div class="match-grid" id="match-cards-grid">
-        <!-- Dynamically filled -->
-      </div>
-    </section>
-
-    <!-- Tab 5: Group Standings -->
-    <section id="tab-view-standings" class="app-view">
-      <div class="standings-header" style="margin-bottom: 2rem; text-align: center;">
-        <h2 style="font-size: 2rem; margin-bottom: 0.5rem; background: linear-gradient(135deg, var(--accent-color), var(--accent-secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Tournament Standings</h2>
-        <p style="color: var(--text-secondary);">Real-time group stage tables computed dynamically from live API scores.</p>
-      </div>
-      
-      <div class="groups-standings-grid" id="groups-standings-grid">
-        <!-- Dynamically filled with 12 group tables -->
-      </div>
-    </section>
-
-    <!-- Tab 2: Broadcaster Directory -->
-    <section id="tab-view-broadcasters" class="app-view">
-      <div class="filter-bar">
-        <!-- Search -->
-        <div class="filter-group">
-          <label for="broadcaster-search">Search Broadcasters</label>
-          <input type="text" id="broadcaster-search" placeholder="Type network name...">
-        </div>
-
-        <!-- Access Type Filter -->
-        <div class="filter-group">
-          <label for="broadcaster-access">Access Level</label>
-          <select id="broadcaster-access">
-            <option value="all">All Access Types</option>
-            <option value="free">Free & Free-to-Air Only</option>
-            <option value="paid">Subscription/Paid Only</option>
-          </select>
-        </div>
-
-        <!-- Medium Type Filter -->
-        <div class="filter-group">
-          <label for="broadcaster-medium">Platform Medium</label>
-          <select id="broadcaster-medium">
-            <option value="all">All Platforms</option>
-            <option value="TV">Television (TV)</option>
-            <option value="Web">Web Streaming</option>
-            <option value="App">Mobile/Smart App</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Grid of Broadcaster Cards -->
-      <div class="broadcaster-grid" id="broadcaster-cards-grid">
-        <!-- Dynamically filled -->
-      </div>
-    </section>
-
-    <!-- Tab 3: Regional Broadcaster Explorer -->
-    <section id="tab-view-regions" class="app-view">
-      <div class="region-guide-section">
-        <div class="region-explore-panels">
-          <!-- Left: Region list buttons -->
-          <div class="region-list-panel" id="regions-list-panel">
-            <!-- Populated via script.js -->
-          </div>
-
-          <!-- Right: Details of selected region -->
-          <div class="region-details-panel" id="region-details-panel">
-            <!-- Dynamic output -->
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Tab 4: Broadcaster Comparison Guide -->
-    <section id="tab-view-comparison" class="app-view">
-      <div class="comparison-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Broadcaster</th>
-              <th>Primary Countries</th>
-              <th>Access Tier</th>
-              <th>Cost Model</th>
-              <th>Platforms Supported</th>
-              <th>Key Languages</th>
-              <th>Official Portal</th>
-            </tr>
-          </thead>
-          <tbody id="comparison-table-body">
-            <!-- Table rows populated dynamically -->
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- Share Match Details Modal -->
-  <div class="modal-overlay" id="share-modal-overlay">
-    <div class="modal-content">
-      <button class="modal-close" id="modal-close-btn" aria-label="Close modal">&times;</button>
-      <h3 class="modal-title">Share Match Broadcast Info</h3>
-      
-      <div class="share-card-preview">
-        <div class="share-title" id="share-modal-match-title">USA vs Germany</div>
-        <div class="share-details" id="share-modal-match-details">
-          Date: June 14, 2026<br>
-          Kickoff: 12:00 PM CDT<br>
-          Official Streams: FOX Sports (US), BBC (UK), SBS (Australia).
-        </div>
-      </div>
-
-      <div class="share-actions">
-        <button class="btn-primary" id="btn-copy-clipboard">Copy Broadcast Card</button>
-        <button class="btn-secondary" id="btn-copy-link">Copy Web Link</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Match Details Modal -->
-  <div class="modal-overlay" id="match-details-modal">
-    <div class="modal-content match-details-content">
-      <button class="modal-close" id="details-close-btn" aria-label="Close modal">&times;</button>
-      
-      <!-- Modal Header: Teams & Score -->
-      <div class="details-modal-header">
-        <div class="details-team-display">
-          <div class="details-team home">
-            <span class="details-flag" id="details-home-flag">🏳️</span>
-            <span class="details-team-name" id="details-home-name">Home Team</span>
-          </div>
-          <div class="details-score-wrap">
-            <span class="details-score" id="details-score-home">-</span>
-            <span class="details-score-divider">:</span>
-            <span class="details-score" id="details-score-away">-</span>
-          </div>
-          <div class="details-team away">
-            <span class="details-team-name" id="details-away-name">Away Team</span>
-            <span class="details-flag" id="details-away-flag">🏳️</span>
-          </div>
-        </div>
-        <div class="details-match-status" id="details-match-status">Upcoming</div>
-      </div>
-      
-      <!-- Modal Body -->
-      <div class="details-modal-body">
-        <!-- Tab system inside modal -->
-        <div class="modal-tabs">
-          <button class="modal-tab-btn active" data-modal-tab="timeline">⚡ Match Feed</button>
-          <button class="modal-tab-btn" data-modal-tab="lineups">👥 Lineups</button>
-          <button class="modal-tab-btn" data-modal-tab="broadcasters">📺 Where to Watch</button>
-          <button class="modal-tab-btn" data-modal-tab="info">📍 Match Info</button>
-        </div>
-        
-        <!-- Tab Content 1: Timeline -->
-        <div class="modal-tab-view active" id="modal-tab-view-timeline">
-          <div class="timeline-feed" id="details-timeline-feed">
-            <!-- Timeline events -->
-          </div>
-        </div>
-        
-        <!-- Tab Content 2: Lineups -->
-        <div class="modal-tab-view" id="modal-tab-view-lineups">
-          <div class="details-lineups-container" id="details-lineups-container">
-            <!-- Lineups will be populated here -->
-          </div>
-        </div>
-        
-        <!-- Tab Content 3: Broadcasters -->
-        <div class="modal-tab-view" id="modal-tab-view-broadcasters">
-          <div class="details-broadcasters-list" id="details-broadcasters-list">
-            <!-- Broadcasters dynamic links -->
-          </div>
-        </div>
-        
-        <!-- Tab Content 4: Match Info -->
-        <div class="modal-tab-view" id="modal-tab-view-info">
-          <div class="details-info-grid">
-            <div class="info-item">
-              <span class="info-label">Tournament Stage</span>
-              <span class="info-value" id="details-info-stage">-</span>
-            </div>
-            <div class="info-item">
-              <span class="info-label">Stadium</span>
-              <span class="info-value" id="details-info-stadium">-</span>
-            </div>
-            <div class="info-item">
-              <span class="info-label">City</span>
-              <span class="info-value" id="details-info-city">-</span>
-            </div>
-            <div class="info-item">
-              <span class="info-label">Kickoff Time</span>
-              <span class="info-value" id="details-info-time">-</span>
-            </div>
-          </div>
-          
-          <div class="modal-form-section" style="margin-top: 1.5rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
-            <h4 style="font-size: 0.85rem; font-weight: 700; margin-bottom: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">Tournament Form (Last 5)</h4>
-            <div class="details-form-display" style="display: flex; flex-direction: column; gap: 0.75rem;">
-              <div class="team-form-row" style="display: flex; align-items: center; justify-content: space-between;">
-                <span class="form-team-name" id="form-home-team-name" style="font-weight: 600; font-size: 0.9rem;">Home Team</span>
-                <div class="form-indicator-list" id="form-home-indicators" style="display: flex; gap: 0.35rem;">
-                  <!-- W-D-L badges -->
-                </div>
-              </div>
-              <div class="team-form-row" style="display: flex; align-items: center; justify-content: space-between;">
-                <span class="form-team-name" id="form-away-team-name" style="font-weight: 600; font-size: 0.9rem;">Away Team</span>
-                <div class="form-indicator-list" id="form-away-indicators" style="display: flex; gap: 0.35rem;">
-                  <!-- W-D-L badges -->
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Toast Notification System -->
-  <div class="toast" id="toast-notify">Copied to clipboard!</div>
-
-  <!-- Footer -->
   <footer>
-    <div class="container footer-grid">
-      <div class="footer-col">
-        <h3>FIFA World Cup 2026 Portal</h3>
-        <p>Your ultimate viewing map for the 23rd edition of the World Cup in Canada, Mexico, and the United States. Supporting clean, legal streaming and local broadcasting rights.</p>
-      </div>
-      <div class="footer-col">
-        <h3>Official Resources</h3>
-        <ul class="footer-links">
-          <li><a href="https://www.fifa.com" target="_blank" rel="noopener noreferrer">Official FIFA Website</a></li>
-          <li><a href="https://www.fifa.com/fifaplus" target="_blank" rel="noopener noreferrer">FIFA+ Stream Portal</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h3>Portal Info</h3>
-        <p>This portal uses third-party sources and does not claim ownership of external match data.</p>
-        <p style="margin-top: 0.75rem; color: var(--text-secondary);">Live fixtures are sourced from <strong>worldcup26.ir</strong> and lineup details come from <strong>TheSportsDB</strong>.</p>
-      </div>
+    <div class="footgrid">
+      <div class="cell"><p class="k">Name</p><p class="v">Joyvishek Ghosh</p></div>
+      <div class="cell"><p class="k">Base</p><p class="v">Kolkata, India</p></div>
+      <div class="cell"><p class="k">Focus</p><p class="v">AI Architect · Full Stack</p></div>
     </div>
-    <div class="footer-bottom">
-      <p>&copy; 2026 KICKOFF 26. Created by Joyvishek. Built as an open aggregation portal. Broadcaster names and logos are trademarks of their respective owners.</p>
-    </div>
+    <p class="note">Agentic AI orchestration · GraphRAG · computer vision · enterprise full-stack systems ·
+      English, Hindi, Bengali.</p>
   </footer>
 
-  <!-- Scripts -->
-  <script src="data.js"></script>
-  <script src="script.js"></script>
+</div>
 </body>
 </html>
