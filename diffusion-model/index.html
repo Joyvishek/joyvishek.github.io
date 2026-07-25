@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Diffusion Architect: A Complete Educational Book</title>
+    <title>The Diffusion Encyclopedia: From Thermodynamics to Generative AI</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -22,70 +22,75 @@
     <script src="https://cdn.jsdelivr.net/npm/mermaid@9.4.3/dist/mermaid.min.js"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Charter:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
         
         :root {
-            --book-bg: #faf9f6;
-            --text-main: #2c2c2c;
-            --accent: #2563eb;
+            --book-bg: #ffffff;
+            --text-main: #1f2937;
+            --accent: #0f172a;
+            --border-color: #e2e8f0;
         }
 
         body {
-            font-family: 'Lora', serif;
+            font-family: 'Charter', serif;
             color: var(--text-main);
             background-color: var(--book-bg);
             line-height: 1.8;
             font-size: 1.125rem;
             scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
         }
 
         h1, h2, h3, h4, h5, h6, .ui-font {
             font-family: 'Inter', sans-serif;
-            color: #111827;
+            color: #0f172a;
+            letter-spacing: -0.025em;
         }
 
         code {
             font-family: 'Fira Code', monospace;
-            font-size: 0.9em;
+            font-size: 0.85em;
         }
 
         .chapter-header {
             position: relative;
-            margin-top: 5rem;
+            margin-top: 6rem;
             margin-bottom: 3rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 1.5rem;
+            border-bottom: 3px solid #0f172a;
         }
 
         .chapter-num {
             display: block;
             font-family: 'Inter', sans-serif;
             font-weight: 800;
-            color: #3b82f6;
-            font-size: 1rem;
+            color: #64748b;
+            font-size: 1.125rem;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.15em;
             margin-bottom: 0.5rem;
         }
 
-        .book-content p { margin-bottom: 1.5rem; }
+        .book-content p { margin-bottom: 1.5rem; text-align: justify; }
         .book-content ul, .book-content ol { margin-bottom: 1.5rem; padding-left: 2rem; }
         .book-content li { margin-bottom: 0.5rem; }
+        .book-content strong { color: #0f172a; }
 
         .definition-box {
-            background-color: #f0fdf4;
-            border-left: 4px solid #22c55e;
-            padding: 1.5rem;
-            margin: 2rem 0;
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid #3b82f6;
+            padding: 1.5rem 2rem;
+            margin: 2.5rem 0;
             border-radius: 0 0.5rem 0.5rem 0;
         }
 
         .theorem-box {
-            background-color: #fffbeb;
-            border-left: 4px solid #f59e0b;
-            padding: 1.5rem;
-            margin: 2rem 0;
-            border-radius: 0 0.5rem 0.5rem 0;
+            background-color: #fcfdfd;
+            border: 1px solid #e2e8f0;
+            border-top: 4px solid #0f172a;
+            padding: 2rem;
+            margin: 2.5rem 0;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
 
@@ -93,62 +98,58 @@
             background-color: #f8fafc;
             border: 1px solid #cbd5e1;
             border-top: 4px solid #3b82f6;
-            padding: 1.5rem;
-            margin: 2rem 0;
+            padding: 2rem;
+            margin: 2.5rem 0;
             border-radius: 0.5rem;
+            overflow-x: auto;
         }
-        
+
         .diagram-explanation {
-            background-color: #f3f4f6;
-            padding: 1.25rem;
+            background-color: #f8fafc;
+            padding: 1.5rem;
             border-radius: 0.5rem;
             font-size: 1rem;
-            margin-top: -1rem;
-            margin-bottom: 2rem;
-            border-left: 4px solid #6b7280;
+            margin-top: 1rem;
+            margin-bottom: 2.5rem;
+            border-left: 4px solid #64748b;
         }
 
         .box-title {
             font-family: 'Inter', sans-serif;
-            font-weight: 700;
+            font-weight: 800;
             display: block;
-            margin-bottom: 0.75rem;
+            margin-bottom: 1rem;
             text-transform: uppercase;
             font-size: 0.875rem;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.1em;
+            color: #0f172a;
         }
 
         .math-display {
             overflow-x: auto;
-            padding: 1.5rem 0;
-            font-size: 1.2rem;
+            padding: 2rem 0;
+            font-size: 1.25rem;
             text-align: center;
         }
 
-        /* Enforce large, highly visible Mermaid diagrams */
-        .mermaid {
+        /* Enforce large, highly visible Mermaid diagrams with responsive scrolling */
+        .mermaid-container {
             width: 100%;
-            display: flex;
-            justify-content: center;
-            padding: 1rem 0;
             overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 2rem 0;
         }
         
-        .mermaid-large svg {
-            width: 100%;
-            min-width: 750px;
-            max-width: 950px;
-            height: auto !important;
-            transform: scale(1.2);
-            transform-origin: top center;
-            margin-bottom: 3rem;
+        .mermaid {
+            display: flex;
+            justify-content: center;
+            min-width: 800px; /* Forces width to prevent text crushing */
         }
-
-        .mermaid:not(.mermaid-large) svg {
-            max-width: 100%;
+        
+        .mermaid svg {
+            width: 100%;
             height: auto !important;
-            transform: none;
-            margin-bottom: 1rem;
+            max-width: 1000px;
         }
 
         #sandbox-container {
@@ -158,6 +159,7 @@
             overflow: hidden;
             margin: 3rem 0;
             background: white;
+            border: 1px solid #e2e8f0;
         }
         
         canvas {
@@ -169,924 +171,663 @@
         }
 
         .toc-link {
-            transition: color 0.2s;
+            transition: all 0.2s ease;
             display: block;
-            padding: 0.25rem 0;
+            padding: 0.35rem 0;
+            color: #475569;
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            padding-left: 1rem;
+            margin-left: -1rem;
         }
         
-        .toc-link:hover { color: var(--accent); }
-        .active-toc { color: var(--accent); font-weight: 600; }
+        .toc-link:hover { color: #0f172a; border-left-color: #cbd5e1; }
+        .active-toc { color: #0f172a; font-weight: 700; border-left-color: #0f172a; }
     </style>
 </head>
 
 <body class="antialiased">
 
     <header class="bg-white border-b border-gray-200 sticky top-0 z-50 ui-font shadow-sm">
-        <div class="max-w-screen-2xl mx-auto px-4 h-16 flex items-center justify-between">
+        <div class="max-w-[1400px] mx-auto px-4 h-16 flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <div class="w-8 h-8 bg-blue-600 rounded flex items-center justify-center text-white font-bold">D</div>
-                <h1 class="font-bold text-lg text-gray-900">The Diffusion Architect</h1>
+                <div class="w-8 h-8 bg-slate-900 rounded flex items-center justify-center text-white font-bold">DE</div>
+                <h1 class="font-bold text-xl text-slate-900 tracking-tight">The Diffusion Encyclopedia</h1>
             </div>
-            <div class="text-sm font-medium text-gray-500">The Complete Educational Text</div>
+            <div class="text-sm font-medium text-slate-500 hidden sm:block">A Comprehensive Academic Text</div>
         </div>
     </header>
 
-    <div class="max-w-screen-2xl mx-auto flex flex-col lg:flex-row relative">
+    <div class="max-w-[1400px] mx-auto flex flex-col lg:flex-row relative">
         
-        <aside class="w-full lg:w-72 flex-shrink-0 lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)] overflow-y-auto border-r border-gray-200 bg-[#faf9f6] p-6 ui-font hidden lg:block">
-            <h3 class="font-bold text-gray-900 uppercase tracking-wider text-xs mb-6">Table of Contents</h3>
-            <nav class="flex flex-col space-y-2 text-sm text-gray-600">
-                <a href="#preface" class="toc-link">Preface: A Blank Slate</a>
-                <a href="#ch1" class="toc-link">1. The Intuition of Diffusion</a>
-                <a href="#ch2" class="toc-link">2. Defining the Vocabulary</a>
-                <a href="#ch3" class="toc-link">3. The Forward Process & Theorems</a>
-                <a href="#ch4" class="toc-link">4. Step-by-Step Math Walkthrough</a>
-                <a href="#ch5" class="toc-link">5. The Reverse Process & Loss</a>
-                <a href="#ch6" class="toc-link">6. Interactive Simulator Sandbox</a>
-                <a href="#ch7" class="toc-link">7. The Neural Architecture (U-Net)</a>
-                <a href="#ch8" class="toc-link">8. The Latent Space Revolution</a>
-                <a href="#ch9" class="toc-link">9. Fine-Tuning & Personalization</a>
-                <a href="#ch10" class="toc-link">10. Absolute Spatial Control</a>
-                <a href="#ch11" class="toc-link">11. Advanced Formulations</a>
-                <a href="#ch12" class="toc-link">12. The Transformer Revolution</a>
-                <a href="#ch13" class="toc-link">13. Alternative Paradigms</a>
-                <a href="#ch14" class="toc-link">14. Real-World Applications</a>
-                <a href="#ch15" class="toc-link">15. State of the Art & Stats</a>
-                <a href="#ch16" class="toc-link">16. Future Scopes & Frontiers</a>
-                <a href="#ch17" class="toc-link">17. Complete Code Implementation</a>
+        <aside class="w-full lg:w-80 flex-shrink-0 lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)] overflow-y-auto border-r border-gray-200 bg-slate-50/50 p-8 ui-font hidden lg:block">
+            <h3 class="font-bold text-slate-900 uppercase tracking-widest text-xs mb-8">Encyclopedia Index</h3>
+            <nav class="flex flex-col text-sm text-slate-600 space-y-1">
+                <a href="#preface" class="toc-link">Preface</a>
+                
+                <span class="font-bold text-slate-900 mt-4 mb-2 text-xs tracking-wider">VOL I: MATHEMATICAL FOUNDATIONS</span>
+                <a href="#ch1" class="toc-link">1. Non-Equilibrium Thermodynamics</a>
+                <a href="#ch2" class="toc-link">2. The Markovian Forward Process</a>
+                <a href="#ch3" class="toc-link">3. The Reverse Process & ELBO</a>
+                <a href="#ch4" class="toc-link">4. Continuous-Time SDEs & Score</a>
+                <a href="#ch5" class="toc-link">5. Mathematical Walkthroughs</a>
+                <a href="#ch6" class="toc-link">6. Interactive Process Simulator</a>
+                
+                <span class="font-bold text-slate-900 mt-6 mb-2 text-xs tracking-wider">VOL II: ARCHITECTURAL ENGINEERING</span>
+                <a href="#ch7" class="toc-link">7. The U-Net Backbone</a>
+                <a href="#ch8" class="toc-link">8. Latent Space & Autoencoders (VAE)</a>
+                <a href="#ch9" class="toc-link">9. Parameter-Efficient Tuning (LoRA)</a>
+                <a href="#ch10" class="toc-link">10. Spatial ControlNet & Adapters</a>
+                <a href="#ch11" class="toc-link">11. Diffusion Transformers (DiT)</a>
+
+                <span class="font-bold text-slate-900 mt-6 mb-2 text-xs tracking-wider">VOL III: ADVANCED SAMPLING & PARADIGMS</span>
+                <a href="#ch12" class="toc-link">12. Advanced ODE Solvers (DDIM/DPM)</a>
+                <a href="#ch13" class="toc-link">13. Flow Matching & Rectified Flows</a>
+                <a href="#ch14" class="toc-link">14. Discrete & Alternative Paradigms</a>
+
+                <span class="font-bold text-slate-900 mt-6 mb-2 text-xs tracking-wider">VOL IV: REAL-WORLD & FUTURE</span>
+                <a href="#ch15" class="toc-link">15. Industry Applications</a>
+                <a href="#ch16" class="toc-link">16. State of the Art Frontiers</a>
+                <a href="#ch17" class="toc-link">17. Advanced PyTorch Architecture</a>
             </nav>
         </aside>
 
         <!-- Main Content Area -->
-        <main class="flex-1 px-6 lg:px-16 py-12 max-w-4xl book-content">
+        <main class="flex-1 px-6 sm:px-12 lg:px-20 py-16 w-full max-w-[950px] book-content overflow-x-hidden">
 
-            <section id="preface" class="mb-20">
-                <h1 class="text-5xl font-extrabold text-gray-900 mb-8 tracking-tight ui-font leading-tight">The Diffusion Architect: <br><span class="text-blue-600">A Complete Educational Book</span></h1>
-                
-                <p class="text-xl text-gray-600 mb-8 italic">A comprehensive, ground-up textbook for researchers, developers, and curious minds. No prior AI background is required.</p>
+            <section id="preface" class="mb-24">
+                <h1 class="text-5xl md:text-6xl font-extrabold text-slate-900 mb-8 tracking-tight ui-font leading-tight">The Diffusion Encyclopedia</h1>
+                <p class="text-xl text-slate-600 mb-12 italic border-l-4 border-slate-300 pl-6 py-2">A rigorous, academic, and exhaustive exposition of Diffusion Models, from foundational ELBO derivations to Score-Based SDEs and Diffusion Transformers.</p>
 
-                <p>Welcome. If you are reading this text, you are likely looking to understand the mechanism behind the greatest leap in generative technology in our lifetime. Over the past few years, computers have shifted from systems that merely classify information (e.g., sorting emails into spam and inbox) to systems that create entirely new information from thin air (e.g., generating a photorealistic image, composing a song, or designing a new medicinal protein).</p>
+                <p>The transition from discriminative modeling (classifying existing information) to generative modeling (synthesizing novel information) represents a profound paradigm shift in artificial intelligence. While Generative Adversarial Networks (GANs) and Variational Autoencoders (VAEs) paved the way, the contemporary revolution in high-fidelity synthesis—ranging from photorealistic imagery to novel molecular structures—is driven almost entirely by the Diffusion Model.</p>
 
-                <p>The technology driving this revolution is the <strong>Diffusion Model</strong>.</p>
-
-                <p>This book is written with a strict, uncompromising rule: <strong>We assume you know nothing about this topic.</strong> We will not use phrases like "it is intuitively obvious" or skip over mathematical proofs. Every concept, every line of math, and every architectural diagram will be broken down into its fundamental building blocks.</p>
-
-                <p>By the time you reach the final chapter, you will have read through mathematical theorems, solved a diffusion equation by hand step-by-step, explored a live interactive simulation, understood the architecture of systems like Stable Diffusion, and reviewed actual, runnable software code.</p>
+                <p>This text serves as a definitive architectural and mathematical reference. It systematically deconstructs the mechanisms of generative diffusion: establishing the probabilistic foundations, proving the governing theorems, detailing the neural network architectures, and examining the continuous-time and flow-matching formulations that define the current state of the art.</p>
             </section>
 
-            <section id="ch1" class="mb-20">
+            <section id="ch1" class="mb-24">
                 <div class="chapter-header">
                     <span class="chapter-num">Chapter 01</span>
-                    <h2 class="text-4xl font-bold">The Intuition of Diffusion</h2>
+                    <h2 class="text-4xl font-bold">Non-Equilibrium Thermodynamics</h2>
                 </div>
                 
-                <p>To understand how a computer learns to create, we must first step away from computers entirely and look at a concept from physics: <strong>Thermodynamics</strong>, specifically the idea of entropy (the measure of disorder).</p>
+                <p>Diffusion models are a class of latent variable models parameterized by Markov chains, deeply inspired by non-equilibrium thermodynamics. The conceptual foundation rests on the fact that any complex data distribution $p_{data}(x)$ can be systematically degraded into a simple, tractable distribution (typically an isotropic Gaussian) via a gradual diffusion process, akin to molecules of a solvent distributing themselves evenly over time.</p>
                 
-                <p>Imagine a clear glass of water resting on a table. You hold a dropper above it and release a single drop of dark blue ink. At the exact fraction of a second the ink hits the water, it possesses high structure and low entropy. It is a concentrated, distinct sphere of color.</p>
-                
-                <p><strong>Example:</strong> Think of this structured ink drop as a high-resolution photograph of a dog. All the information (the shape of the ears, the color of the fur) is perfectly organized.</p>
+                <p>In physics, this is modeled by Langevin dynamics. If we consider a data point $x \in \mathbb{R}^d$, the destruction of its information over continuous time $t \in [0, T]$ is a process of increasing entropy. The true generative breakthrough of the 2020s was recognizing that if this forward destruction process is modeled as a sequence of infinitesimally small Gaussian steps, the <em>reverse</em> process must also take the form of a Gaussian distribution.</p>
 
-                <p>As time passes, the water molecules bump into the ink molecules. The ink begins to spread. It diffuses. The structure breaks down. After an hour, the glass contains a uniform, cloudy, light-blue liquid. The original structure of the ink drop is completely gone. Information has been destroyed.</p>
+                <p>By training a neural network to estimate the parameters of this reverse Gaussian, we essentially train a computational system to act as Maxwell's Demon—reversing the arrow of entropy to reconstruct highly structured data distributions from pure thermal noise.</p>
 
-                <p>In physics, this is a one-way street. You cannot stir the water backward to force the scattered ink molecules to re-assemble into that perfect, concentrated drop. The universe naturally moves toward disorder (static, noise, uniformity).</p>
-
-                <div class="definition-box">
-                    <span class="box-title text-green-700">The Core Concept of Generative Diffusion</span>
-                    <p class="m-0 text-green-900">What if we could train a computer program to act as a "time machine"—a system that learns the exact rules of how things fall apart, so that it can reverse the arrow of time, meticulously removing the disorder until the original, highly structured ink drop reappears?</p>
-                </div>
-
-                <p>In the world of generation, we replace "ink and water" with "data and static noise". The framework consists of two distinct, opposing phases:</p>
-
-                <ol class="list-decimal space-y-4">
-                    <li><strong>The Forward Process (Destroying Data):</strong> We start with a piece of data (a photograph). We systematically inject random "static" (visual noise) into the image over hundreds of small steps. Eventually, the image becomes pure, unrecognizable television static. <em>This process requires no learning; it is pure mathematics.</em></li>
-                    <li><strong>The Reverse Process (Creating Data):</strong> We train a software brain to look at a slightly noisy image and guess what the noise looks like. By doing this thousands of times, the software learns the "rules" of removing static. Once fully trained, we can hand it a picture of pure, random static, and it will iteratively remove the noise step-by-step until an entirely new, pristine image emerges.</li>
-                </ol>
-
-                <div class="my-10 bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col items-center overflow-x-auto">
-                    <div class="mermaid mermaid-large mb-6">
-                        flowchart LR
-                        A[Clean Data] -->|"Add Noise (Forward)"| B(Slightly Noisy Data)
-                        B -->|"Add Noise (Forward)"| C(Pure Static Noise)
-                        
-                        C -.->|"Remove Noise (Reverse)"| D(Slightly Noisy Data)
-                        D -.->|"Remove Noise (Reverse)"| E[Clean Generated Data]
-                        
-                        classDef default fill:#f8fafc,stroke:#cbd5e1,stroke-width:2px,color:#334155,font-family:Inter;
-                        classDef clean fill:#dcfce7,stroke:#22c55e;
-                        classDef purenoise fill:#e2e8f0,stroke:#64748b,stroke-dasharray: 5 5;
-                        
-                        class A,E clean;
-                        class C purenoise;
+                <div class="my-10 bg-slate-50 p-6 rounded-xl border border-slate-200 shadow-sm w-full">
+                    <div class="mermaid-container">
+                        <div class="mermaid">
+                            graph LR
+                            A[Clean Data] -->|Forward Process: Add Noise| B(Slightly Noisy Data)
+                            B -->|Forward Process: Add Noise| C(Pure Gaussian Noise)
+                            
+                            C -.->|Reverse Process: Denoise| D(Slightly Noisy Data)
+                            D -.->|Reverse Process: Denoise| E[Generated Data]
+                            
+                            classDef default fill:#fff,stroke:#cbd5e1,stroke-width:2px,color:#334155,font-family:Inter;
+                            classDef clean fill:#dcfce7,stroke:#22c55e;
+                            classDef purenoise fill:#e2e8f0,stroke:#64748b,stroke-dasharray: 5 5;
+                            
+                            class A,E clean;
+                            class C purenoise;
+                        </div>
                     </div>
-                    <div class="diagram-explanation w-full">
-                        <span class="box-title text-gray-700">How to Read This Diagram</span>
-                        <p class="text-sm text-gray-700 m-0">
-                            <strong>1. Top Path (Solid Arrows):</strong> This represents time moving forward. We start on the left with <strong>Clean Data</strong>. Through mathematical equations, we artificially add noise, creating <strong>Slightly Noisy Data</strong>. We repeat this until we reach <strong>Pure Static Noise</strong>, where no trace of the original data remains.<br><br>
-                            <strong>2. Bottom Path (Dashed Arrows):</strong> This represents the generative phase. We start with absolute garbage (Pure Static Noise). The trained model guesses how to remove a small fraction of the noise, transitioning to the <strong>Slightly Noisy Data</strong> state. It repeats this until it generates a brand new piece of <strong>Clean Generated Data</strong>.
+                    <div class="diagram-explanation">
+                        <span class="box-title">System Flow Diagram</span>
+                        <p class="text-sm m-0">
+                            <strong>1. Forward Trajectory (Solid):</strong> A fixed Markov chain systematically corrupts the data manifold $x_0 \sim q(x)$ over $T$ steps until $x_T \sim \mathcal{N}(0, \mathbf{I})$.<br><br>
+                            <strong>2. Reverse Trajectory (Dashed):</strong> A parameterized neural network $p_\theta$ acts as a learned denoising transition kernel, mapping from the prior Gaussian back to the structured data manifold.
                         </p>
                     </div>
                 </div>
             </section>
 
-            <section id="ch2" class="mb-20">
+            <section id="ch2" class="mb-24">
                 <div class="chapter-header">
                     <span class="chapter-num">Chapter 02</span>
-                    <h2 class="text-4xl font-bold">Defining the Vocabulary</h2>
+                    <h2 class="text-4xl font-bold">The Markovian Forward Process</h2>
                 </div>
 
-                <p>Before we can look at the mathematical equations that drive this process, we must define our building blocks. If you are entirely new to this field, these concepts form your foundation.</p>
+                <p>Let $x_0 \sim q(x_0)$ represent a sample from our true data distribution. We define the forward diffusion process as a Markov chain that adds Gaussian noise over $T$ discrete timesteps, producing a sequence of latent variables $x_1, x_2, \dots, x_T$ possessing the exact same dimensionality as $x_0$.</p>
 
-                <div class="space-y-8 mt-8">
-                    <div>
-                        <h4 class="text-xl font-bold mb-2">1. Data as Tensors</h4>
-                        <p>A computer does not "see" a picture of a dog. It sees a grid of numbers. A 100-pixel by 100-pixel image is a grid of 10,000 pixels. If it is a color image (Red, Green, Blue), it has 3 overlapping layers. Therefore, the image is a 3D grid containing 30,000 numbers.</p>
-                        <p><strong>Definition:</strong> A multi-dimensional grid of numbers is called a <strong>Tensor</strong>. Whenever we talk about "data" or an "image", we are actually talking about a tensor. We will represent our main data tensor with the variable $x$.</p>
-                        <p class="text-sm bg-gray-100 p-3 rounded mt-2 border-l-2 border-gray-400"><em>Example:</em> A spreadsheet with rows and columns is a 2D tensor. A color image is a 3D tensor. A video (a sequence of color images) is a 4D tensor.</p>
-                    </div>
-
-                    <div>
-                        <h4 class="text-xl font-bold mb-2">2. Gaussian Noise (Static)</h4>
-                        <p>When we say we add "noise" or "static" to an image, we do not just pick numbers out of a hat. We use <strong>Gaussian Noise</strong> (also known as Normal Distribution noise). Imagine a bell curve graph: most of the random numbers we generate will be very close to zero (the peak of the bell), and very few will be extremely large or extremely small.</p>
-                        <p><strong>Definition:</strong> Pure Gaussian noise is represented by the Greek letter epsilon: $\epsilon$.</p>
-                        <p class="text-sm bg-gray-100 p-3 rounded mt-2 border-l-2 border-gray-400"><em>Example:</em> If you measure the heights of millions of adult humans, the distribution of those heights forms a Gaussian bell curve. Most people are average height, while very few are 4 feet tall or 7 feet tall. We generate noise using this exact same statistical shape.</p>
-                    </div>
-
-                    <div>
-                        <h4 class="text-xl font-bold mb-2">3. Timesteps</h4>
-                        <p>Diffusion does not happen instantly. It happens over a sequence of discrete steps, like frames in a flipbook animation. We define the total number of steps as $T$ (usually between 500 and 1000). A specific, current step is denoted by the lowercase letter $t$.</p>
-                        <ul class="list-disc">
-                            <li>$x_0$ represents the perfectly clean, original image at step 0.</li>
-                            <li>$x_t$ represents the noisy image currently at step $t$.</li>
-                            <li>$x_T$ represents the final step, which is pure, unrecognizable static noise.</li>
-                        </ul>
-                    </div>
-
-                    <div>
-                        <h4 class="text-xl font-bold mb-2">4. Markov Chains</h4>
-                        <p><strong>Definition:</strong> A Markov chain is a sequence of events where the outcome of the current event depends <em>only</em> on the event immediately preceding it.</p>
-                        <p>In diffusion, to create the noisy image at step $x_5$, we only look at the image from step $x_4$. We completely ignore $x_3$, $x_2$, and $x_0$. This memory-less property drastically simplifies the mathematics.</p>
-                        <p class="text-sm bg-gray-100 p-3 rounded mt-2 border-l-2 border-gray-400"><em>Example:</em> Think of a board game like Monopoly. Your chance of landing on "Boardwalk" on your next turn depends entirely on where your piece is sitting *right now*, and the roll of the dice. It does not matter what spaces you landed on three turns ago.</p>
-                    </div>
-
-                    <div>
-                        <h4 class="text-xl font-bold mb-2">5. Neural Networks, Parameters, and Loss</h4>
-                        <p>An Artificial Neural Network is simply a massive, complex mathematical equation with millions (or billions) of adjustable dials. These dials are called <strong>parameters</strong> or <strong>weights</strong>. We use the Greek letter theta ($\theta$) to represent all the dials collectively.</p>
-                        <p>When we "train" a network, we show it a problem, let it guess the answer, and then use a <strong>Loss Function</strong> to score how wrong the guess was. The system then slightly turns its dials ($\theta$) to get a better score next time.</p>
-                    </div>
-                </div>
-            </section>
-
-            <section id="ch3" class="mb-20">
-                <div class="chapter-header">
-                    <span class="chapter-num">Chapter 03</span>
-                    <h2 class="text-4xl font-bold">The Forward Process & Theorems</h2>
-                </div>
-
-                <p>We are now ready to formalize how we destroy data mathematically. At each step $t$, we want to take the image from the previous step ($x_{t-1}$) and add a tiny bit of noise to it.</p>
-                
-                <h3 class="text-2xl font-bold mt-8 mb-4">The Variance Schedule ($\beta$)</h3>
-                <p>Exactly how much noise do we add? We define a "schedule" of variance parameters, denoted by the Greek letter beta ($\beta$). $\beta_t$ is a very small fraction between 0 and 1.</p>
-                
-                <p>For example, $\beta_1$ might be $0.0001$ (adding almost no noise at step 1), and $\beta_{1000}$ might be $0.02$ (adding more noise at step 1000).</p>
-
-                <p>The mathematical rule to generate the next noisy image ($x_t$) from the previous one ($x_{t-1}$) is written as a probability distribution $q$:</p>
-
+                <p>The forward transition kernel is defined as:</p>
                 <div class="math-display">
                     $$ q(x_t \vert x_{t-1}) = \mathcal{N}(x_t; \sqrt{1 - \beta_t} x_{t-1}, \beta_t \mathbf{I}) $$
                 </div>
 
-                <p><strong>Translating Math into English:</strong></p>
-                <ol class="list-decimal space-y-2 mb-6">
-                    <li>Take the previous image $x_{t-1}$.</li>
-                    <li>Shrink its pixel values very slightly by multiplying them by $\sqrt{1 - \beta_t}$. We do this so the numbers don't grow infinitely large as we keep adding noise.</li>
-                    <li>Add fresh, random Gaussian noise ($\mathcal{N}$), scaled by the size of $\beta_t$.</li>
-                </ol>
-
-                <h3 class="text-2xl font-bold mt-10 mb-4">Theorem 1: The Reparameterization Trick</h3>
-                <p>If we want to generate the image at step $t=500$ to train our model, the formula above suggests we have to run a "for loop" 500 times, adding noise step-by-step. For a computer, running thousands of sequential steps for millions of images is incredibly slow.</p>
-
-                <div class="theorem-box">
-                    <span class="box-title text-amber-700">Theorem 1: Closed-Form Sampling (Reparameterization)</span>
-                    <p class="m-0 text-amber-900">Because the sum of two independent Gaussian variables is simply another Gaussian variable, we can mathematically bypass the step-by-step loop. We can jump directly from the clean image ($x_0$) to any arbitrary noisy step ($x_t$) in a single calculation.</p>
-                </div>
-
-                <p>To do this, we define two new helper constants based on our original $\beta$ schedule:</p>
-                <ul class="list-disc space-y-2 mb-4">
-                    <li>Let $\alpha_t = 1 - \beta_t$</li>
-                    <li>Let $\bar{\alpha}_t$ (pronounced "alpha bar") be the cumulative product of all alphas up to step $t$. Mathematically: $\bar{\alpha}_t = \alpha_1 \times \alpha_2 \times \dots \times \alpha_t$</li>
-                </ul>
-
-                <p>With $\bar{\alpha}_t$ pre-calculated, we can jump straight to step $t$ using the clean image $x_0$ and a single batch of standard noise $\epsilon$:</p>
-
-                <div class="math-display bg-gray-50 border border-gray-200 rounded-lg py-6 my-6 shadow-inner text-blue-800 font-bold">
-                    $$ x_t = \sqrt{\bar{\alpha}_t} \cdot x_0 + \sqrt{1 - \bar{\alpha}_t} \cdot \epsilon $$
-                </div>
-
-                <p><strong>Why is this equation beautiful?</strong> Look closely at its two halves:</p>
-                <ul class="list-disc space-y-2">
-                    <li>The left half ($\sqrt{\bar{\alpha}_t} \cdot x_0$) represents the <strong>Signal</strong> (the original image). At $t=0$, $\bar{\alpha}$ is $1$. The signal is fully present. At $t=1000$, $\bar{\alpha}$ is practically $0$. The signal is erased.</li>
-                    <li>The right half ($\sqrt{1 - \bar{\alpha}_t} \cdot \epsilon$) represents the <strong>Noise</strong>. As time goes on, the noise multiplier gets larger, completely overwhelming the fading signal.</li>
-                </ul>
-            </section>
-
-            <section id="ch4" class="mb-20">
-                <div class="chapter-header">
-                    <span class="chapter-num">Chapter 04</span>
-                    <h2 class="text-4xl font-bold">Walkthrough: Solving the Math by Hand</h2>
-                </div>
-
-                <p>To prove that this isn't magic, let us physically solve the Reparameterization equation from scratch using real numbers.</p>
-
-                <div class="math-problem-box">
-                    <span class="box-title text-blue-700">The Problem Scenario</span>
-                    <p>Imagine our "image" is just a single grayscale pixel. White is $1.0$, Black is $0.0$. Our clean starting pixel is light gray: <strong>$x_0 = 0.8$</strong>.</p>
-                    <p>We want to find out what this pixel's value will be at <strong>timestep $t = 2$</strong>.</p>
-                    
-                    <hr class="my-4 border-blue-200">
-                    
-                    <span class="box-title text-blue-700 mt-4">Given Variables</span>
-                    <ul class="list-disc ml-4 mb-4">
-                        <li>The clean data: $x_0 = 0.8$</li>
-                        <li>The noise schedule for step 1: $\beta_1 = 0.1$</li>
-                        <li>The noise schedule for step 2: $\beta_2 = 0.2$</li>
-                        <li>The random noise generated by the computer for this step: $\epsilon = -0.5$</li>
-                    </ul>
-
-                    <hr class="my-4 border-blue-200">
-                    
-                    <span class="box-title text-blue-700 mt-4">Step-by-Step Solution</span>
-                    
-                    <p class="font-bold mt-2">Step 1: Calculate the $\alpha$ values.</p>
-                    <p class="font-mono text-sm bg-white p-2 rounded">$\alpha_1 = 1 - \beta_1 = 1 - 0.1 = 0.9$<br>
-                    $\alpha_2 = 1 - \beta_2 = 1 - 0.2 = 0.8$</p>
-
-                    <p class="font-bold mt-4">Step 2: Calculate Alpha Bar ($\bar{\alpha}_2$) for step 2.</p>
-                    <p class="font-mono text-sm bg-white p-2 rounded">$\bar{\alpha}_2 = \alpha_1 \times \alpha_2$<br>
-                    $\bar{\alpha}_2 = 0.9 \times 0.8 = 0.72$</p>
-
-                    <p class="font-bold mt-4">Step 3: Plug values into the Reparameterization Equation.</p>
-                    <p class="font-mono text-sm bg-white p-2 rounded">
-                    $x_2 = \sqrt{\bar{\alpha}_2} \cdot x_0 + \sqrt{1 - \bar{\alpha}_2} \cdot \epsilon$<br>
-                    $x_2 = \sqrt{0.72} \cdot (0.8) + \sqrt{1 - 0.72} \cdot (-0.5)$
-                    </p>
-
-                    <p class="font-bold mt-4">Step 4: Solve the arithmetic.</p>
-                    <p class="font-mono text-sm bg-white p-2 rounded">
-                    $\sqrt{0.72} \approx 0.848$<br>
-                    $\sqrt{0.28} \approx 0.529$<br><br>
-                    $x_2 = (0.848 \cdot 0.8) + (0.529 \cdot -0.5)$<br>
-                    $x_2 = 0.678 - 0.264$<br>
-                    <strong>$x_2 = 0.414$</strong>
-                    </p>
-
-                    <hr class="my-4 border-blue-200">
-                    <p class="m-0 text-gray-700"><strong>Conclusion:</strong> In a fraction of a millisecond, without having to calculate step 1, we determined that at step 2, our light gray pixel ($0.8$) has been degraded into a medium gray pixel ($0.414$) due to the noise injection.</p>
-                </div>
-            </section>
-
-            <section id="ch5" class="mb-20">
-                <div class="chapter-header">
-                    <span class="chapter-num">Chapter 05</span>
-                    <h2 class="text-4xl font-bold">The Reverse Process & Loss</h2>
-                </div>
-
-                <p>We now have a mathematical machine that reliably turns beautiful data into worthless television static. How do we build the reverse machine?</p>
-
-                <p>We want to find $q(x_{t-1} \vert x_t)$ — meaning, given a noisy image, what did it look like exactly one step ago? </p>
-
-                <p>In mathematics, calculating this exact reversal is impossible. It requires knowing the probability of every single image that has ever existed or could ever exist (the true data distribution). Because we cannot write a simple equation to reverse the process, we use a Neural Network to <em>guess</em> the answer.</p>
-
-                <h3 class="text-2xl font-bold mt-8 mb-4">Theorem 2: The Variational Lower Bound (ELBO)</h3>
-                <p>How do we score a neural network when we don't know the absolute true mathematical probability of an image existing? We rely on a concept called the Evidence Lower Bound (ELBO).</p>
-
-                <div class="theorem-box">
-                    <span class="box-title text-amber-700">Theorem 2: Evidence Lower Bound</span>
-                    <p class="m-0 text-amber-900">If we cannot directly maximize the exact likelihood of generating a perfect image, we can instead maximize a mathematical "lower bound." If we push the floor (the lower bound) upward, the actual likelihood is forced to go up with it.</p>
-                </div>
-                <p>Through heavy algebraic manipulation of the ELBO, researchers discovered that minimizing the difference between the network's prediction and the forward process naturally maximizes the model's generative capability.</p>
-
-                <h3 class="text-2xl font-bold mt-8 mb-4">The Breakthrough: Predict the Noise</h3>
-                <p>Initially, researchers asked the neural network: <em>"Here is a noisy image. Predict the clean image $x_0$."</em> The network performed terribly.</p>
-
-                <p>They discovered a mathematically equivalent but vastly superior approach:</p>
-
-                <div class="definition-box bg-blue-50 border-l-4 border-blue-500">
-                    <p class="m-0 text-blue-900 font-medium">Do not ask the network to predict the clean image. Ask the network to predict <strong>the exact noise ($\epsilon$)</strong> that was added to the image.</p>
-                </div>
-
-                <p>If we know exactly what the static noise looks like, we can easily subtract a fraction of it from our image to take one step backwards in time.</p>
-
-                <h3 class="text-2xl font-bold mt-8 mb-4">The Loss Function (How it Learns)</h3>
-                <p>Because we decided to predict the noise, our loss function (how we score the network) becomes incredibly simple. It is just Mean Squared Error (MSE). We compare the real noise we injected ($\epsilon$) with the noise the network guessed ($\epsilon_\theta$):</p>
+                <p>Where $\beta_t \in (0, 1)$ is the variance schedule. A critical property of this formulation is that we can bypass iterative computation. By defining $\alpha_t = 1 - \beta_t$ and $\bar{\alpha}_t = \prod_{s=1}^t \alpha_s$, we can leverage the reparameterization trick (since the sum of Gaussians is Gaussian) to sample $x_t$ directly from $x_0$:</p>
 
                 <div class="math-display">
-                    $$ L_{simple} = \mathbb{E}_{t, x_0, \epsilon} \left[ \Vert \epsilon - \epsilon_\theta(x_t, t) \Vert^2 \right] $$
+                    $$ q(x_t \vert x_0) = \mathcal{N}(x_t; \sqrt{\bar{\alpha}_t} x_0, (1 - \bar{\alpha}_t) \mathbf{I}) $$
+                </div>
+                
+                <p>This allows us to express any noisy state explicitly as:</p>
+                <div class="math-display font-bold text-blue-800 bg-blue-50 py-4 border border-blue-200 rounded">
+                    $$ x_t = \sqrt{\bar{\alpha}_t} x_0 + \sqrt{1 - \bar{\alpha}_t} \epsilon, \quad \epsilon \sim \mathcal{N}(0, \mathbf{I}) $$
                 </div>
 
-                <p><strong>The Training Loop:</strong></p>
-                <ol class="list-decimal space-y-2">
-                    <li>Pick a random clean image $x_0$ from our database.</li>
-                    <li>Pick a random timestep $t$ (e.g., step 342).</li>
-                    <li>Generate random static noise $\epsilon$.</li>
-                    <li>Use the "Shortcut Equation" from Chapter 3 to instantly mash the image and the noise together to create $x_t$.</li>
-                    <li>Show $x_t$ and $t$ to the neural network. Ask it to guess the noise $\epsilon$.</li>
-                    <li>Calculate the difference between the network's guess and the real noise. Update the network's dials to be smarter next time.</li>
-                </ol>
+                <p>As $T \to \infty$, we design the schedule such that $\bar{\alpha}_T \to 0$. Thus, the marginal distribution $q(x_T)$ approaches an isotropic Gaussian distribution $\mathcal{N}(0, \mathbf{I})$, erasing all information regarding the initial condition $x_0$.</p>
             </section>
 
-            <section id="ch6" class="mb-20">
+            <section id="ch3" class="mb-24">
                 <div class="chapter-header">
-                    <span class="chapter-num">Chapter 06</span>
-                    <h2 class="text-4xl font-bold">Interactive Simulator Sandbox</h2>
+                    <span class="chapter-num">Chapter 03</span>
+                    <h2 class="text-4xl font-bold">The Reverse Process & ELBO Derivation</h2>
                 </div>
 
-                <p>Equations are abstract. To truly grasp how the Forward process destroys data, and how the Reverse process recovers it, you must see it happen.</p>
-                <p>Below is a live, interactive simulation. We have created a simple "dataset" consisting of 400 dots arranged in a highly structured spiral shape. This represents our clean image ($x_0$).</p>
-                <p>Using the controls below, you can execute the Reparameterization Equation we solved by hand in Chapter 4. Watch how the Alpha Bar ($\bar{\alpha}$) value drops as the signal is destroyed, and the Beta value dictates the noise injection.</p>
+                <p>The generative phase requires reversing the forward chain: we wish to sample $x_T \sim \mathcal{N}(0, \mathbf{I})$ and iteratively sample $q(x_{t-1} \vert x_t)$. However, calculating $q(x_{t-1} \vert x_t)$ directly requires evaluating the marginal distribution of all possible data, which is computationally intractable. Therefore, we approximate it using a parameterized neural network $p_\theta$:</p>
 
-                <!-- Interactive App Container -->
-                <div id="sandbox-container" class="border border-gray-200">
-                    <!-- Controls Header -->
-                    <div class="p-5 bg-gray-50 border-b border-gray-200 grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="math-display">
+                    $$ p_\theta(x_{t-1} \vert x_t) = \mathcal{N}(x_{t-1}; \mu_\theta(x_t, t), \Sigma_\theta(x_t, t)) $$
+                </div>
+
+                <h3 class="text-2xl font-bold mt-10 mb-4">Deriving the Evidence Lower Bound (ELBO)</h3>
+                <p>To optimize $p_\theta$, we maximize the Evidence Lower Bound (ELBO) of the log-likelihood of the data $\log p(x_0)$.</p>
+
+                <div class="theorem-box">
+                    <span class="box-title">Theorem: ELBO Decomposition</span>
+                    <p>The negative log-likelihood is bounded by the variational upper bound $L_{VLB}$:</p>
+                    <div class="math-display text-sm md:text-lg">
+                        $$ L_{VLB} = \mathbb{E}_q \left[ -\log \frac{p_\theta(x_{0:T})}{q(x_{1:T} \vert x_0)} \right] \ge -\mathbb{E}_q [\log p_\theta(x_0)] $$
+                    </div>
+                </div>
+
+                <p>By expanding the Markov chain probabilities and utilizing Bayes' theorem, Ho et al. (2020) demonstrated that $L_{VLB}$ can be elegantly decomposed into three distinct terms:</p>
+
+                <div class="math-display text-base">
+                    $$ L_{VLB} = L_T + \sum_{t>1} L_{t-1} + L_0 $$
+                </div>
+
+                <ul class="list-disc mb-6">
+                    <li><strong>$L_T = D_{KL}(q(x_T \vert x_0) \parallel p(x_T))$:</strong> This term asserts that the final forward step should match the prior standard Gaussian. Because our schedule $\beta_t$ is fixed, $L_T$ has no learnable parameters and is treated as a constant.</li>
+                    <li><strong>$L_0 = -\log p_\theta(x_0 \vert x_1)$:</strong> The reconstruction term for the final step of generation.</li>
+                    <li><strong>$L_{t-1} = D_{KL}(q(x_{t-1} \vert x_t, x_0) \parallel p_\theta(x_{t-1} \vert x_t))$:</strong> This is the workhorse of the loss function. It compares the network's predicted reverse step against the <em>true</em> posterior of the forward process, conditioned on $x_0$.</li>
+                </ul>
+
+                <h3 class="text-2xl font-bold mt-10 mb-4">The Tractable Posterior and Reparameterization</h3>
+                <p>A crucial mathematical revelation is that while $q(x_{t-1} \vert x_t)$ is intractable, the posterior <em>conditioned on $x_0$</em> is tractable and strictly Gaussian:</p>
+                <div class="math-display">
+                    $$ q(x_{t-1} \vert x_t, x_0) = \mathcal{N}(x_{t-1}; \tilde{\mu}_t(x_t, x_0), \tilde{\beta}_t \mathbf{I}) $$
+                </div>
+                <p>Where the true mean is derived analytically as:</p>
+                <div class="math-display text-base">
+                    $$ \tilde{\mu}_t(x_t, x_0) = \frac{\sqrt{\bar{\alpha}_{t-1}} \beta_t}{1 - \bar{\alpha}_t} x_0 + \frac{\sqrt{\alpha_t}(1 - \bar{\alpha}_{t-1})}{1 - \bar{\alpha}_t} x_t $$
+                </div>
+
+                <h3 class="text-2xl font-bold mt-10 mb-4">Simplifying to Noise Prediction</h3>
+                <p>Instead of predicting the mean $\tilde{\mu}_t$ directly, Ho et al. reparameterized $x_0$ in terms of $x_t$ and the injected noise $\epsilon$. By substituting this back into the loss term, they found the network simply needs to predict the noise $\epsilon$ that was added at step $t$:</p>
+
+                <div class="math-display bg-slate-50 border border-slate-200 py-6 my-6 font-bold shadow-inner">
+                    $$ L_{simple}(\theta) = \mathbb{E}_{t, x_0, \epsilon \sim \mathcal{N}(0,\mathbf{I})} \left[ \Vert \epsilon - \epsilon_\theta(x_t, t) \Vert^2 \right] $$
+                </div>
+                <p>This $L_{simple}$ objective discards the complex weighting terms of the true ELBO, empirically resulting in vastly superior generative sample quality.</p>
+            </section>
+
+            <section id="ch4" class="mb-24">
+                <div class="chapter-header">
+                    <span class="chapter-num">Chapter 04</span>
+                    <h2 class="text-4xl font-bold">Continuous-Time SDEs & Score Matching</h2>
+                </div>
+
+                <p>While DDPMs formulate diffusion in discrete timesteps, Song et al. (2020) generalized this by allowing the number of steps $T \to \infty$, transforming the discrete Markov chain into a continuous-time Stochastic Differential Equation (SDE). This unifies Denoising Diffusion with <em>Score-Based Generative Modeling</em>.</p>
+
+                <p>The forward process is defined by an Ito SDE:</p>
+                <div class="math-display">
+                    $$ dx = f(x, t)dt + g(t)dw $$
+                </div>
+                <p>Where $f(x, t)$ is the drift coefficient (pulling the data deterministically), $g(t)$ is the diffusion coefficient (injecting noise), and $w$ is standard Brownian motion.</p>
+
+                <p>A profound result by Anderson (1982) dictates that the reverse-time process is also an SDE:</p>
+                <div class="math-display text-sm md:text-lg">
+                    $$ dx = \left[ f(x, t) - g(t)^2 \nabla_x \log p_t(x) \right] dt + g(t) d\bar{w} $$
+                </div>
+
+                <p>The only unknown in this reverse equation is $\nabla_x \log p_t(x)$, which is the <strong>score function</strong> of the data distribution at time $t$. We train a neural network $s_\theta(x, t)$ to approximate this score via Score Matching techniques. Strikingly, predicting the noise $\epsilon$ in DDPM is mathematically equivalent to score matching via Tweedie's Formula:</p>
+                <div class="math-display">
+                    $$ s_\theta(x_t, t) \approx -\frac{\epsilon_\theta(x_t, t)}{\sqrt{1 - \bar{\alpha}_t}} $$
+                </div>
+
+                <h3 class="text-2xl font-bold mt-8 mb-4">SDE Classifications</h3>
+                <ul class="list-disc">
+                    <li><strong>Variance Exploding (VE-SDE):</strong> Adds noise without attenuating the original signal. The variance approaches infinity. (Equivalent to NCSN).</li>
+                    <li><strong>Variance Preserving (VP-SDE):</strong> Scales the signal down as noise is added, keeping the total variance strictly bounded at 1.0. (Equivalent to continuous DDPM).</li>
+                    <li><strong>Sub-VP SDE:</strong> A variant where variance is bounded even tighter, empirically avoiding high-variance bottlenecks during sampling.</li>
+                </ul>
+            </section>
+
+            <section id="ch5" class="mb-24">
+                <div class="chapter-header">
+                    <span class="chapter-num">Chapter 05</span>
+                    <h2 class="text-4xl font-bold">Mathematical Walkthroughs</h2>
+                </div>
+
+                <p>To ground these advanced theories in concrete mathematics, let us execute the algebra physically, calculating generative states step-by-step.</p>
+
+                <!-- Problem 1: Basic Scalar -->
+                <div class="math-problem-box border-slate-300">
+                    <span class="box-title text-slate-800">Problem 1: Forward Process Reparameterization</span>
+                    <p class="whitespace-normal">Let our "image" be a single pixel: $x_0 = 0.8$. Find $x_2$ given $\beta_1 = 0.1, \beta_2 = 0.2, \epsilon = -0.5$.</p>
+                    
+                    <hr class="my-4 border-slate-300">
+                    <div class="font-mono text-sm space-y-4">
                         <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Total Timesteps (T): <span id="val-t" class="text-blue-600">500</span></label>
-                            <input type="range" id="sim-t" min="50" max="1000" step="50" value="500" class="w-full accent-blue-600 cursor-pointer">
+                            <span class="font-bold font-sans text-slate-700 block mb-1">Step 1: Calculate $\alpha$ values</span>
+                            <div class="bg-white p-3 border border-slate-200 rounded whitespace-nowrap overflow-x-auto">$\alpha_1 = 1 - 0.1 = 0.9$<br>$\alpha_2 = 1 - 0.2 = 0.8$</div>
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Noise Schedule</label>
-                            <select id="sim-schedule" class="w-full bg-white border border-gray-300 rounded shadow-sm py-1.5 px-3 focus:ring-blue-500 focus:border-blue-500 text-sm">
-                                <option value="linear">Linear (Standard)</option>
-                                <option value="cosine">Cosine (Smoother)</option>
+                            <span class="font-bold font-sans text-slate-700 block mb-1">Step 2: Calculate cumulative $\bar{\alpha}_2$</span>
+                            <div class="bg-white p-3 border border-slate-200 rounded whitespace-nowrap overflow-x-auto">$\bar{\alpha}_2 = 0.9 \times 0.8 = 0.72$</div>
+                        </div>
+                        <div>
+                            <span class="font-bold font-sans text-slate-700 block mb-1">Step 3: Solve closed-form equation</span>
+                            <div class="bg-white p-3 border border-slate-200 rounded whitespace-nowrap overflow-x-auto">$x_2 = \sqrt{\bar{\alpha}_2} \cdot x_0 + \sqrt{1 - \bar{\alpha}_2} \cdot \epsilon$<br>$x_2 = \sqrt{0.72} \cdot (0.8) + \sqrt{0.28} \cdot (-0.5)$<br>$x_2 = (0.848 \cdot 0.8) - (0.529 \cdot 0.5) = \mathbf{0.414}$</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Problem 2: Harder Challenge - Reverse Sampling -->
+                <div class="math-problem-box border-purple-300">
+                    <span class="box-title text-purple-800">Problem 2: Reverse DDPM Image Tensor Physics</span>
+                    <p class="whitespace-normal">Calculate one reverse generative step $x_t \to x_{t-1}$ for a 2-pixel feature tensor $x_t = [0.60, -0.20]^T$ at $t = 100$.</p>
+                    <p class="whitespace-normal text-sm text-slate-600 mb-2">Given constants: $\beta_{100} = 0.02, \bar{\alpha}_{100} = 0.50, \epsilon_\theta = [0.15, -0.40]^T, z = [0.10, 0.05]^T$.</p>
+                    
+                    <hr class="my-4 border-purple-200">
+                    <div class="font-mono text-sm space-y-4">
+                        <div>
+                            <span class="font-bold font-sans text-slate-700 block mb-1">Step 1: Reverse Equation Definition</span>
+                            <div class="math-display overflow-x-auto whitespace-nowrap pb-4 text-base">
+                                $$ x_{t-1} = \frac{1}{\sqrt{\alpha_t}} \left( x_t - \frac{1 - \alpha_t}{\sqrt{1 - \bar{\alpha}_t}} \epsilon_\theta(x_t, t) \right) + \sqrt{\beta_t} \cdot z $$
+                            </div>
+                        </div>
+                        <div>
+                            <span class="font-bold font-sans text-slate-700 block mb-1">Step 2: Pre-calculate scaling scalars</span>
+                            <div class="bg-white p-3 border border-slate-200 rounded whitespace-nowrap overflow-x-auto">$\alpha_{100} = 1 - 0.02 = 0.98 \implies \frac{1}{\sqrt{0.98}} \approx 1.01015$<br>Noise Multiplier $c = \frac{1 - 0.98}{\sqrt{0.50}} = \frac{0.02}{0.70711} \approx 0.02828$<br>Langevin Noise Scale $\sigma_t \approx \sqrt{\beta_t} = \sqrt{0.02} \approx 0.14142$</div>
+                        </div>
+                        <div>
+                            <span class="font-bold font-sans text-slate-700 block mb-1">Step 3: Execute vector arithmetic</span>
+                            <div class="bg-white p-3 border border-slate-200 rounded whitespace-nowrap overflow-x-auto">Subtract noise: $x_{100} - c \cdot \epsilon_\theta = [0.60, -0.20] - [0.0042, -0.0113] = [0.5958, -0.1887]$<br>Scale step: $1.01015 \cdot [0.5958, -0.1887] = [0.6018, -0.1906]$<br>Add Langevin $z$: $[0.6018, -0.1906] + [0.0141, 0.0071] = \mathbf{[0.6159, -0.1835]^T}$</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Problem 3: Advanced CFG -->
+                <div class="math-problem-box border-emerald-300">
+                    <span class="box-title text-emerald-800">Problem 3: Document Layout Vector CFG Extrapolation</span>
+                    <p class="whitespace-normal">Calculate the Classifier-Free Guidance (CFG) tensor extrapolation for a Document Layout network with guidance scale $w = 7.5$.<br>$\epsilon_{uncond} = [0.80, 0.30, -0.50]^T$<br>$\epsilon_{cond} = [0.20, 0.90, -0.10]^T$</p>
+
+                    <hr class="my-4 border-emerald-200">
+                    <div class="font-mono text-sm space-y-4">
+                        <div class="bg-white p-3 border border-slate-200 rounded whitespace-nowrap overflow-x-auto">$$ \epsilon_{final} = \epsilon_{uncond} + w \cdot (\epsilon_{cond} - \epsilon_{uncond}) $$<br>1. Delta Direction: $[0.20, 0.90, -0.10] - [0.80, 0.30, -0.50] = [-0.60, 0.60, 0.40]$<br>2. Scale by $w$: $7.5 \cdot [-0.60, 0.60, 0.40] = [-4.50, 4.50, 3.00]$<br>3. Final $\epsilon$: $[0.80, 0.30, -0.50] + [-4.50, 4.50, 3.00] = \mathbf{[-3.70, 4.80, 2.50]^T}$</div>
+                        <p class="text-sm font-sans text-slate-600 mt-2 whitespace-normal italic">Notice how CFG heavily amplifies the text-conditioned features. The layout channel 2 jumped from 0.30 to 4.80, strongly forcing the generative state to obey the prompt constraints regarding the document's structure.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="ch6" class="mb-24">
+                <div class="chapter-header">
+                    <span class="chapter-num">Chapter 06</span>
+                    <h2 class="text-4xl font-bold">Interactive Process Simulator</h2>
+                </div>
+                
+                <p>Observe the Reparameterization Math executing on a 2D continuous distribution (a highly structured spiral). Adjust the schedules to witness how the Alpha Bar and Beta factors physically degrade and theoretically reconstruct the positional tensors.</p>
+
+                <div id="sandbox-container">
+                    <div class="p-6 bg-slate-50 border-b border-slate-200 grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Timesteps (T): <span id="val-t" class="text-blue-600">500</span></label>
+                            <input type="range" id="sim-t" min="100" max="1000" step="50" value="500" class="w-full accent-blue-600 cursor-pointer">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Noise Schedule</label>
+                            <select id="sim-schedule" class="w-full bg-white border border-slate-300 rounded shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500 text-sm">
+                                <option value="linear">Linear Distribution</option>
+                                <option value="cosine">Cosine (Nichol & Dhariwal)</option>
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Max Beta: <span id="val-beta" class="text-blue-600">0.02</span></label>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Maximum Beta ($\beta_T$): <span id="val-beta" class="text-blue-600">0.02</span></label>
                             <input type="range" id="sim-beta" min="0.005" max="0.1" step="0.005" value="0.02" class="w-full accent-blue-600 cursor-pointer">
                         </div>
                     </div>
                     
-                    <!-- Visualization Area -->
-                    <div class="p-6 bg-slate-900 flex flex-col lg:flex-row items-center gap-8">
-                        <!-- Canvas -->
-                        <div class="relative flex-shrink-0">
-                            <canvas id="diffusionCanvas" width="400" height="400" class="shadow-xl"></canvas>
-                            <div class="absolute top-4 left-4 bg-black/60 backdrop-blur text-white text-xs font-mono py-1 px-2 rounded border border-white/10">
-                                Step: <span id="current-step" class="text-blue-400 font-bold">0</span> / <span id="total-step">500</span>
+                    <div class="p-8 bg-slate-900 flex flex-col lg:flex-row items-center justify-center gap-12">
+                        <div class="relative flex-shrink-0 w-full max-w-[400px]">
+                            <canvas id="diffusionCanvas" width="400" height="400" class="shadow-2xl border border-slate-700 w-full h-auto"></canvas>
+                            <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur text-slate-100 text-xs font-mono py-1.5 px-3 rounded shadow border border-slate-600">
+                                $t = $ <span id="current-step" class="text-blue-400 font-bold">0</span> / <span id="total-step">500</span>
                             </div>
                         </div>
                         
-                        <!-- Telemetry Stats -->
-                        <div class="flex-1 w-full space-y-4 font-mono">
-                            <div class="bg-slate-800 p-4 rounded-lg border border-slate-700">
-                                <div class="text-xs text-slate-400 mb-1 uppercase">Signal Remaining (Alpha Bar $\bar{\alpha}_t$)</div>
-                                <div class="text-2xl font-bold text-white mb-2" id="stat-alpha">1.000000</div>
-                                <div class="w-full bg-slate-900 h-2 rounded-full overflow-hidden">
+                        <div class="w-full max-w-sm space-y-6 font-mono">
+                            <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 shadow-inner">
+                                <div class="text-xs text-slate-400 mb-2 uppercase tracking-wider">Alpha Bar ($\bar{\alpha}_t$)</div>
+                                <div class="text-3xl font-bold text-white mb-3" id="stat-alpha">1.000000</div>
+                                <div class="w-full bg-slate-900 h-2.5 rounded-full overflow-hidden">
                                     <div id="bar-alpha" class="bg-emerald-500 h-full transition-all duration-75" style="width: 100%"></div>
                                 </div>
                             </div>
                             
-                            <div class="bg-slate-800 p-4 rounded-lg border border-slate-700">
-                                <div class="text-xs text-slate-400 mb-1 uppercase">Noise Variance Added (Beta $\beta_t$)</div>
-                                <div class="text-2xl font-bold text-white mb-2" id="stat-beta">0.000100</div>
-                                <div class="w-full bg-slate-900 h-2 rounded-full overflow-hidden">
+                            <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 shadow-inner">
+                                <div class="text-xs text-slate-400 mb-2 uppercase tracking-wider">Variance ($\beta_t$)</div>
+                                <div class="text-3xl font-bold text-white mb-3" id="stat-beta">0.000100</div>
+                                <div class="w-full bg-slate-900 h-2.5 rounded-full overflow-hidden">
                                     <div id="bar-beta" class="bg-rose-500 h-full transition-all duration-75" style="width: 1%"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Action Buttons -->
-                    <div class="p-4 bg-gray-50 border-t border-gray-200 flex flex-wrap justify-center gap-4">
-                        <button id="btn-forward" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-medium rounded-lg shadow-sm transition flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg>
-                            Run Forward Process (Noise)
+                    <div class="p-5 bg-slate-50 border-t border-slate-200 flex flex-wrap justify-center gap-4">
+                        <button id="btn-forward" class="px-8 py-3 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold rounded shadow transition flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg>
+                            Execute Forward Process
                         </button>
-                        <button id="btn-reverse" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-medium rounded-lg shadow-sm transition flex items-center gap-2 opacity-50 cursor-not-allowed" disabled>
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path></svg>
-                            Run Reverse Process (Denoise)
+                        <button id="btn-reverse" class="px-8 py-3 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-semibold rounded shadow transition flex items-center gap-2 opacity-50 cursor-not-allowed" disabled>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path></svg>
+                            Execute Reverse Process
                         </button>
-                        <button id="btn-reset" class="px-4 py-2.5 bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium rounded-lg transition">
-                            Reset
+                        <button id="btn-reset" class="px-6 py-3 bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 font-semibold rounded transition">
+                            Reset State
                         </button>
                     </div>
                 </div>
-                <p class="text-sm text-gray-500 italic mt-2 text-center">Note: In this specific visual sandbox, the "Reverse Process" relies on the mathematically perfect known noise to ensure visual clarity, rather than a neural network estimation.</p>
             </section>
 
-            <section id="ch7" class="mb-20">
+            <section id="ch7" class="mb-24">
                 <div class="chapter-header">
                     <span class="chapter-num">Chapter 07</span>
-                    <h2 class="text-4xl font-bold">The Neural Architecture (U-Net)</h2>
+                    <h2 class="text-4xl font-bold">The U-Net Backbone</h2>
                 </div>
 
-                <p>We established that we need a Neural Network to guess the noise. But what does the structure of that network look like? You cannot use a simple flat list of neurons. Because we are dealing with images, we need a network capable of understanding spatial relationships (shapes, edges, textures, eyes, wheels).</p>
+                <p>The workhorse function approximator $\epsilon_\theta(x_t, t)$ requires an architecture capable of processing dense spatial features while maintaining pixel-perfect structural alignment. The dominant choice has historically been the <strong>U-Net</strong>.</p>
 
-                <p>The undisputed champion of image diffusion architectures is the <strong>U-Net</strong>.</p>
-
-                <h3 class="text-2xl font-bold mt-8 mb-4">What is a U-Net?</h3>
-                <p>A U-Net gets its name because its architecture resembles the letter "U". It is divided into two distinct halves:</p>
-                <ol class="list-decimal space-y-4 mb-6">
-                    <li><strong>The Encoder (Downsampling):</strong> The network takes the noisy 512x512 image and slowly shrinks its physical dimensions (e.g., to 256x256, then 128x128, down to 64x64). As the image shrinks spatially, the network increases its "depth" or "channels".<br>
-                    <em>Example:</em> Think of this like looking at a painting and slowly squinting your eyes. You lose the fine pixel details (like individual brush strokes), but you gain a deep understanding of the big, abstract concepts ("that blob is a tree, that blob is the sky").</li>
-                    <li><strong>The Decoder (Upsampling):</strong> The network takes that deep, abstract, squished representation and slowly scales it back up to the original 512x512 resolution.</li>
+                <p>The U-Net operates through a spatial bottleneck:</p>
+                <ol class="list-decimal space-y-2 mb-6">
+                    <li><strong>Encoder:</strong> A sequence of ResNet blocks and downsampling layers (e.g., strided convolutions or max pooling) that compress the spatial dimensions $H \times W$ while increasing the channel dimension $C$. This extracts global, semantic context.</li>
+                    <li><strong>Bottleneck:</strong> The lowest resolution tier, containing massive channel depths, typically integrated with Multi-Head Self-Attention layers to calculate global spatial correlations.</li>
+                    <li><strong>Decoder:</strong> Upsampling layers that reconstruct the spatial dimensions. Crucially, <strong>skip connections</strong> concatenate the high-resolution feature maps from the Encoder directly into the Decoder, rescuing fine-grained spatial details lost in the bottleneck.</li>
                 </ol>
 
-                <h3 class="text-2xl font-bold mt-8 mb-4">The Magic of Skip Connections</h3>
-                <p>If we just squish an image and blow it back up, the result will be terribly blurry. The U-Net solves this using <strong>Skip Connections</strong>. It draws literal wires directly from the high-resolution layers in the Encoder straight across to the corresponding layers in the Decoder.</p>
-                <p>This means the network has access to both deep, abstract meaning ("this area is a cat") AND high-resolution structural details ("here are the exact crisp pixel locations to draw the whiskers") simultaneously.</p>
-
-                <h3 class="text-2xl font-bold mt-8 mb-4">Time and Text Awareness</h3>
-                <p>Our U-Net must predict noise, but remember our equation: $\epsilon_\theta(x_t, t)$. The network MUST know what timestep ($t$) it is currently working on. Noise at step 900 looks completely different than noise at step 10.</p>
-                
-                <p>We convert the number $t$ into a mathematical vector called a <strong>Sinusoidal Time Embedding</strong>. We literally inject this time vector into the side of every block in the U-Net. This is often done using a technique called <strong>Adaptive Group Normalization (AdaGN)</strong>, which scales and shifts the image features based on the current time. This acts as a signal telling the U-Net, "Hey, we are currently at step 342, adjust your filter parameters accordingly."</p>
-
-                <p>Furthermore, if this is a Text-to-Image model (like Midjourney or DALL-E), we must also inject the user's text prompt. We use <strong>Cross-Attention</strong> layers. As the image data flows through the U-Net, it "attends" (looks at) the words in the prompt and physically shifts its internal representations to match the user's request.</p>
+                <h3 class="text-2xl font-bold mt-8 mb-4">Conditioning Injection (AdaGN)</h3>
+                <p>The network must process the scalar timestep $t$. $t$ is projected into a high-dimensional vector using Sinusoidal Positional Embeddings and passed through a Multi-Layer Perceptron (MLP). This temporal embedding is injected into *every* ResNet block via <strong>Adaptive Group Normalization (AdaGN)</strong>.</p>
+                <div class="math-display text-base">
+                    $$ \text{AdaGN}(h, t) = y_s(t) \odot \text{GroupNorm}(h) + y_b(t) $$
+                </div>
+                <p>Where $y_s$ and $y_b$ are scale and shift parameters derived from the timestep embedding. This allows time to physically alter the distribution of features throughout the entire network.</p>
             </section>
 
-            <section id="ch8" class="mb-20">
+            <section id="ch8" class="mb-24">
                 <div class="chapter-header">
                     <span class="chapter-num">Chapter 08</span>
-                    <h2 class="text-4xl font-bold">The Latent Space Revolution</h2>
+                    <h2 class="text-4xl font-bold">Latent Space & Autoencoders (VAE)</h2>
                 </div>
 
-                <p>If you run a massive U-Net on a full 1024x1024 pixel image for 1000 steps, it requires astronomical amounts of VRAM (Video RAM) and computational power. For a long time, diffusion models were so slow they were commercially unviable.</p>
+                <p>Running a U-Net on high-resolution pixel space requires catastrophic computational complexity ($O(N^2)$ for attention layers). Rombach et al. solved this by introducing <strong>Latent Diffusion Models (LDMs)</strong>, the architecture powering Stable Diffusion.</p>
 
-                <p>This changed drastically with the introduction of <strong>Latent Diffusion Models (LDMs)</strong>, the architecture famously known today as <strong>Stable Diffusion</strong>.</p>
-
-                <h3 class="text-2xl font-bold mt-8 mb-4">Leaving Pixel Space</h3>
-                <p>The breakthrough was realizing that we do not need to perform complex diffusion math on actual visible pixels. An image contains massive amounts of redundant information (e.g., a blue sky has thousands of identical blue pixels).</p>
-
-                <p>LDMs introduce a side-kick neural network called a <strong>Variational Autoencoder (VAE)</strong>.</p>
-
-                <ul class="list-disc space-y-4 mb-6">
-                    <li><strong>VAE Encoder:</strong> Takes a massive 1024x1024 pixel image and compresses it down into a tiny 128x128 grid of numbers. This tiny grid is called the <strong>Latent Space</strong>. It no longer looks like an image to human eyes; it is a purely mathematical, highly compressed representation of meaning.</li>
-                    <li><strong>The Diffusion Process:</strong> We run the ENTIRE forward (noising) and reverse (U-Net denoising) process exclusively on these tiny 128x128 latents. Because it is so small, the computer can do the math thousands of times faster with a fraction of the memory.</li>
-                    <li><strong>VAE Decoder:</strong> Once the U-Net has successfully generated a beautiful, clean 128x128 latent representation, we pass it to the VAE Decoder. The decoder effortlessly expands that mathematical soup back into a stunning 1024x1024 pixel image that humans can see.</li>
-                </ul>
-
-                <div class="my-10 bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col items-center overflow-x-auto">
-                    <div class="mermaid mb-6">
-                        flowchart TD
-                        Prompt["User Prompt (e.g., 'A cat')"] -->|CLIP Text Encoder| TextEmb["Text Embeddings"]
-                        Image["Original Pixel Image (1024px)"] -->|VAE Encoder| Latent["Latent Space (128px)"]
-                        
-                        Latent -->|"Add Noise"| NoisyLatent["Noisy Latent (x_t)"]
-                        
-                        TextEmb -.->|"Cross-Attention"| UNet
-                        Time["Timestep (t)"] -.->|"Time Embedding"| UNet
-                        NoisyLatent --> UNet{"U-Net (Predicts Noise)"}
-                        
-                        UNet -->|"Subtract Noise (Loop)"| CleanLatent["Clean Generated Latent"]
-                        
-                        CleanLatent -->|VAE Decoder| Final["Final Pixel Image (1024px)"]
-                        
-                        classDef default fill:#f8fafc,stroke:#cbd5e1,stroke-width:2px,color:#334155,font-family:Inter;
-                        classDef input fill:#eff6ff,stroke:#3b82f6;
-                        classDef engine fill:#fef08a,stroke:#eab308;
-                        classDef output fill:#dcfce7,stroke:#22c55e;
-                        
-                        class Prompt,Image input;
-                        class UNet engine;
-                        class Final output;
-                    </div>
-                    
-                    <div class="diagram-explanation w-full">
-                        <span class="box-title text-gray-700">How to Read the LDM Architecture</span>
-                        <p class="text-sm text-gray-700 m-0">
-                            <strong>1. Preparation (Top):</strong> The system translates human inputs into math. The text prompt is converted into "Embeddings" (a list of numbers representing word meanings). If training, a real image is compressed by the VAE Encoder into the tiny "Latent Space".<br><br>
-                            <strong>2. The Engine (Middle):</strong> The Noisy Latent is fed into the yellow <strong>U-Net</strong>. Notice the dashed arrows: the U-Net isn't just looking at the image; it is constantly referring back to the Timestep and the Text Embeddings to figure out exactly what kind of noise to remove.<br><br>
-                            <strong>3. The Output (Bottom):</strong> After the U-Net loops many times to clean the latent, the final, perfect latent is passed to the VAE Decoder. It inflates the math back into a visible, high-resolution Pixel Image.
-                        </p>
-                    </div>
-                </div>
-                
-                <h3 class="text-2xl font-bold mt-8 mb-4">Controlling Generation (CFG)</h3>
-                <p>When generating an image from text, the model sometimes ignores the user's prompt. If you type "A bright red car", the model might just generate a gray car because gray cars were more common in its training data. How do we force the model to listen to us?</p>
-
-                <p>We use <strong>Classifier-Free Guidance (CFG)</strong>. At every single step of the denoising process, we run the U-Net <strong>twice</strong> instead of once.</p>
-
-                <ol class="list-decimal space-y-2 mb-6">
-                    <li><strong>Conditional Run:</strong> We feed the U-Net the noisy image AND the user's text prompt ("A red car"). The U-Net predicts noise: $\epsilon_{cond}$.</li>
-                    <li><strong>Unconditional Run:</strong> We feed the U-Net the exact same noisy image, but we give it a blank, empty text prompt. The U-Net predicts noise based purely on the generic image shapes, ignoring any specific text: $\epsilon_{uncond}$.</li>
+                <p>LDMs utilize a two-stage approach:</p>
+                <ol class="list-decimal space-y-4 mb-6">
+                    <li><strong>Perceptual Compression (The VAE):</strong> A pre-trained Variational Autoencoder (VAE) compresses the pixel-space image $x \in \mathbb{R}^{H \times W \times 3}$ into a dense, lower-dimensional latent space $z \in \mathbb{R}^{h \times w \times c}$, typically with a downsampling factor of $f=8$ (e.g., $1024 \to 128$).</li>
+                    <li><strong>Semantic Diffusion:</strong> The Markovian forward and reverse diffusion process is executed *strictly* within this compressed latent space $z_t$. Because $128 \times 128$ requires $64\times$ fewer computations than $1024 \times 1024$, the model can allocate heavily localized self-attention mechanisms without exceeding VRAM bounds.</li>
                 </ol>
 
-                <p>The difference between these two predictions represents the mathematical "direction" of the text "red car". We take the unconditional prediction and push it drastically in the direction of the text prompt. </p>
-                
-                <div class="math-display">
-                    $$ \epsilon_{final} = \epsilon_{uncond} + w \cdot (\epsilon_{cond} - \epsilon_{uncond}) $$
+                <div class="my-10 bg-slate-50 p-6 rounded-xl border border-slate-200 shadow-sm w-full">
+                    <div class="mermaid-container">
+                        <div class="mermaid">
+                            graph TD
+                            Prompt["Text Prompt"] -->|CLIP Encoder| TextEmb["Text Embeddings"]
+                            Image["Pixel Image"] -->|VAE Encoder| Latent["Latent Space"]
+                            
+                            Latent -->|"Forward: Add Noise"| NoisyLatent["Noisy Latent (x_t)"]
+                            
+                            TextEmb -.->|"Cross-Attention"| UNet
+                            Time["Timestep (t)"] -.->|"AdaGN"| UNet
+                            NoisyLatent --> UNet{"U-Net Denoising"}
+                            
+                            UNet -->|"Loop to Step 0"| CleanLatent["Clean Latent (x_0)"]
+                            CleanLatent -->|VAE Decoder| Final["Generated Image"]
+                            
+                            classDef default fill:#fff,stroke:#cbd5e1,stroke-width:2px,color:#334155,font-family:Inter;
+                            classDef input fill:#eff6ff,stroke:#3b82f6;
+                            classDef engine fill:#fef08a,stroke:#eab308;
+                            classDef output fill:#dcfce7,stroke:#22c55e;
+                            
+                            class Prompt,Image input;
+                            class UNet engine;
+                            class Final output;
+                        </div>
+                    </div>
                 </div>
-                <p>Where $w$ is the CFG Scale (a number usually between 5.0 and 8.0). This simple equation is what allows humans to steer the AI's imagination through text.</p>
             </section>
 
-            <section id="ch9" class="mb-20">
+            <section id="ch9" class="mb-24">
                 <div class="chapter-header">
                     <span class="chapter-num">Chapter 09</span>
-                    <h2 class="text-4xl font-bold">Fine-Tuning & Personalization</h2>
+                    <h2 class="text-4xl font-bold">Parameter-Efficient Tuning (LoRA)</h2>
                 </div>
 
-                <p>Training a foundational diffusion model from absolute scratch requires millions of dollars in compute, clusters of GPUs, and billions of images. But what if a developer wants to teach the AI a <em>new</em> concept that was not in its original training data—such as a specific person's face, a custom video game character, or a corporate brand style?</p>
+                <p>Training a foundational model requires millions of GPU hours. If an enterprise wishes to adapt a model to a specific subject, full fine-tuning is computationally prohibitive. <strong>Low-Rank Adaptation (LoRA)</strong> solves this via linear algebra matrix decomposition.</p>
 
-                <p>We do not train a new model; we <strong>fine-tune</strong> the existing one.</p>
+                <p>Instead of updating a massive weight matrix $W_0 \in \mathbb{R}^{d \times k}$, LoRA hypothesizes that the "update" necessary for a specific concept resides in a low intrinsic rank. We freeze $W_0$ and represent the weight update $\Delta W$ as the product of two low-rank matrices $A$ and $B$:</p>
 
-                <h3 class="text-2xl font-bold mt-8 mb-4">1. DreamBooth</h3>
-                <p>DreamBooth is a technique developed by Google researchers to personalize text-to-image models. You provide the model with 3 to 5 images of your specific subject (e.g., your dog). You then bind those images to a rare, meaningless text token, such as <code>sks dog</code>.</p>
-                <p>The model briefly resumes its training loop, learning to associate the visual features of your dog strictly with the <code>sks</code> token. To prevent the model from "forgetting" what a normal dog looks like, DreamBooth uses a <em>Class Preservation Loss</em>—simultaneously training on generic dog images alongside your custom images.</p>
-
-                <h3 class="text-2xl font-bold mt-8 mb-4">2. LoRA (Low-Rank Adaptation)</h3>
-                <p>While DreamBooth is powerful, it updates all the weights in the massive U-Net, outputting a completely new 2-to-6 Gigabyte model file. If you have 50 different characters in your video game, hosting 50 massive models is impossible.</p>
-                <p>The savior of modern AI development is <strong>LoRA</strong>.</p>
-
-                <div class="theorem-box bg-blue-50 border-l-4 border-blue-500 shadow-sm">
-                    <span class="box-title text-blue-800">The Mathematics of LoRA</span>
-                    <p class="m-0 text-blue-900">Instead of permanently modifying the original billions of parameters ($W$), we freeze them completely. We introduce a new, parallel mathematical path for the weights: $W' = W + \Delta W$.</p>
+                <div class="math-display">
+                    $$ W = W_0 + \Delta W = W_0 + BA $$
                 </div>
-
-                <p>Updating a massive matrix like $\Delta W$ is computationally heavy. LoRA's genius relies on linear algebra: a massive matrix can be heavily compressed (decomposed) into two much smaller matrices if it has a "low rank."</p>
-
-                <div class="math-display bg-white border border-gray-200 rounded-lg py-4 shadow-sm my-6">
-                    $$ \Delta W = A \times B $$
-                </div>
-
-                <ul class="list-disc space-y-4 mb-6">
-                    <li>We freeze $W$ (requiring no memory updates).</li>
-                    <li>We train only the tiny matrices $A$ and $B$.</li>
-                    <li><strong>The Result:</strong> We reduce the number of trainable parameters by 10,000x. A custom concept can be trained on a single consumer graphics card in 15 minutes, resulting in a tiny 10-Megabyte file. This file acts as a "plugin" or "cartridge" that slides into the base model at generation time.</li>
-                </ul>
+                <p>Where $B \in \mathbb{R}^{d \times r}$ and $A \in \mathbb{R}^{r \times k}$, and the rank $r \ll \min(d, k)$. Typically, $r$ is extremely small (e.g., $r=4$ or $8$). Matrix $A$ is initialized randomly, and $B$ is initialized to zero, ensuring $\Delta W = 0$ at the start of training. This reduces the number of trainable parameters by over 10,000x, allowing models to be fine-tuned on consumer GPUs in minutes.</p>
             </section>
 
-            <section id="ch10" class="mb-20">
+            <section id="ch10" class="mb-24">
                 <div class="chapter-header">
                     <span class="chapter-num">Chapter 10</span>
-                    <h2 class="text-4xl font-bold">Absolute Spatial Control</h2>
+                    <h2 class="text-4xl font-bold">Spatial ControlNet & Adapters</h2>
                 </div>
 
-                <p>A major limitation of standard text-to-image diffusion models is ambiguity. The prompt <em>"a person striking a heroic pose"</em> leaves the exact position of the arms, legs, and camera angle entirely up to random chance. In a production pipeline (like animation or architectural visualization), developers need strict structural blueprints.</p>
+                <p>While CFG allows semantic text control, developers often require strict spatial structural control (e.g., forcing a generated human into a specific skeletal pose, or preserving the exact edges of an architectural sketch). <strong>ControlNet</strong> resolves this without requiring retraining of the foundational base model.</p>
 
-                <p>How do we force a diffusion model to perfectly follow a structural outline without ignoring its text prompt? We use <strong>ControlNet</strong>.</p>
+                <p>ControlNet operates by cloning the weights of the foundational U-Net's encoder. The original encoder is locked (frozen). The cloned encoder is made trainable and receives the spatial condition (e.g., Canny edge map or OpenPose skeleton) alongside the latent $x_t$.</p>
 
-                <h3 class="text-2xl font-bold mt-8 mb-4">The ControlNet Architecture</h3>
-                <p>ControlNet is a neural network architecture designed to add spatial conditions to large, pre-trained diffusion models. A "spatial condition" can be a Canny edge-detection map, a depth map, a user's crude doodle, or a stick-figure skeleton (OpenPose).</p>
-
-                <ol class="list-decimal space-y-4 mb-6">
-                    <li><strong>Locking the Original:</strong> We take the pristine, fully-trained U-Net and completely freeze its weights. This preserves the model's vast knowledge of billions of images.</li>
-                    <li><strong>The Trainable Copy:</strong> We create a literal, exact clone of the U-Net's encoding layers. We feed our spatial map (e.g., the stick figure) into this copy.</li>
-                    <li><strong>Re-merging:</strong> The structural outputs from the copy are merged back into the frozen original model.</li>
-                </ol>
-
-                <h3 class="text-2xl font-bold mt-8 mb-4">The Magic of Zero Convolutions</h3>
-                <p>If you attach a brand new, untrained neural network (the copy) directly to the side of a finely-tuned model, it will immediately corrupt the data stream, generating garbage and destroying the generation process.</p>
-
-                <div class="definition-box bg-purple-50 border-l-4 border-purple-500">
-                    <span class="box-title text-purple-800">Zero Convolutions</span>
-                    <p class="m-0 text-purple-900">ControlNet connects the Trainable Copy to the Original Model using 1x1 convolution layers where all weights are initialized to <strong>absolute zero</strong>. Before training begins, this guarantees the output is multiplied by zero.</p>
-                </div>
-
-                <p>At Step 1 of training, the ControlNet does absolutely nothing. The model generates an image exactly as it normally would. But as training progresses over thousands of steps, the gradients slowly shift these zero-weights into non-zero numbers. The model smoothly and safely learns to respect the edge map, without ever experiencing catastrophic forgetting.</p>
-                
-                <p>This single architectural trick transformed Diffusion Models from unpredictable art generators into precise, controllable tools used in professional film, gaming, and 3D pipelines.</p>
+                <p>The trainable clone processes the spatial map, and its outputs are injected back into the frozen decoder's skip connections. To prevent the untrained clone from destroying the fragile generative capability of the frozen model during the first training epoch, ControlNet employs <strong>Zero-Convolutions</strong>—$1 \times 1$ convolutional layers whose weights and biases are explicitly initialized to zero. Because the gradients flow naturally through zero-convs, the network safely learns to interpret the spatial map over time without gradient explosions.</p>
             </section>
 
-            <section id="ch11" class="mb-20">
+            <section id="ch11" class="mb-24">
                 <div class="chapter-header">
                     <span class="chapter-num">Chapter 11</span>
-                    <h2 class="text-4xl font-bold">Advanced Mathematical Formulations</h2>
+                    <h2 class="text-4xl font-bold">Diffusion Transformers (DiT)</h2>
                 </div>
 
-                <p>The standard DDPM framework we have explored is foundational, but it has one major flaw: <strong>slow sampling speed</strong>. Because it is a strict Markov chain, generating an image requires calculating every single step sequentially (often 1,000 steps). Researchers have developed advanced formulations to solve this.</p>
+                <p>While U-Nets dominated the early 2020s, scaling them up (to billions of parameters) yielded diminishing returns and complex inductive biases due to localized convolutions. Peebles and Xie (2022) proposed replacing the U-Net entirely with a standard <strong>Transformer</strong> architecture, creating the DiT (used by Sora, Stable Diffusion 3, and Flux).</p>
 
-                <div class="space-y-8 mt-8">
-                    <div class="p-5 border border-gray-200 rounded-lg bg-white shadow-sm">
-                        <h3 class="text-xl font-bold mb-2 text-blue-800">1. DDIM (Denoising Diffusion Implicit Models)</h3>
-                        <p class="m-0 text-gray-700">DDIM re-derived the mathematical reverse process to be <em>non-Markovian</em>. This means the model does not have to strictly step from $t=1000$ to $t=999$. The math proves that you can deterministically "skip" steps, taking larger strides through time. DDIM allows for generating high-quality images in just 20 to 50 steps, drastically accelerating generation times without needing to retrain the network.</p>
-                    </div>
+                <h3 class="text-2xl font-bold mt-8 mb-4">The DiT Architecture</h3>
+                <p>DiTs operate on latents by "patchifying" them, identical to a Vision Transformer (ViT). A $32 \times 32$ latent is sliced into $p \times p$ patches, unrolled into a sequence of tokens, and processed by standard Transformer blocks (Self-Attention $\to$ MLP).</p>
 
-                    <div class="p-5 border border-gray-200 rounded-lg bg-white shadow-sm">
-                        <h3 class="text-xl font-bold mb-2 text-blue-800">2. Score-Based SDEs (Stochastic Differential Equations)</h3>
-                        <p class="mb-2 text-gray-700">Instead of treating time as discrete chunks (step 1, step 2, step 3), this formulation treats time continuously. The forward process of adding noise is modeled as a continuous SDE:</p>
-                        <div class="math-display my-2 bg-gray-50 border border-gray-200 rounded-lg py-4">
-                            $$ dx = f(x, t)dt + g(t)dw $$
-                        </div>
-                        <p class="m-0 text-gray-700">Where $w$ represents standard Brownian motion (continuous random noise). To reverse this, we calculate the gradient of the log probability density (known as the "score"). This bridges the gap between diffusion models and older score-matching generative models.</p>
-                    </div>
+                <div class="theorem-box">
+                    <span class="box-title text-emerald-700">Crucial Innovation: AdaLN-Zero</span>
+                    <p class="m-0 text-emerald-900">How do we inject the timestep $t$ and class condition $c$ into a Transformer? DiTs utilize Adaptive Layer Normalization (AdaLN). A linear layer projects $(t, c)$ into scale ($\gamma$), shift ($\beta$), and dimensional scaling ($\alpha$) parameters.</p>
+                    <p class="font-mono text-sm mt-4 p-2 bg-white rounded border border-emerald-200">
+                    h = &gamma;(t,c) * LayerNorm(x) + &beta;(t,c)<br>
+                    x_out = x + &alpha;(t,c) * MLP(h)
+                    </p>
+                    <p class="m-0 text-emerald-900 mt-4">Crucially, the MLPs predicting $\gamma, \beta, \alpha$ are initialized to <strong>zero</strong>. This guarantees that at initialization, every DiT block acts as an identity function ($x\_out = x$). This enables the training of monstrously deep Transformers (e.g., 50+ layers) with absolute gradient stability from step one.</p>
                 </div>
             </section>
 
-            <section id="ch12" class="mb-20">
+            <section id="ch12" class="mb-24">
                 <div class="chapter-header">
                     <span class="chapter-num">Chapter 12</span>
-                    <h2 class="text-4xl font-bold">The Transformer Revolution (DiTs)</h2>
+                    <h2 class="text-4xl font-bold">Advanced ODE Solvers (DDIM/DPM)</h2>
                 </div>
 
-                <p>The U-Net architecture discussed in Chapter 7 has powered the vast majority of early diffusion models. However, as researchers attempted to tackle harder challenges—like generating massive 4D data (high-resolution, physically accurate video over time)—the structural inductive biases of the U-Net became a bottleneck.</p>
+                <p>The native ancestral sampling of DDPM is an incredibly slow Markov chain, requiring $T$ evaluations of the neural network (often 1000). Song et al. noted that for every diffusion SDE, there exists a deterministic Ordinary Differential Equation (ODE) called the Probability Flow ODE, whose trajectories share the exact same marginal probability densities.</p>
 
-                <h3 class="text-2xl font-bold mt-8 mb-4">The Scalability Problem</h3>
-                <p>U-Nets rely heavily on Convolutions. Convolutions are excellent at understanding local 2D relationships (like edges and textures). However, they struggle to natively understand long-range global context (e.g., remembering that a character wore a red hat at the beginning of a 60-second video) without extensive hacks and heavy VRAM overhead.</p>
+                <h3 class="text-2xl font-bold mt-8 mb-4">Denoising Diffusion Implicit Models (DDIM)</h3>
+                <p>DDIM bypasses the Markovian restriction by defining a non-Markovian forward process with the same marginals. It deterministically links $x_{t-1}$ directly to $x_t$ and the predicted clean image $x_0$. Because the process is deterministic, one can define a sub-sequence of timesteps $\tau \subset [1, \dots, T]$ and calculate steps with large "strides", effectively dropping generation requirements from 1000 steps to 20-50 steps.</p>
 
-                <p>The solution? Rip the U-Net out entirely and replace it with the architecture that powers Large Language Models like ChatGPT: <strong>The Transformer</strong>.</p>
-
-                <h3 class="text-2xl font-bold mt-8 mb-4">Diffusion Transformers (DiTs)</h3>
-                <p>Introduced by Peebles and Xie, the <strong>DiT</strong> (Diffusion Transformer) completely discards convolutional blocks in favor of standard Transformer attention blocks.</p>
-
-                <ul class="list-disc space-y-4 mb-6">
-                    <li><strong>Patchification:</strong> Just like a Language Model breaks a sentence into discrete "words" (tokens), a DiT takes the noisy image (or noisy latent) and chops it up into a grid of tiny squares called "patches."</li>
-                    <li><strong>Flattening:</strong> These patches are flattened into a 1D sequence and fed into a massive stack of Transformer blocks.</li>
-                    <li><strong>Global Attention:</strong> Because it uses Self-Attention, every patch can simultaneously look at every other patch in the image (or video frame) at every single step. This gives the model a profound, native understanding of global structure and physics.</li>
-                </ul>
-
-                <div class="definition-box bg-blue-50 border-l-4 border-blue-500">
-                    <span class="box-title text-blue-800">The Power of Scaling Laws</span>
-                    <p class="m-0 text-blue-900">The true advantage of DiTs is mathematically predictable scalability. As you increase the number of parameters (Gflops) in a Transformer, the loss reliably and predictably drops. This allows researchers to train massive, highly predictable models without the architectural plateaus of U-Nets.</p>
-                </div>
-
-                <p><strong>Real-World Proof:</strong> This architectural shift is exactly what enabled OpenAI to build <strong>Sora</strong>, treating video not as a sequence of separate images, but as a massive sequence of 3D spacetime patches processed by a diffusion transformer.</p>
+                <h3 class="text-2xl font-bold mt-8 mb-4">DPM-Solver</h3>
+                <p>Because the reverse process is just an ODE, we can employ advanced numerical ODE solvers (like Runge-Kutta). DPM-Solver analytically integrates the linear part of the Diffusion ODE, treating the neural network $\epsilon_\theta$ as the non-linear element to be approximated via Taylor expansions. This enables generation of high-quality samples in as few as 10 to 15 steps.</p>
             </section>
 
-            <section id="ch13" class="mb-20">
+            <section id="ch13" class="mb-24">
                 <div class="chapter-header">
                     <span class="chapter-num">Chapter 13</span>
-                    <h2 class="text-4xl font-bold">Beyond Standard Diffusion: Alternative Paradigms</h2>
+                    <h2 class="text-4xl font-bold">Flow Matching & Rectified Flows</h2>
                 </div>
 
-                <p>Standard DDPMs are powerful, but they are not perfect. They suffer from two massive flaws: they are computationally slow due to their iterative nature, and they fundamentally rely on continuous numbers (making them natively terrible at generating discrete data like text or DNA). To solve these harder challenges, researchers have developed entirely new paradigms.</p>
+                <p>While Score-SDEs and DDPMs force the data to diffuse along a fixed, curved Gaussian path defined by the $\beta_t$ schedule, this curvature causes inefficiency during ODE solving. <strong>Flow Matching</strong> (and the specific variant <strong>Rectified Flows</strong>) supersedes DDPM by learning a Continuous Normalizing Flow.</p>
 
-                <h3 class="text-2xl font-bold mt-8 mb-4">1. Consistency Models (Solving the Speed Problem)</h3>
-                <p>While DDIM sampling reduced generation from 1,000 steps down to 50, researchers at OpenAI introduced <strong>Consistency Models</strong> to reduce generation down to a single step.</p>
-
-                <p>Instead of learning to remove a tiny bit of noise to get to the previous step ($x_{t-1}$), a Consistency Model enforces a mathematical constraint: any point on the noisy trajectory must map directly back to the exact same clean origin point ($x_0$). By enforcing this "consistency" across the trajectory during training, the model can look at an image of pure static and jump straight to a beautiful, clean image in just <strong>1 to 4 steps</strong>. This is the technology powering real-time, zero-latency image generation.</p>
-
-                <h3 class="text-2xl font-bold mt-8 mb-4">2. Flow Matching (Solving the Inefficiency Problem)</h3>
-                <p>Standard diffusion pushes data toward noise along a curved, inefficient Gaussian probability path. <strong>Flow Matching</strong> (and Rectified Flows) Abandons this entirely.</p>
-                
-                <p>It mathematically defines a perfectly straight line (a constant vector field) between the data distribution and the noise distribution. Because the path is straight and direct, Ordinary Differential Equation (ODE) solvers can traverse it with extreme stability and speed. This results in vastly superior text-to-image alignment and is the mathematical core driving modern systems like Stable Diffusion 3 and FLUX.</p>
-
-                <h3 class="text-2xl font-bold mt-8 mb-4">3. Discrete/Multinomial Diffusion (Solving the Text Problem)</h3>
-                <p>You can add 0.5 to a pixel value, but you cannot add 0.5 to the word "Apple". Standard Gaussian diffusion fails on categorical data (text, code, molecular graphs).</p>
-
-                <p>To solve this, researchers developed <strong>Discrete Diffusion</strong>. Instead of adding Gaussian noise, the forward process acts as a Markov transition matrix that randomly replaces words with a `[MASK]` token, or mutates them into random other words over time. The reverse model (usually a Transformer) is trained to look at the corrupted text and predict the uncorrupted tokens. This bridges the gap between LLMs and Diffusion, allowing diffusion-like generation of language and code.</p>
+                <p>Instead of a schedule, we establish an explicit, <em>perfectly straight line</em> transport path between pure noise $x_1 \sim \mathcal{N}(0, \mathbf{I})$ and the true data $x_0 \sim p_{data}$. We define the latent trajectory as a simple interpolation:</p>
+                <div class="math-display">
+                    $$ X_t = t \cdot x_1 + (1 - t) \cdot x_0, \quad t \in [0,1] $$
+                </div>
+                <p>The neural network $v_\theta(X_t, t)$ is trained to directly predict the vector field (the velocity derivative):</p>
+                <div class="math-display bg-slate-50 border border-slate-200 py-6 my-6 font-bold shadow-inner">
+                    $$ L = \mathbb{E}_{t, x_0, x_1} \left[ \Vert (x_1 - x_0) - v_\theta(X_t, t) \Vert^2 \right] $$
+                </div>
+                <p>Because the transport path is a straight line, solving the ODE during inference requires vastly fewer integration steps (Euler's method works perfectly). This is the underlying mathematics of the most advanced 2024+ models (Stable Diffusion 3, Flux), yielding generation in 4 to 8 steps natively without requiring knowledge-distillation tricks.</p>
             </section>
 
-            <section id="ch14" class="mb-20">
+            <section id="ch14" class="mb-24">
                 <div class="chapter-header">
                     <span class="chapter-num">Chapter 14</span>
-                    <h2 class="text-4xl font-bold">Real-World Applications</h2>
+                    <h2 class="text-4xl font-bold">Discrete & Alternative Paradigms</h2>
                 </div>
 
-                <p>While the internet focuses primarily on AI art, the mathematics of diffusion (reversing entropy to create structure) can be applied to almost any domain of science and technology.</p>
+                <p>Standard diffusion relies on continuous numbers, making it natively terrible at generating discrete data like text or code tokens. To solve these harder challenges, researchers have developed entirely new paradigms.</p>
 
-                <div class="space-y-6 mt-6">
-                    <div class="p-5 border border-gray-200 rounded-lg bg-white shadow-sm">
-                        <h4 class="text-xl font-bold mb-2 text-blue-800">1. Image & Video Generation</h4>
-                        <p class="m-0 text-gray-700">The most famous application. Tools like Midjourney, DALL-E 3, and Sora use diffusion to generate award-winning photography, illustrations, and physics-accurate video clips. They can also perform "Inpainting" (replacing a specific part of an image) and "Outpainting" (extending the borders of an image infinitely).</p>
-                    </div>
+                <h3 class="text-2xl font-bold mt-8 mb-4">Discrete/Multinomial Diffusion</h3>
+                <p>Instead of adding Gaussian noise, the forward process acts as a Markov transition matrix that randomly replaces words with a `[MASK]` token, or mutates them into random other categorical tokens over time. The reverse model (usually a Transformer) is trained to look at the corrupted text and predict the uncorrupted tokens. This bridges the gap between Autoregressive LLMs and Diffusion, allowing diffusion-like generation of language.</p>
 
-                    <div class="p-5 border border-gray-200 rounded-lg bg-white shadow-sm">
-                        <h4 class="text-xl font-bold mb-2 text-blue-800">2. Audio & Speech Synthesis</h4>
-                        <p class="m-0 text-gray-700">Audio waves can be represented visually as spectrograms (a 2D tensor of frequencies over time). We can train a diffusion model on these spectrograms to generate highly realistic human speech, original music tracks, or entirely new sound effects (like a laser blaster) from text prompts.</p>
-                    </div>
-
-                    <div class="p-5 border border-gray-200 rounded-lg bg-white shadow-sm">
-                        <h4 class="text-xl font-bold mb-2 text-blue-800">3. Drug Discovery & Protein Folding</h4>
-                        <p class="m-0 text-gray-700">Instead of diffusing pixels, scientists diffuse the 3D coordinates of atoms. Systems like Chroma and RoseTTAFold Diffusion generate entirely new, functional protein structures that do not exist in nature. This allows researchers to custom-design molecules to bind to specific viruses, rapidly accelerating pharmaceutical drug discovery.</p>
-                    </div>
-
-                    <div class="p-5 border border-gray-200 rounded-lg bg-white shadow-sm">
-                        <h4 class="text-xl font-bold mb-2 text-blue-800">4. Time-Series Forecasting</h4>
-                        <p class="m-0 text-gray-700">Financial analysts and meteorologists use 1D diffusion models to predict stock market trends or weather patterns. By treating historical data as the "signal" and future uncertainty as "noise," diffusion models can generate multiple highly probable future scenarios.</p>
-                    </div>
-                </div>
+                <h3 class="text-2xl font-bold mt-8 mb-4">Consistency Models</h3>
+                <p>To drop generation speeds from 50 steps down to 1 step, Consistency Models enforce a mathematical constraint: any point on a noisy trajectory must map directly back to the exact same clean origin point ($x_0$). By enforcing this "consistency" across the trajectory during training, the model can look at an image of pure static and jump straight to a beautiful, clean image in a single pass. This unlocks true zero-latency real-time generation.</p>
             </section>
 
-            <section id="ch15" class="mb-20">
+            <section id="ch15" class="mb-24">
                 <div class="chapter-header">
                     <span class="chapter-num">Chapter 15</span>
-                    <h2 class="text-4xl font-bold">State of the Art: Stats & Breakthroughs</h2>
+                    <h2 class="text-4xl font-bold">Industry Applications</h2>
                 </div>
 
-                <p>Diffusion models have moved rapidly from academic theory to industry-dominating production systems. Here is a snapshot of what has already been achieved and the ongoing experiments shaping the present day.</p>
-
-                <h3 class="text-2xl font-bold mt-8 mb-4">What Has Already Been Achieved</h3>
-                <ul class="list-disc space-y-4 mb-6">
-                    <li><strong>Massive Scale Generation:</strong> Open-source diffusion models (like Stable Diffusion) generated over <strong>15 billion images</strong> in just their first year of release—statistically more than the entire history of human photography up to the 1900s.</li>
-                    <li><strong>Hyper-Realistic Video:</strong> Systems like OpenAI's Sora and Runway Gen-3 Alpha are currently generating up to 60-second, 1080p videos at 60fps. They demonstrate an emergent understanding of 3D physics, object permanence, and camera dynamics purely from diffusing video patches.</li>
-                    <li><strong>Real-Time Audio:</strong> Models like Suno and Udio diffuse highly complex spectrograms to generate fully mastered, 3-minute songs (including vocals and instrumentation) in seconds, achieving commercial studio quality.</li>
-                    <li><strong>Computational Biology:</strong> AlphaFold 3 and RoseTTAFold Diffusion use 3D equivariant diffusion to predict and generate the molecular structures of proteins and DNA, drastically reducing the time required for pharmaceutical drug discovery.</li>
-                </ul>
-
-                <h3 class="text-2xl font-bold mt-8 mb-4">Ongoing Experiments & Today's Frontiers</h3>
-                <p>Researchers are actively experimenting to solve the remaining bottlenecks in diffusion technology:</p>
-                <div class="space-y-6 mt-6">
-                    <div class="p-5 border border-l-4 border-blue-500 rounded-r-lg bg-blue-50 shadow-sm">
-                        <h4 class="text-lg font-bold mb-1 text-blue-900">1. Sub-100ms Inference (Distillation)</h4>
-                        <p class="m-0 text-gray-800">Standard models require 50-100 denoising steps. Current experiments in <em>Adversarial Diffusion Distillation (ADD)</em> and <em>Latent Consistency Models (LCMs)</em> have successfully compressed this process. Today, models like SDXL Turbo can generate 1-megapixel images in <strong>1 to 4 steps</strong> (under 100 milliseconds on a consumer GPU), enabling real-time video game rendering.</p>
+                <p>The mathematics of reversing entropy extends far beyond AI art generation.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                    <div class="p-6 border border-slate-200 rounded-lg bg-white shadow-sm">
+                        <h4 class="text-xl font-bold mb-2 text-slate-900">Audio & Speech Synthesis</h4>
+                        <p class="text-slate-700 text-sm">Audio waves are represented visually as spectrograms. Diffusion models trained on these 2D tensors generate highly realistic human speech, original music tracks, or entirely new sound effects from text prompts.</p>
                     </div>
-                    <div class="p-5 border border-l-4 border-purple-500 rounded-r-lg bg-purple-50 shadow-sm">
-                        <h4 class="text-lg font-bold mb-1 text-purple-900">2. Multimodal Any-to-Any Diffusion</h4>
-                        <p class="m-0 text-gray-800">Current research is merging LLMs (Large Language Models) with Diffusion Models natively. Instead of translating text to an image, new unified architectures aim to ingest a mixture of text, audio, and images simultaneously, and diffuse a coherent mixture of audio and video out.</p>
+                    <div class="p-6 border border-slate-200 rounded-lg bg-white shadow-sm">
+                        <h4 class="text-xl font-bold mb-2 text-slate-900">Computational Biology</h4>
+                        <p class="text-slate-700 text-sm">Instead of diffusing pixels, scientists diffuse the 3D coordinates of atoms. Systems like RoseTTAFold Diffusion generate entirely new, functional protein structures, accelerating pharmaceutical drug discovery.</p>
                     </div>
-                    <div class="p-5 border border-l-4 border-emerald-500 rounded-r-lg bg-emerald-50 shadow-sm">
-                        <h4 class="text-lg font-bold mb-1 text-emerald-900">3. 3D Gaussian Splatting Diffusion</h4>
-                        <p class="m-0 text-gray-800">Instead of diffusing 2D pixels, experimental pipelines are diffusing "Gaussian Splats" (a novel method of representing 3D space). This allows the generation of fully navigable, photorealistic 3D environments from a single text prompt in seconds.</p>
+                    <div class="p-6 border border-slate-200 rounded-lg bg-white shadow-sm">
+                        <h4 class="text-xl font-bold mb-2 text-slate-900">Time-Series Forecasting</h4>
+                        <p class="text-slate-700 text-sm">Financial analysts use 1D diffusion models to predict market trends. By treating historical data as the "signal" and future uncertainty as "noise," models generate highly probable future scenarios.</p>
+                    </div>
+                    <div class="p-6 border border-slate-200 rounded-lg bg-white shadow-sm">
+                        <h4 class="text-xl font-bold mb-2 text-slate-900">Physics-Accurate Video</h4>
+                        <p class="text-slate-700 text-sm">Treating video as a 4D tensor (height, width, channels, time), diffusion models generate highly coherent video clips that demonstrate emergent understanding of object permanence and lighting.</p>
                     </div>
                 </div>
             </section>
 
-            <section id="ch16" class="mb-20">
+            <section id="ch16" class="mb-24">
                 <div class="chapter-header">
                     <span class="chapter-num">Chapter 16</span>
-                    <h2 class="text-4xl font-bold">Future Scopes & Frontiers</h2>
+                    <h2 class="text-4xl font-bold">State of the Art Frontiers</h2>
                 </div>
 
-                <p>The field of generative AI is moving at a breakneck pace. Here is where the architecture of diffusion is heading next:</p>
+                <p>Diffusion models have moved rapidly from academic theory to industry-dominating production systems. Ongoing experiments are shaping the present day:</p>
 
                 <ul class="list-disc space-y-4 mt-6">
-                    <li><strong>Real-Time Generation:</strong> Historically, diffusion required 50 to 100 steps to generate an image, taking several seconds. New distillation techniques (like Latent Consistency Models) are reducing this to 1 to 4 steps. This unlocks real-time diffusion, where video game environments or live video filters are generated at 60 frames per second natively.</li>
-                    <li><strong>3D Asset Generation:</strong> Moving beyond 2D images, current research is focusing on diffusing 3D point clouds and Neural Radiance Fields (NeRFs). In the future, a game developer will type "an ancient ruined sword," and the model will output a fully textured, 3D-rendered asset ready to drop into an engine like Unreal or Unity.</li>
-                    <li><strong>Flow Matching (The Successor):</strong> Standard diffusion relies on a curved, Gaussian path from data to noise. "Flow Matching" (used in newer models like Stable Diffusion 3) establishes a straight, optimal transport path between noise and data. This makes the math easier to solve, resulting in vastly better text adherence and image quality in fewer steps.</li>
-                    <li><strong>Edge Computing:</strong> As model weights become optimized and smaller, we are seeing the beginning of "On-Device Diffusion." Running high-quality generative models directly on smartphones without requiring an internet connection or expensive cloud GPU servers ensures privacy and zero latency.</li>
+                    <li><strong>Adversarial Diffusion Distillation (ADD):</strong> By merging adversarial GAN losses with Diffusion objectives, models like SDXL Turbo can generate 1-megapixel images in <strong>1 to 4 steps</strong> (under 100 milliseconds), enabling real-time video game rendering.</li>
+                    <li><strong>Multimodal Any-to-Any Diffusion:</strong> Merging LLMs with Diffusion Models natively. Unified architectures ingest a mixture of text, audio, and images simultaneously, and diffuse a coherent mixture of audio and video out.</li>
+                    <li><strong>3D Gaussian Splatting Diffusion:</strong> Instead of diffusing 2D pixels, experimental pipelines diffuse "Gaussian Splats" (a novel method of representing 3D space), allowing the generation of fully navigable, photorealistic 3D environments.</li>
                 </ul>
             </section>
 
-            <section id="ch17" class="mb-20">
+            <section id="ch17" class="mb-24">
                 <div class="chapter-header">
                     <span class="chapter-num">Chapter 17</span>
-                    <h2 class="text-4xl font-bold">Complete Code Implementation</h2>
+                    <h2 class="text-4xl font-bold">Advanced PyTorch Architecture</h2>
                 </div>
 
-                <p>We have covered the intuition, the theorems, the math, and the architecture. Now, we will write the actual code. The snippet below is written in Python using PyTorch, the industry standard library for AI development.</p>
-                <p>This code purposely abstracts away the thousands of lines required to define the complex U-Net class, allowing us to focus entirely and exclusively on the elegant diffusion logic.</p>
+                <p>We transition from theory to applied engineering. Below is the architectural PyTorch code for a critical component of modern models: The <strong>Diffusion Transformer (DiT) Block utilizing AdaLN-Zero</strong>, resolving the injection of timesteps ($t$) into spatial sequence processing.</p>
 
-                <h3 class="text-xl font-bold mt-8 mb-2">1. Setting up the Environment and Constants</h3>
-                <pre><code class="language-python">import torch
-import torch.nn.functional as F
+<pre><code class="language-python">import torch
+import torch.nn as nn
+import math
 
-def extract(a, t, x_shape):
+class ModulatedLayerNorm(nn.Module):
     """
-    Helper function: Extracts the correct math constant from a list 'a' 
-    for the specific timestep 't' for a batch of images.
+    Implements AdaLN (Adaptive Layer Normalization)
+    Projects the timestep embedding into shift, scale, and gate parameters.
     """
-    batch_size = t.shape[0]
-    out = a.gather(-1, t.cpu())
-    return out.reshape(batch_size, *((1,) * (len(x_shape) - 1))).to(t.device)
+    def __init__(self, d_model):
+        super().__init__()
+        self.ln = nn.LayerNorm(d_model, elementwise_affine=False)
+        self.mlp = nn.Sequential(
+            nn.SiLU(),
+            nn.Linear(d_model, 6 * d_model) # Generates 6 vectors for AdaLN
+        )
 
-# --- Define the Math Constants ---
-timesteps = 1000
+    def forward(self, x, c):
+        # c is the temporal/condition embedding
+        shift_msa, scale_msa, gate_msa, shift_mlp, scale_mlp, gate_mlp = self.mlp(c).chunk(6, dim=-1)
+        
+        # Apply normalization and modulate with timestep scale/shift
+        x_norm = self.ln(x)
+        x_modulated = x_norm * (1 + scale_msa.unsqueeze(1)) + shift_msa.unsqueeze(1)
+        return x_modulated, gate_msa, shift_mlp, scale_mlp, gate_mlp
 
-# Create the beta schedule (linear from 0.0001 to 0.02)
-betas = torch.linspace(0.0001, 0.02, timesteps)
 
-# Calculate Alpha and Alpha Bar (The Cumulative Product)
-alphas = 1.0 - betas
-alphas_cumprod = torch.cumprod(alphas, axis=0) # This is \bar{\alpha}
-
-# Pre-calculate square roots for the Reparameterization forward equation
-sqrt_alphas_cumprod = torch.sqrt(alphas_cumprod)
-sqrt_one_minus_alphas_cumprod = torch.sqrt(1.0 - alphas_cumprod)</code></pre>
-
-                <h3 class="text-xl font-bold mt-8 mb-2">2. The Forward Process (Destroying)</h3>
-                <pre><code class="language-python">def q_sample(x_0, t, noise=None):
+class DiTBlock(nn.Module):
     """
-    The Forward Process (Equation: x_t = sqrt(alpha_bar) * x_0 + sqrt(1-alpha_bar) * noise)
-    Takes a clean image (x_0) and instantly jumps to timestep 't' by adding Gaussian noise.
+    A single Diffusion Transformer block utilizing AdaLN-Zero.
     """
-    if noise is None:
-        noise = torch.randn_like(x_0) # Generate pure standard normal static
-    
-    # Grab the pre-calculated constants for the specific timestep 't'
-    sqrt_alpha_bar_t = extract(sqrt_alphas_cumprod, t, x_0.shape)
-    sqrt_one_minus_alpha_bar_t = extract(sqrt_one_minus_alphas_cumprod, t, x_0.shape)
-    
-    # Mix the clean image and the noise together
-    x_t = sqrt_alpha_bar_t * x_0 + sqrt_one_minus_alpha_bar_t * noise
-    return x_t</code></pre>
+    def __init__(self, hidden_size, num_heads):
+        super().__init__()
+        self.norm1 = ModulatedLayerNorm(hidden_size)
+        self.attn = nn.MultiheadAttention(hidden_size, num_heads, batch_first=True)
+        
+        self.ln2 = nn.LayerNorm(hidden_size, elementwise_affine=False)
+        self.mlp = nn.Sequential(
+            nn.Linear(hidden_size, hidden_size * 4),
+            nn.GELU(),
+            nn.Linear(hidden_size * 4, hidden_size)
+        )
+        
+        # AdaLN-Zero Initialization
+        # Ensures that at initialization, the block is an exact identity function.
+        nn.init.constant_(self.norm1.mlp[-1].weight, 0)
+        nn.init.constant_(self.norm1.mlp[-1].bias, 0)
 
-                <h3 class="text-xl font-bold mt-8 mb-2">3. The Training Loop</h3>
-                <p>This is how we teach the U-Net to be smart using the MSE Loss function we discussed.</p>
-                <pre><code class="language-python"># Assuming 'model' is your PyTorch U-Net architecture
-# Assuming 'dataloader' feeds you batches of clean images from a dataset
-
-optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
-device = "cuda" if torch.cuda.is_available() else "cpu"
-model.to(device)
-
-epochs = 10
-
-model.train()
-for epoch in range(epochs):
-    for batch_of_clean_images in dataloader:
-        x_0 = batch_of_clean_images.to(device)
-        batch_size = x_0.shape[0]
+    def forward(self, x, c):
+        # 1. Modulate inputs using the Time/Condition embedding
+        x_mod, gate_msa, shift_mlp, scale_mlp, gate_mlp = self.norm1(x, c)
         
-        # 1. Pick a random timestep for every image in the batch
-        t = torch.randint(0, timesteps, (batch_size,), device=device).long()
+        # 2. Self-Attention with Gated Residual
+        attn_out, _ = self.attn(x_mod, x_mod, x_mod)
+        x = x + gate_msa.unsqueeze(1) * attn_out
         
-        # 2. Generate pure noise
-        noise = torch.randn_like(x_0)
+        # 3. MLP block with second Modulation & Gated Residual
+        x_norm2 = self.ln2(x)
+        x_mod2 = x_norm2 * (1 + scale_mlp.unsqueeze(1)) + shift_mlp.unsqueeze(1)
+        mlp_out = self.mlp(x_mod2)
+        x = x + gate_mlp.unsqueeze(1) * mlp_out
         
-        # 3. Smash the images and noise together (Forward Process)
-        x_noisy = q_sample(x_0, t, noise)
-        
-        # 4. Ask the U-Net to guess what the noise looks like
-        predicted_noise = model(x_noisy, t)
-        
-        # 5. Score the U-Net's guess using Mean Squared Error
-        loss = F.mse_loss(predicted_noise, noise)
-        
-        # 6. Backpropagate to update the U-Net's dials (learn)
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
-        
-    print(f"Epoch {epoch} finished. Loss: {loss.item()}")</code></pre>
-
-                <h3 class="text-xl font-bold mt-8 mb-2">4. The Inference Loop (Generating Art)</h3>
-                <p>Once the model is fully trained, this is the code used to generate a brand new image from absolute scratch.</p>
-                <pre><code class="language-python">@torch.no_grad() # Turn off learning/updating weights
-def p_sample_loop(model, shape):
-    """
-    The Reverse Process. Starts with pure noise and generates an image over 1000 steps.
-    """
-    device = next(model.parameters()).device
-    
-    # Start with pure random noise (x_T)
-    img = torch.randn(shape, device=device)
-    
-    # Loop backward from step 999 down to 0
-    for i in reversed(range(0, timesteps)):
-        
-        # Create a tensor filled with the current timestep 'i'
-        t = torch.full((shape[0],), i, device=device, dtype=torch.long)
-        
-        # Ask U-Net to predict the noise in the current image
-        predicted_noise = model(img, t)
-        
-        # Extract constants for math
-        alpha_t = extract(1.0 - betas, t, img.shape)
-        alpha_bar_t = extract(alphas_cumprod, t, img.shape)
-        beta_t = extract(betas, t, img.shape)
-        
-        # --- The Mathematical Denoising Step ---
-        # We subtract a calculated fraction of the predicted noise from the image
-        img = (1 / torch.sqrt(alpha_t)) * (img - ((1 - alpha_t) / torch.sqrt(1 - alpha_bar_t)) * predicted_noise)
-        
-        # Langevin Dynamics: Add a tiny bit of fresh noise back in to prevent image collapse
-        # (We do this for every step except the very last step t=0)
-        if i > 0:
-            fresh_noise = torch.randn_like(img)
-            img = img + torch.sqrt(beta_t) * fresh_noise
-            
-    # After 1000 loops, 'img' is now a fully formed, beautiful piece of data!
-    return img
-
-# To generate a 64x64 color image (Batch size 1, 3 color channels):
-# final_generated_image = p_sample_loop(model, shape=(1, 3, 64, 64))
+        return x
 </code></pre>
-            </section>
-
-            <section id="glossary" class="mb-20">
-                <div class="chapter-header">
-                    <h2 class="text-4xl font-bold">Glossary of Terms</h2>
-                </div>
-
-                <dl class="space-y-6">
-                    <div>
-                        <dt class="font-bold text-lg text-gray-900">Autoencoder (VAE)</dt>
-                        <dd class="text-gray-600 mt-1">A neural network designed to compress data into a small size (encoding), and then reconstruct it back to its original size (decoding) with minimal loss of information.</dd>
-                    </div>
-                    <div>
-                        <dt class="font-bold text-lg text-gray-900">Entropy</dt>
-                        <dd class="text-gray-600 mt-1">A measure of disorder or randomness in a system. Diffusion models fundamentally work by intentionally adding entropy (forward process) and learning the exact rules to reverse it (reverse process).</dd>
-                    </div>
-                    <div>
-                        <dt class="font-bold text-lg text-gray-900">Inference</dt>
-                        <dd class="text-gray-600 mt-1">The phase where a fully trained AI model is put to work generating data or making predictions, as opposed to the "Training" phase where it is actively learning.</dd>
-                    </div>
-                    <div>
-                        <dt class="font-bold text-lg text-gray-900">Latent Space</dt>
-                        <dd class="text-gray-600 mt-1">A highly compressed, purely mathematical representation of data. It is much smaller than the raw pixel data, making computations extremely fast.</dd>
-                    </div>
-                    <div>
-                        <dt class="font-bold text-lg text-gray-900">Loss Function</dt>
-                        <dd class="text-gray-600 mt-1">The mathematical formula used to grade an AI's performance. The goal of training is to minimize this "loss" (make the error as close to zero as possible).</dd>
-                    </div>
-                    <div>
-                        <dt class="font-bold text-lg text-gray-900">Tensor</dt>
-                        <dd class="text-gray-600 mt-1">The fundamental data structure in machine learning. It is a multi-dimensional array (grid) of numbers. An image is typically a 3D tensor (Width x Height x RGB Colors).</dd>
-                    </div>
-                </dl>
+            <p class="mt-4">By enforcing <code>nn.init.constant_(..., 0)</code> on the final linear projection of the AdaLN MLP, we guarantee $\gamma = 0, \beta = 0, \alpha = 0$ at step 0 of training. The Transformer acts as a perfect identity pass-through, eliminating gradient vanishing issues in 50+ layer unrolls.</p>
             </section>
 
         </main>
     </div>
 
     <script>
-        // 1. Initialize Mermaid Diagrams
         mermaid.initialize({ 
             startOnLoad: true, 
             theme: 'neutral',
             fontFamily: 'Inter, sans-serif'
         });
 
-        // 2. Auto-render KaTeX math equations
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
                 delimiters: [
@@ -1096,7 +837,6 @@ def p_sample_loop(model, shape):
                 throwOnError : false
             });
             
-            // Highlight active TOC link based on scroll position
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -1108,21 +848,16 @@ def p_sample_loop(model, shape):
                         });
                     }
                 });
-            }, { rootMargin: "-20% 0px -80% 0px" });
+            }, { rootMargin: "-10% 0px -80% 0px" });
 
-            document.querySelectorAll('section[id]').forEach(section => {
-                observer.observe(section);
-            });
-            
+            document.querySelectorAll('section[id]').forEach(section => observer.observe(section));
             initSandbox();
         });
 
-        // 3. Interactive Sandbox Application Logic
         function initSandbox() {
             const canvas = document.getElementById('diffusionCanvas');
             const ctx = canvas.getContext('2d');
             
-            // Adjust canvas resolution for high-DPI (Retina) displays
             const dpr = window.devicePixelRatio || 1;
             const rect = canvas.getBoundingClientRect();
             canvas.width = rect.width * dpr;
@@ -1134,57 +869,50 @@ def p_sample_loop(model, shape):
             const cx = width / 2;
             const cy = height / 2;
 
-            // UI Elements Binding
             const elT = document.getElementById('sim-t');
             const elBeta = document.getElementById('sim-beta');
             const elSchedule = document.getElementById('sim-schedule');
             
             const valT = document.getElementById('val-t');
             const valBeta = document.getElementById('val-beta');
+            const textStep = document.getElementById('current-step');
+            const textTotal = document.getElementById('total-step');
             
             const btnForward = document.getElementById('btn-forward');
             const btnReverse = document.getElementById('btn-reverse');
             const btnReset = document.getElementById('btn-reset');
 
-            const textStep = document.getElementById('current-step');
-            const textTotal = document.getElementById('total-step');
-            
             const statAlpha = document.getElementById('stat-alpha');
             const statBeta = document.getElementById('stat-beta');
             const barAlpha = document.getElementById('bar-alpha');
             const barBeta = document.getElementById('bar-beta');
 
-            // Simulation State
             let points = [];
-            const numPoints = 400; // Represents our "Image Tensor"
+            const numPoints = 600; 
             let currentT = 0;
             let totalT = parseInt(elT.value);
             let maxBeta = parseFloat(elBeta.value);
             let scheduleType = elSchedule.value; 
             let isAnimating = false;
-            let animationDir = 0; // 1 for forward, -1 for reverse
+            let animationDir = 0;
             
-            // Precomputed math schedules to save CPU during animation
             let betas = [];
             let alphas_cumprod = [];
 
-            // Create our "Clean Data" (x_0) -> A highly structured spiral shape
             function generateSpiral() {
                 points = [];
                 for (let i = 0; i < numPoints; i++) {
-                    const theta = (i / numPoints) * Math.PI * 5; 
-                    const r = (i / numPoints) * (width * 0.35);
+                    const theta = (i / numPoints) * Math.PI * 6; 
+                    const r = (i / numPoints) * (width * 0.40);
                     const x0 = r * Math.cos(theta);
                     const y0 = r * Math.sin(theta);
-                    // Pre-generate standard normal noise for each point to remain deterministic
-                    const noiseX = (Math.random() + Math.random() + Math.random() + Math.random() - 2) / 2 * (width * 0.35); 
-                    const noiseY = (Math.random() + Math.random() + Math.random() + Math.random() - 2) / 2 * (width * 0.35);
+                    const noiseX = (Math.random() + Math.random() + Math.random() + Math.random() - 2) / 2 * (width * 0.40); 
+                    const noiseY = (Math.random() + Math.random() + Math.random() + Math.random() - 2) / 2 * (width * 0.40);
                     
                     points.push({ x0, y0, noiseX, noiseY, x: x0, y: y0 });
                 }
             }
 
-            // Calculate the math constants based on user input
             function computeSchedules() {
                 betas = [];
                 alphas_cumprod = [];
@@ -1197,7 +925,6 @@ def p_sample_loop(model, shape):
                         betas.push(b);
                     }
                 } else if (scheduleType === 'cosine') {
-                    // Cosine schedule formula
                     const s = 0.008;
                     const f = (t) => Math.pow(Math.cos(((t / totalT + s) / (1 + s)) * Math.PI / 2), 2);
                     for (let i = 0; i < totalT; i++) {
@@ -1212,14 +939,12 @@ def p_sample_loop(model, shape):
                 }
             }
 
-            // Update DOM to reflect application state
             function updateUIState() {
                 valT.innerText = totalT;
                 valBeta.innerText = maxBeta.toFixed(3);
                 textStep.innerText = currentT;
                 textTotal.innerText = totalT;
 
-                // Button State Logic
                 if (currentT === 0) {
                     btnReverse.disabled = true;
                     btnReverse.classList.add('opacity-50', 'cursor-not-allowed');
@@ -1237,7 +962,6 @@ def p_sample_loop(model, shape):
                     btnReverse.classList.remove('opacity-50', 'cursor-not-allowed');
                 }
 
-                // Telemetry Logic Updates
                 const alphaBar = alphas_cumprod[Math.max(0, currentT - 1)] || 1.0;
                 const currentBeta = betas[Math.max(0, currentT - 1)] || 0.0;
                 
@@ -1248,28 +972,21 @@ def p_sample_loop(model, shape):
                 barBeta.style.width = `${Math.min(100, (currentBeta / maxBeta) * 100)}%`;
             }
 
-            // Draw current state to HTML Canvas
             function draw() {
                 ctx.clearRect(0, 0, width, height);
-                
                 const alphaBar = alphas_cumprod[Math.max(0, currentT - 1)] || 1.0;
-                const ratio = 1 - alphaBar; // 0 = Pure signal, 1 = Pure noise
+                const ratio = 1 - alphaBar;
                 
-                // Color transition from Blue (Signal) to White/Gray (Noise)
-                const r = Math.floor(37 * (1 - ratio) + 200 * ratio);
-                const g = Math.floor(99 * (1 - ratio) + 200 * ratio);
-                const b = Math.floor(235 * (1 - ratio) + 200 * ratio);
+                const r = Math.floor(59 * (1 - ratio) + 226 * ratio);
+                const g = Math.floor(130 * (1 - ratio) + 232 * ratio);
+                const b = Math.floor(246 * (1 - ratio) + 240 * ratio);
                 
                 ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
                 
                 for (let i = 0; i < numPoints; i++) {
                     const p = points[i];
-                    
-                    // The Reparameterization Trick Equation applied visually!
-                    // q(x_t | x_0) = sqrt(alpha_bar) * x_0 + sqrt(1 - alpha_bar) * noise
                     if (currentT === 0) {
-                        p.x = p.x0;
-                        p.y = p.y0;
+                        p.x = p.x0; p.y = p.y0;
                     } else {
                         const a_bar = alphas_cumprod[currentT - 1];
                         const sqrt_a_bar = Math.sqrt(a_bar);
@@ -1278,18 +995,14 @@ def p_sample_loop(model, shape):
                         p.x = sqrt_a_bar * p.x0 + sqrt_one_minus_a_bar * p.noiseX;
                         p.y = sqrt_a_bar * p.y0 + sqrt_one_minus_a_bar * p.noiseY;
                     }
-                    
                     ctx.beginPath();
                     ctx.arc(cx + p.x, cy + p.y, 2, 0, Math.PI * 2);
                     ctx.fill();
                 }
             }
 
-            // Frame processing for animation
             function stepAnimation() {
                 if (!isAnimating) return;
-
-                // Animate based on total timesteps to keep speed consistent
                 const stepSize = Math.ceil(totalT / 120); 
 
                 if (animationDir === 1) {
@@ -1297,23 +1010,21 @@ def p_sample_loop(model, shape):
                     if (currentT >= totalT) {
                         currentT = totalT - 1;
                         isAnimating = false;
-                        btnForward.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg> Run Forward Process (Noise)`;
+                        btnForward.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg> Execute Forward Process`;
                     }
                 } else if (animationDir === -1) {
                     currentT -= stepSize;
                     if (currentT <= 0) {
                         currentT = 0;
                         isAnimating = false;
-                        btnReverse.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path></svg> Run Reverse Process (Denoise)`;
+                        btnReverse.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path></svg> Execute Reverse Process`;
                     }
                 }
 
                 updateUIState();
                 draw();
 
-                if (isAnimating) {
-                    requestAnimationFrame(stepAnimation);
-                }
+                if (isAnimating) requestAnimationFrame(stepAnimation);
             }
 
             function handleParamsChange() {
@@ -1323,8 +1034,8 @@ def p_sample_loop(model, shape):
                 currentT = 0;
                 isAnimating = false;
                 
-                btnForward.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg> Run Forward Process (Noise)`;
-                btnReverse.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path></svg> Run Reverse Process (Denoise)`;
+                btnForward.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg> Execute Forward Process`;
+                btnReverse.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path></svg> Execute Reverse Process`;
 
                 generateSpiral();
                 computeSchedules();
@@ -1332,7 +1043,6 @@ def p_sample_loop(model, shape):
                 draw();
             }
 
-            // Bind Events
             elT.addEventListener('input', handleParamsChange);
             elBeta.addEventListener('input', handleParamsChange);
             elSchedule.addEventListener('change', handleParamsChange);
@@ -1340,12 +1050,12 @@ def p_sample_loop(model, shape):
             btnForward.addEventListener('click', () => {
                 if (isAnimating && animationDir === 1) {
                     isAnimating = false;
-                    btnForward.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> Resume Forward`;
+                    btnForward.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path></svg> Resume`;
                 } else {
                     isAnimating = true;
                     animationDir = 1;
-                    btnForward.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> Pause`;
-                    btnReverse.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path></svg> Run Reverse Process (Denoise)`;
+                    btnForward.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> Pause`;
+                    btnReverse.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path></svg> Execute Reverse Process`;
                     requestAnimationFrame(stepAnimation);
                 }
             });
@@ -1353,19 +1063,18 @@ def p_sample_loop(model, shape):
             btnReverse.addEventListener('click', () => {
                 if (isAnimating && animationDir === -1) {
                     isAnimating = false;
-                    btnReverse.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> Resume Reverse`;
+                    btnReverse.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path></svg> Resume`;
                 } else {
                     isAnimating = true;
                     animationDir = -1;
-                    btnReverse.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> Pause`;
-                    btnForward.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg> Run Forward Process (Noise)`;
+                    btnReverse.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> Pause`;
+                    btnForward.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg> Execute Forward Process`;
                     requestAnimationFrame(stepAnimation);
                 }
             });
 
             btnReset.addEventListener('click', handleParamsChange);
 
-            // Initial Boot Sequence
             generateSpiral();
             computeSchedules();
             updateUIState();
