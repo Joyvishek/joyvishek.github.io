@@ -30,6 +30,48 @@ h1 {
     font-size: 1.8em;
 }
 
+.back-link {
+    display: inline-block;
+    margin-bottom: 15px;
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95em;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+.mode-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.mode-tab {
+    border: 2px solid #dee2e6;
+    background: #f8f9fa;
+    color: #555;
+    padding: 8px 18px;
+    border-radius: 30px;
+    font-size: 0.9em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.mode-tab:hover {
+    border-color: #667eea;
+}
+
+.mode-tab.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-color: transparent;
+    color: white;
+}
+
 .controls {
     margin-bottom: 20px;
     display: flex;
@@ -37,6 +79,10 @@ h1 {
     align-items: center;
     gap: 15px;
     flex-wrap: wrap;
+}
+
+.controls.hidden {
+    display: none;
 }
 
 .toggle-container {

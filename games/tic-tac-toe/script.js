@@ -3,7 +3,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const statusDisplay = document.getElementById('status');
     const restartBtn = document.getElementById('restart');
     const goFirstToggle = document.getElementById('goFirstToggle');
+    const goFirstContainer = document.getElementById('goFirstContainer');
+    const vsBotTab = document.getElementById('vsBotTab');
+    const vsFriendTab = document.getElementById('vsFriendTab');
+    const score1Label = document.getElementById('score1Label');
+    const score2Label = document.getElementById('score2Label');
 
+    let mode = 'bot'; // 'bot' or 'friend'
     let board = ['', '', '', '', '', '', '', '', ''];
     let humanPlayer = 'X';
     let botPlayer = 'O';
@@ -100,7 +106,16 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleCellClick(event) {
         const cellIndex = parseInt(event.target.dataset.index);
 
-        if (board[cellIndex] !== '' || !gameActive || currentPlayer !== humanPlayer) {
+        if (board[cellIndex] !== '' || !gameActive) {
+            return;
+        }
+
+        if (mode === 'friend') {
+            handleFriendMove(cellIndex);
+            return;
+        }
+
+        if (currentPlayer !== humanPlayer) {
             return;
         }
 
@@ -128,6 +143,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 500);
     }
 
+    function handleFriendMove(cellIndex) {
+        const player = currentPlayer;
+        makeMove(cellIndex, player);
+
+        if (!gameActive) return;
+
+        currentPlayer = player === 'X' ? 'O' : 'X';
+        statusDisplay.textContent = "Player " + (currentPlayer === 'X' ? '1' : '2') + "'s turn (" + currentPlayer + ')';
+    }
+
     function makeMove(index, player) {
         const moves = player === humanPlayer ? humanMoves : botMoves;
 
@@ -151,7 +176,15 @@ document.addEventListener('DOMContentLoaded', () => {
             gameActive = false;
             highlightWinningCells(result.line);
 
-            if (player === humanPlayer) {
+            if (mode === 'friend') {
+                if (result.winner === 'X') {
+                    statusDisplay.textContent = '🎉 Player 1 (X) wins!';
+                    scores.player++;
+                } else {
+                    statusDisplay.textContent = '🎉 Player 2 (O) wins!';
+                    scores.bot++;
+                }
+            } else if (player === humanPlayer) {
                 statusDisplay.textContent = '🎉 You win!';
                 scores.player++;
             } else {
@@ -197,6 +230,26 @@ document.addEventListener('DOMContentLoaded', () => {
         restartGame();
     }
 
+    function setMode(newMode) {
+        if (mode === newMode) return;
+        mode = newMode;
+
+        vsBotTab.classList.toggle('active', mode === 'bot');
+        vsFriendTab.classList.toggle('active', mode === 'friend');
+
+        if (mode === 'friend') {
+            score1Label.textContent = 'Player 1';
+            score2Label.textContent = 'Player 2';
+        } else {
+            score1Label.textContent = 'You';
+            score2Label.textContent = 'Bot';
+        }
+
+        scores = { player: 0, bot: 0, draws: 0 };
+        updateScoreBoard();
+        restartGame();
+    }
+
     function restartGame() {
         if (botMoveTimeout !== null) {
             clearTimeout(botMoveTimeout);
@@ -212,6 +265,12 @@ document.addEventListener('DOMContentLoaded', () => {
             cell.textContent = '';
             cell.classList.remove('taken', 'x', 'o', 'winner');
         });
+
+        if (mode === 'friend') {
+            currentPlayer = humanGoesFirst ? 'X' : 'O';
+            statusDisplay.textContent = "Player " + (currentPlayer === 'X' ? '1' : '2') + "'s turn (" + currentPlayer + ')';
+            return;
+        }
 
         currentPlayer = humanPlayer;
 
@@ -245,4 +304,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     restartBtn.addEventListener('click', restartGame);
     goFirstToggle.addEventListener('click', toggleGoFirst);
+    vsBotTab.addEventListener('click', () => setMode('bot'));
+    vsFriendTab.addEventListener('click', () => setMode('friend'));
 });

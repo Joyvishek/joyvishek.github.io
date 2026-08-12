@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock Paper Scissors</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <a class="back-link" href="../index.html">&larr; All Games</a>
+        <h1>Rock Paper Scissors</h1>
+
+        <p class="status" id="status">Make your move</p>
+
+        <div class="score-board">
+            <div class="score">
+                <div class="score-label">You</div>
+                <div class="score-value player-score" id="playerScore">0</div>
+            </div>
+            <div class="score">
+                <div class="score-label">Draws</div>
+                <div class="score-value draw-score" id="drawScore">0</div>
+            </div>
+            <div class="score">
+                <div class="score-label">Bot</div>
+                <div class="score-value bot-score" id="botScore">0</div>
+            </div>
+        </div>
+
+        <div class="arena">
+            <div class="choice-display" id="playerChoice">❓</div>
+            <div class="vs">VS</div>
+            <div class="choice-display" id="botChoice">❓</div>
+        </div>
+
+        <div class="choices">
+            <button class="choice-btn" data-choice="rock">🪨<span>Rock</span></button>
+            <button class="choice-btn" data-choice="paper">📄<span>Paper</span></button>
+            <button class="choice-btn" data-choice="scissors">✂️<span>Scissors</span></button>
+        </div>
+
+        <button class="restart-btn" id="restart">Reset Scores</button>
+    </div>
+
+    <script src="script.js" defer></script>
+</body>
+
+</html>
