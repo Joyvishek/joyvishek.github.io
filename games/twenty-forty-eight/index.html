@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2048</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <a class="back-link" href="../index.html">&larr; All Games</a>
+        <h1>2048</h1>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-label">Score</div>
+                <div class="stat-value" id="score">0</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">Best</div>
+                <div class="stat-value" id="best">0</div>
+            </div>
+        </div>
+
+        <div class="status" id="status">Use arrow keys or WASD to play</div>
+
+        <div class="board" id="board"></div>
+
+        <button class="restart-btn" id="restart">New Game</button>
+    </div>
+</body>
+</html>

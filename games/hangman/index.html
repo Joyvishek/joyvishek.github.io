@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hangman</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <a class="back-link" href="../index.html">&larr; All Games</a>
+        <h1>Hangman</h1>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-label">Wins</div>
+                <div class="stat-value" id="wins">0</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">Losses</div>
+                <div class="stat-value" id="losses">0</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">Wrong</div>
+                <div class="stat-value" id="wrong-count">0 / 6</div>
+            </div>
+        </div>
+
+        <div class="drawing" id="drawing"></div>
+
+        <p class="word-display" id="word-display"></p>
+
+        <p class="status" id="status">Guess the word!</p>
+
+        <div class="keyboard" id="keyboard"></div>
+
+        <button class="restart-btn" id="restart">New Word</button>
+    </div>
+
+    <script src="script.js" defer></script>
+</body>
+
+</html>

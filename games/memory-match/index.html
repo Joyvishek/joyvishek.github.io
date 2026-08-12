@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Match</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <a class="back-link" href="../index.html">&larr; All Games</a>
+        <h1>Memory Match</h1>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-label">Moves</div>
+                <div class="stat-value" id="moves">0</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">Matches</div>
+                <div class="stat-value" id="matches">0 / 8</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">Best</div>
+                <div class="stat-value" id="best">-</div>
+            </div>
+        </div>
+
+        <p class="status" id="status">Find all the matching pairs</p>
+
+        <div class="board" id="board"></div>
+
+        <button class="restart-btn" id="restart">New Game</button>
+    </div>
+
+    <script src="script.js" defer></script>
+</body>
+
+</html>

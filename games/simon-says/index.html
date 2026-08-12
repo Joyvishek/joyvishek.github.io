@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simon Says</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <a class="back-link" href="../index.html">&larr; All Games</a>
+        <h1>Simon Says</h1>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-label">Round</div>
+                <div class="stat-value" id="round">0</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">Best</div>
+                <div class="stat-value" id="best">0</div>
+            </div>
+        </div>
+
+        <p class="status" id="status">Press Start</p>
+
+        <div class="board" id="board">
+            <div class="pad" data-color="green" data-note="329.63"></div>
+            <div class="pad" data-color="red" data-note="392.00"></div>
+            <div class="pad" data-color="yellow" data-note="261.63"></div>
+            <div class="pad" data-color="blue" data-note="220.00"></div>
+        </div>
+
+        <button class="restart-btn" id="start">Start</button>
+    </div>
+
+    <script src="script.js" defer></script>
+</body>
+
+</html>
