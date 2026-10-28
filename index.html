@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Joyvishek Ghosh — AI Architect &amp; Module Lead</title>
-<meta name="description" content="Joyvishek Ghosh — AI Architect and Module Lead. Agentic AI, GraphRAG, MCP servers, LLM orchestration, knowledge graphs, computer vision, voice AI, and enterprise platforms.">
+<meta name="description" content="Joyvishek Ghosh — AI Architect and Module Lead. Agentic AI, GraphRAG, LLM tool orchestration, knowledge graphs, long-term memory, voice assistants, computer vision and enterprise platforms.">
 <style>
   :root{
     --paper:#edefea;
@@ -13,7 +13,6 @@
     --slate:#565f6b;
     --faint:#8b93a0;
     --rule:#d5d8d2;
-    --rule2:#e4e6e0;
     --blueprint:#1e64b0;
     --blueprint-deep:#123f73;
     --blueprint-wash:#e5edf6;
@@ -28,7 +27,6 @@
   }
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
-  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
   body{
     margin:0;color:var(--ink);background:var(--paper);
     font-family:var(--sans);font-size:16.5px;line-height:1.62;
@@ -41,7 +39,9 @@
   a{color:var(--blueprint);text-decoration:none}
   a:hover{text-decoration:underline}
   :focus-visible{outline:2px solid var(--blueprint);outline-offset:2px}
+  button{font:inherit}
 
+  /* nav */
   nav.index{position:sticky;top:0;z-index:20;background:rgba(237,239,234,.92);
     backdrop-filter:blur(6px);border-bottom:1px solid var(--rule);}
   nav.index .inner{max-width:1000px;margin:0 auto;padding:9px 26px;display:flex;
@@ -53,26 +53,42 @@
   nav.index .cta{margin-left:auto;border:1px solid var(--blueprint);color:var(--blueprint-deep);
     padding:5px 10px;border-radius:3px;}
   nav.index .cta:hover{background:var(--blueprint-wash);text-decoration:none}
+  .progress{position:absolute;left:0;bottom:-1px;height:2px;width:100%;background:transparent;}
+  .progress i{display:block;height:2px;width:0;background:var(--blueprint);}
 
-  header.mast{padding:64px 0 34px;}
+  /* hero */
+  header.mast{position:relative;padding:64px 0 34px;overflow:hidden;}
+  header.mast::after{content:"";position:absolute;inset:-40% -20% auto auto;width:520px;height:520px;
+    border-radius:50%;pointer-events:none;
+    background:radial-gradient(circle,rgba(30,100,176,.16),transparent 65%);
+    transform:translate(var(--gx,0px),var(--gy,0px));transition:transform .4s ease-out;}
   .eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;
     color:var(--blueprint);font-weight:600;margin:0 0 18px;display:inline-flex;align-items:center;gap:8px;}
   .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--ok);
-    box-shadow:0 0 0 3px rgba(29,107,76,.15);}
+    box-shadow:0 0 0 3px rgba(29,107,76,.15);animation:pulse 2s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 3px rgba(29,107,76,.15)}50%{box-shadow:0 0 0 7px rgba(29,107,76,0)}}
   h1{font-family:var(--grotesk);font-weight:800;letter-spacing:-.02em;line-height:1.02;
     font-size:clamp(2.4rem,6vw,4.1rem);margin:0 0 18px;text-wrap:balance;}
   h1 .thin{font-weight:400;color:var(--slate);}
   h1 .accent{color:var(--blueprint-deep);}
   .dek{font-size:1.24rem;line-height:1.5;color:var(--slate);max-width:60ch;margin:0;}
   .dek b{color:var(--ink);font-weight:600;}
+  .typed{display:block;margin-top:22px;font-family:var(--mono);font-size:.9rem;color:var(--blueprint-deep);
+    background:var(--panel);border:1px solid var(--rule);border-left:3px solid var(--blueprint);
+    padding:12px 14px;max-width:60ch;min-height:48px;}
+  .typed::before{content:"> ";color:var(--faint);}
+  .caret{display:inline-block;width:.6ch;margin-left:2px;background:var(--blueprint);animation:blink 1s steps(1) infinite;}
+  @keyframes blink{50%{opacity:0}}
 
   .hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px;}
-  .btn{font-family:var(--mono);font-size:.78rem;letter-spacing:.03em;padding:11px 16px;
+  .btn{font-family:var(--mono);font-size:.78rem;letter-spacing:.03em;padding:11px 16px;cursor:pointer;
     border:1.5px solid var(--ink);border-radius:2px;display:inline-flex;align-items:center;gap:8px;
-    background:var(--panel);color:var(--ink);font-weight:600;}
-  .btn:hover{text-decoration:none;background:var(--ink);color:var(--paper);}
+    background:var(--panel);color:var(--ink);font-weight:600;transition:transform .15s,background .15s,color .15s;}
+  .btn:hover{text-decoration:none;background:var(--ink);color:var(--paper);transform:translateY(-2px);}
   .btn.primary{border-color:var(--blueprint-deep);background:var(--blueprint-deep);color:#fff;}
-  .btn.primary:hover{background:var(--blueprint);border-color:var(--blueprint);}
+  .btn.primary:hover{background:var(--blueprint);border-color:var(--blueprint);color:#fff;}
+  .btn.game{border-color:var(--redline);color:var(--redline);}
+  .btn.game:hover{background:var(--redline);color:#fff;border-color:var(--redline);}
 
   .titleblock{margin-top:38px;border:1.5px solid var(--ink);background:var(--panel);
     display:grid;grid-template-columns:repeat(4,1fr);}
@@ -81,7 +97,7 @@
   .titleblock .cell:nth-child(4n){border-right:none;}
   .titleblock .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
     color:var(--faint);margin:0 0 4px;}
-  .titleblock .v{font-family:var(--mono);font-size:.86rem;color:var(--ink);font-weight:600;}
+  .titleblock .v{font-family:var(--mono);font-size:.86rem;color:var(--ink);font-weight:600;margin:0;}
   @media(max-width:640px){.titleblock{grid-template-columns:repeat(2,1fr)}
     .titleblock .cell:nth-child(-n+4){border-top:1px solid var(--rule)}
     .titleblock .cell:nth-child(-n+2){border-top:none}
@@ -90,11 +106,13 @@
 
   .stats{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px;}
   .stat{flex:1 1 150px;background:var(--panel);border:1px solid var(--rule);border-top:3px solid var(--blueprint);
-    padding:14px 16px;}
+    padding:14px 16px;transition:transform .2s;}
+  .stat:hover{transform:translateY(-3px);}
   .stat .n{font-family:var(--grotesk);font-weight:800;font-size:1.7rem;letter-spacing:-.02em;
     font-variant-numeric:tabular-nums;}
   .stat .l{font-size:.82rem;color:var(--slate);margin-top:2px;}
 
+  /* sections */
   section{padding:52px 0;border-top:1px solid var(--rule);}
   .sheet{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
     color:var(--redline);font-weight:600;margin:0 0 8px;}
@@ -103,15 +121,7 @@
   h3{font-family:var(--grotesk);font-weight:700;font-size:1.12rem;margin:0 0 8px;letter-spacing:-.01em;}
   p{margin:0 0 15px;max-width:68ch;}
   .lead{font-size:1.12rem;color:var(--slate);max-width:64ch;}
-  strong{font-weight:650;}
   em{font-style:normal;background:var(--blueprint-wash);padding:.02em .3em;border-radius:3px;}
-  code{font-family:var(--mono);font-size:.85em;background:#e7e9e3;border:1px solid var(--rule);
-    border-radius:4px;padding:.05em .36em;color:var(--blueprint-deep);}
-  ul.clean{padding-left:0;list-style:none;margin:0 0 15px;max-width:68ch;}
-  ul.clean li{position:relative;padding-left:22px;margin:8px 0;}
-  ul.clean li::before{content:"";position:absolute;left:2px;top:.62em;width:8px;height:8px;
-    border:1.5px solid var(--blueprint);transform:rotate(45deg);}
-
   .section-head{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:28px;flex-wrap:wrap;}
   .section-copy{max-width:420px;color:var(--slate);font-size:.96rem;margin:0;}
 
@@ -121,12 +131,16 @@
     color:var(--redline);font-weight:700;margin:0 0 6px;}
   .callout p{margin:0;font-size:.96rem;}
 
-  .scroll{overflow-x:auto;border:1px solid var(--rule);border-radius:2px;margin:14px 0;background:var(--panel);}
+  /* reveal on scroll (only when JS runs) */
+  .js .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease;}
+  .js .reveal.in{opacity:1;transform:none;}
 
   /* project cards */
   .projects{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;}
   @media(max-width:720px){.projects{grid-template-columns:1fr}}
-  .project{position:relative;background:var(--panel);border:1px solid var(--rule);padding:22px;min-height:270px;}
+  .project{position:relative;background:var(--panel);border:1px solid var(--rule);padding:22px;min-height:250px;
+    transition:transform .2s,box-shadow .2s;}
+  .project:hover{transform:translateY(-4px);box-shadow:0 10px 24px -14px rgba(18,63,115,.45);}
   .project::before{content:"";position:absolute;inset:0;border-top:3px solid var(--blueprint);pointer-events:none;}
   .project:nth-child(2)::before{border-color:var(--redline);}
   .project .kicker{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;
@@ -137,32 +151,55 @@
   .tag{border:1px solid var(--rule);background:#e7e9e3;color:var(--blueprint-deep);
     padding:5px 9px;font-size:.7rem;font-family:var(--mono);font-weight:700;border-radius:2px;}
 
-  /* diagram */
-  .diagram{background:var(--ink-panel);border-radius:4px;padding:26px 22px;margin:18px 0;color:#dfe4ec;
+  /* architecture */
+  .arch{background:var(--ink-panel);border-radius:4px;padding:26px 22px;margin:18px 0;color:#dfe4ec;
     background-image:linear-gradient(rgba(120,160,220,.06) 1px,transparent 1px),
                      linear-gradient(90deg,rgba(120,160,220,.06) 1px,transparent 1px);
     background-size:24px 24px;}
-  .band{display:flex;flex-direction:column;gap:12px;}
-  .tier{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch;justify-content:center;}
-  .box{font-family:var(--mono);font-size:.78rem;border:1px solid #37425a;
-    border-radius:4px;padding:10px 13px;background:#1a2130;color:#cfd8e6;text-align:center;
-    flex:0 1 auto;min-width:96px;}
-  .box .s{display:block;font-size:.64rem;color:#8a97ad;margin-top:3px;letter-spacing:.03em;}
-  .box.accent{border-color:var(--blueprint);background:#15304f;color:#cfe0f4;}
-  .box.data{border-color:#3f5a44;background:#16281c;color:#c9e0cd;}
-  .box.edge{border-color:#5a4a2f;background:#2a2113;color:#e6d3a6;}
-  .tierlabel{font-family:var(--mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;
-    color:#7f8ba1;text-align:center;margin-top:4px;}
-  .flowdown{text-align:center;color:#5f6b82;font-size:1.1rem;line-height:1;margin:-4px 0;}
+  .arch-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:stretch;}
+  .node{font-family:var(--mono);font-size:.78rem;border:1px solid #37425a;border-radius:4px;
+    padding:10px 13px;background:#1a2130;color:#cfd8e6;text-align:center;cursor:pointer;
+    min-width:112px;transition:border-color .25s,background .25s,transform .2s,box-shadow .25s;}
+  .node:hover{transform:translateY(-2px);border-color:#6d8fc4;}
+  .node[aria-pressed="true"]{border-color:var(--blueprint);background:#15304f;box-shadow:0 0 0 3px rgba(30,100,176,.35);}
+  .node.lit{border-color:#7fb0ea;background:#1f4470;box-shadow:0 0 18px rgba(127,176,234,.45);}
+  .node .s{display:block;font-size:.64rem;color:#8a97ad;margin-top:3px;}
+  .node.data{border-color:#3f5a44;background:#16281c;color:#c9e0cd;}
+  .node.edge{border-color:#5a4a2f;background:#2a2113;color:#e6d3a6;}
+  .node.user{border-color:#6b4a7a;background:#241a2e;color:#e0d0ee;}
+  .flowdown{text-align:center;color:#5f6b82;font-size:1.1rem;line-height:1;margin:6px 0;
+    font-family:var(--mono);animation:drift 2.4s ease-in-out infinite;}
+  @keyframes drift{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(4px);opacity:1}}
+  .arch-info{margin-top:16px;border:1px solid #37425a;border-radius:4px;padding:14px 16px;background:#161c28;
+    font-family:var(--mono);font-size:.82rem;color:#cfd8e6;min-height:74px;}
+  .arch-info b{color:#9cc4f0;}
+  .arch-controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px;}
+  .arch-controls .hint{font-family:var(--mono);font-size:.72rem;color:var(--faint);}
+  .btn.dark{background:transparent;color:#cfe0f4;border-color:#4d6a92;}
+  .btn.dark:hover{background:#1e64b0;color:#fff;border-color:#1e64b0;}
 
-  .pipe{display:flex;align-items:stretch;gap:0;min-width:640px;}
-  .pstep{flex:1;background:var(--panel);border:1px solid var(--rule);border-top:3px solid var(--blueprint);
-    padding:12px 12px;position:relative;}
-  .pstep + .pstep{border-left:none;}
-  .pstep .no{font-family:var(--mono);font-size:.62rem;color:var(--faint);letter-spacing:.1em;}
-  .pstep .nm{font-family:var(--grotesk);font-weight:700;font-size:.92rem;margin:2px 0 4px;}
-  .pstep .ds{font-size:.78rem;color:var(--slate);margin-top:6px;line-height:1.4;}
+  /* ask my resume */
+  .ask{border:1.5px solid var(--ink);background:var(--panel);}
+  .ask-log{height:300px;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px;
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px);background-size:100% 26px;}
+  .bubble{max-width:82%;padding:10px 13px;font-size:.92rem;line-height:1.5;border-radius:3px;
+    animation:rise .35s ease-out both;}
+  @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .bubble.me{align-self:flex-end;background:var(--blueprint-deep);color:#fff;}
+  .bubble.bot{align-self:flex-start;background:var(--blueprint-wash);border:1px solid #c9d8ea;color:var(--ink);}
+  .bubble.bot .who{display:block;font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--blueprint-deep);margin-bottom:4px;}
+  .dots{display:inline-flex;gap:4px;}
+  .dots i{width:6px;height:6px;border-radius:50%;background:var(--blueprint);animation:bob 1s infinite;}
+  .dots i:nth-child(2){animation-delay:.15s}.dots i:nth-child(3){animation-delay:.3s}
+  @keyframes bob{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(-4px);opacity:1}}
+  .ask-q{display:flex;flex-wrap:wrap;gap:8px;padding:14px 18px;border-top:1px solid var(--rule);background:#f7f8f5;}
+  .ask-q button{font-family:var(--mono);font-size:.74rem;padding:7px 10px;cursor:pointer;background:var(--panel);
+    border:1px solid var(--rule);border-radius:2px;color:var(--blueprint-deep);transition:background .15s,border-color .15s;}
+  .ask-q button:hover{background:var(--blueprint-wash);border-color:var(--blueprint);}
+  .ask-q button:disabled{opacity:.5;cursor:default;}
 
+  /* strengths */
   .grid2{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:16px 0;}
   @media(max-width:900px){.grid2{grid-template-columns:repeat(2,1fr)}}
   @media(max-width:600px){.grid2{grid-template-columns:1fr}}
@@ -180,37 +217,57 @@
   @media(max-width:640px){.skill-band{grid-template-columns:1fr}}
   .skill-band h3{margin:0;color:var(--redline);font-size:.9rem;font-family:var(--mono);
     letter-spacing:.06em;text-transform:uppercase;}
+  .tag.hot{background:var(--blueprint-deep);color:#fff;border-color:var(--blueprint-deep);}
 
-  /* timeline */
-  .timeline{display:grid;gap:14px;}
-  .timeline-item{display:grid;grid-template-columns:190px 1fr;gap:22px;padding:20px;
-    position:relative;border:1px solid var(--rule);background:var(--panel);}
-  @media(max-width:640px){.timeline-item{grid-template-columns:1fr}.timeline-item::before{display:none}}
-  .timeline-item::before{content:"";position:absolute;top:20px;bottom:20px;left:calc(20px + 190px + 11px);width:1px;background:var(--rule);}
+  /* experience */
+  .role-block{background:var(--panel);border:1px solid var(--rule);margin-bottom:14px;}
+  .role-block > summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:190px 1fr auto;
+    gap:22px;align-items:center;padding:20px;}
+  .role-block > summary::-webkit-details-marker{display:none}
+  .role-block > summary:hover h3{color:var(--blueprint-deep);}
+  .role-block[open] > summary{border-bottom:1px solid var(--rule);}
+  .role-block .chev{font-family:var(--mono);color:var(--blueprint);transition:transform .25s;}
+  .role-block[open] .chev{transform:rotate(90deg);}
+  .role-body{padding:18px 20px 22px;}
+  @media(max-width:720px){.role-block > summary{grid-template-columns:1fr auto}
+    .role-block > summary .date{grid-column:1/-1;order:-1}}
   .date{color:var(--blueprint-deep);font-weight:800;text-transform:uppercase;font-size:.76rem;
     font-family:var(--mono);letter-spacing:.04em;}
-  .role{color:var(--redline);font-weight:700;margin-top:4px;font-size:.92rem;overflow-wrap:break-word;}
-  .timeline-item h3{font-size:1.04rem;margin-bottom:6px;}
-  .timeline-item p{font-size:.92rem;color:var(--slate);margin:0 0 10px;}
-  .timeline-item ul.clean{margin:0;max-width:none;}
-  .timeline-item ul.clean li{font-size:.9rem;color:var(--slate);margin:6px 0;}
-  .timeline-item .subhead{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;
+  .role{color:var(--redline);font-weight:700;margin-top:4px;font-size:.92rem;}
+  .role-block h3{font-size:1.04rem;margin:0 0 4px;}
+  .role-block .sub{font-size:.92rem;color:var(--slate);margin:0 0 10px;}
+  .subhead{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;
     color:var(--blueprint-deep);font-weight:700;margin:14px 0 6px;}
-  .timeline-item .subhead:first-of-type{margin-top:0;}
+  ul.clean{padding-left:0;list-style:none;margin:0 0 10px;max-width:none;}
+  ul.clean li{position:relative;padding-left:22px;margin:7px 0;font-size:.92rem;color:var(--slate);}
+  ul.clean li::before{content:"";position:absolute;left:2px;top:.62em;width:8px;height:8px;
+    border:1.5px solid var(--blueprint);transform:rotate(45deg);}
+  .plain{display:grid;gap:14px;}
+  .plain .role-block{padding:20px;}
+  .plain .role-block h3{margin-bottom:4px;}
+  .plain .role-block .meta{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;}
 
   /* education */
   .edu-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
   @media(max-width:640px){.edu-grid{grid-template-columns:1fr}}
   .edu-card{border:1px solid var(--rule);background:var(--panel);border-top:3px solid var(--redline);padding:16px 18px;}
-  .edu-card .yr{font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--redline);font-weight:700;}
+  .edu-card .yr{font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--redline);font-weight:700;margin:0;}
   .edu-card h3{font-size:.98rem;margin:6px 0 2px;}
   .edu-card p{margin:0;font-size:.86rem;color:var(--slate);}
-
   .misc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:18px;}
   @media(max-width:640px){.misc-grid{grid-template-columns:1fr}}
 
-  .contact{position:relative;border:1.5px solid var(--ink);background:var(--panel);
-    padding:clamp(24px,5vw,44px);}
+  /* arcade teaser */
+  .arcade{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center;background:var(--ink-panel);
+    color:#dfe4ec;padding:26px;border-radius:4px;background-image:linear-gradient(rgba(120,160,220,.06) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(120,160,220,.06) 1px,transparent 1px);background-size:24px 24px;}
+  .arcade h2{color:#fff;margin-bottom:8px;}
+  .arcade p{color:#aab4c5;margin:0;}
+  .arcade .pix{font-family:var(--mono);color:#7fb0ea;font-size:.8rem;white-space:pre;line-height:1.1;}
+  @media(max-width:720px){.arcade{grid-template-columns:1fr}}
+
+  /* contact */
+  .contact{position:relative;border:1.5px solid var(--ink);background:var(--panel);padding:clamp(24px,5vw,44px);}
   .contact-grid{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;}
   @media(max-width:720px){.contact-grid{grid-template-columns:1fr}}
   .contact h2{margin-top:0;}
@@ -221,10 +278,16 @@
   .footgrid{border:1.5px solid var(--ink);display:grid;grid-template-columns:2fr 1fr 1fr;background:var(--panel);}
   .footgrid .cell{padding:14px 16px;border-right:1px solid var(--rule);}
   .footgrid .cell:last-child{border-right:none;}
-  .footgrid .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);}
-  .footgrid .v{font-family:var(--mono);font-size:.82rem;color:var(--ink);margin-top:3px;}
+  .footgrid .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin:0;}
+  .footgrid .v{font-family:var(--mono);font-size:.82rem;color:var(--ink);margin:3px 0 0;}
   @media(max-width:640px){.footgrid{grid-template-columns:1fr}.footgrid .cell{border-right:none;border-bottom:1px solid var(--rule)}}
   .note{font-size:.8rem;color:var(--faint);margin-top:14px;}
+
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{animation:none!important;transition:none!important}
+    .js .reveal{opacity:1;transform:none}
+  }
 </style>
 </head>
 <body>
@@ -235,26 +298,30 @@
     <a href="#overview">Overview</a>
     <a href="#projects">Projects</a>
     <a href="#architecture">Architecture</a>
+    <a href="#ask">Ask</a>
     <a href="#rnd">R&amp;D</a>
     <a href="#skills">Skills</a>
     <a href="#timeline">Experience</a>
     <a href="#education">Education</a>
+    <a href="games/index.html">Games</a>
     <a class="cta" href="JG.pdf" download="Joyvishek-Ghosh-Resume.pdf">Download CV ↓</a>
   </div>
+  <div class="progress" aria-hidden="true"><i id="progress"></i></div>
 </nav>
 
 <div class="wrap">
 
   <header class="mast" id="top">
-    <p class="eyebrow"><span class="dot"></span>Module Lead · operating as AI Architect &amp; Orchestrator</p>
+    <p class="eyebrow"><span class="dot"></span>Module Lead · AI Architect</p>
     <h1>I build <span class="accent">agentic AI</span><br><span class="thin">that can reason, retrieve, and act.</span></h1>
     <p class="dek">8+ years of <b>product engineering</b>, now architecting the <b>enterprise AI layer</b> at
-      ARC Document Solutions — agentic orchestration, GraphRAG, MCP tool servers, long-term memory, voice
-      agents and document / computer-vision AI — turning AI prototypes into secure, grounded,
-      production-grade systems that work over real enterprise data.</p>
+      ARC Document Solutions: LLM tool-calling orchestration, GraphRAG, long-term memory, a voice assistant
+      endpoint and grounded answers over real facility data, while leading a 12–15 member engineering team.</p>
+
+    <div class="typed" aria-live="off"><span id="typed"></span><span class="caret"></span></div>
 
     <div class="hero-actions">
-      <a class="btn primary" href="#projects">View the work →</a>
+      <a class="btn primary" href="#architecture">See how it works →</a>
       <a class="btn" href="JG.pdf" download="Joyvishek-Ghosh-Resume.pdf">Download CV (PDF) ↓</a>
       <a class="btn" href="mailto:joyvishekghosh@gmail.com">joyvishekghosh@gmail.com</a>
       <a class="btn" href="tel:+919804143262">(+91) 98041 43262</a>
@@ -264,90 +331,88 @@
       <div class="cell"><p class="k">Role</p><p class="v">AI Architect / Module Lead</p></div>
       <div class="cell"><p class="k">Experience</p><p class="v">8+ Years</p></div>
       <div class="cell"><p class="k">Base</p><p class="v">Kolkata, India</p></div>
-      <div class="cell"><p class="k">Focus</p><p class="v">GraphRAG · MCP · CV</p></div>
+      <div class="cell"><p class="k">Focus</p><p class="v">GraphRAG · Agents · CV</p></div>
     </div>
 
     <div class="stats">
-      <div class="stat"><div class="n">8+</div><div class="l">years building production software &amp; AI systems</div></div>
-      <div class="stat"><div class="n">9</div><div class="l">independent MCP servers across enterprise AI capabilities</div></div>
-      <div class="stat"><div class="n">3</div><div class="l">retrieval sources fused in GraphRAG answers</div></div>
+      <div class="stat"><div class="n"><span data-count="8">8</span>+</div><div class="l">years building production software and AI systems</div></div>
+      <div class="stat"><div class="n"><span data-count="13">13</span></div><div class="l">tool modules behind one orchestrated Claude loop</div></div>
+      <div class="stat"><div class="n"><span data-count="2">2</span></div><div class="l">competing Cypher chains racing per question over Neo4j</div></div>
       <div class="stat"><div class="n">12–15</div><div class="l">engineers guided as module lead</div></div>
     </div>
   </header>
 
   <!-- 01 -->
-  <section id="overview">
+  <section id="overview" class="reveal">
     <p class="sheet">01 · Who I am</p>
     <h2>AI architect with product-delivery ownership</h2>
-    <p class="lead">AI Architect and Module Lead with 8+ years of product engineering experience. I architect
-      the enterprise AI layer at ARC Document Solutions — agentic orchestration, GraphRAG, MCP tool servers,
-      long-term memory, voice agents and document / computer-vision AI — while leading a 12–15 member
-      engineering team.</p>
-    <p>My work sits at the intersection of three things: enterprise full-stack delivery, applied AI, and
-      team leadership. I care about the model, but I care just as much about the typed contracts, auth
-      context, observability, error handling, and data boundaries around it.</p>
+    <p class="lead">AI Architect and Module Lead with 8+ years of product engineering experience. I architect the
+      enterprise AI layer at ARC Document Solutions: agentic orchestration, GraphRAG, long-term memory, a voice
+      assistant endpoint and document / computer-vision AI, while leading a 12–15 member engineering team.</p>
+    <p>My work sits at the intersection of three things: enterprise full-stack delivery, applied AI, and team
+      leadership. I care about the model, but just as much about the typed contracts, auth context,
+      observability, error handling, and data boundaries around it.</p>
 
     <div class="callout">
       <p class="h">Operating principle</p>
-      <p>AI should not be a demo layer bolted onto a product. It needs grounded data, scoped tools,
-        runtime discovery, retries, graceful degradation, guardrails, and domain services underneath it —
-        the same rigor as any other production system.</p>
+      <p>AI should not be a demo layer bolted onto a product. It needs grounded data, scoped tools, guardrails,
+        retries, graceful degradation and domain services underneath it, with the same rigor as any other
+        production system.</p>
     </div>
   </section>
 
   <!-- 02 -->
   <section id="projects">
-    <p class="sheet">02 · Selected work</p>
-    <div class="section-head">
+    <p class="sheet reveal">02 · Selected work</p>
+    <div class="section-head reveal">
       <h2 style="margin:0">Enterprise AI systems I have been building</h2>
-      <p class="section-copy">The through-line is simple: decompose capabilities into reliable tools, ground
-        answers in enterprise data, and let the orchestration layer decide what to call at runtime.</p>
+      <p class="section-copy">The through-line: turn capabilities into reliable tools, ground answers in enterprise
+        data, and let the orchestration layer decide what to call.</p>
     </div>
 
     <div class="projects">
-      <article class="project">
-        <p class="kicker">ARC · MCP Platform</p>
-        <h3>Modular AI tool platform</h3>
-        <p>Migrated a monolithic RAG application into 9 independent MCP tool servers — Graph, Actions,
-          Document, Memory, Maps, Search, Export, Analytics and Guardrail — without breaking existing product
-          flows.</p>
-        <p>Standardised the servers on typed tool schemas, a shared tool registry, structured errors, health
-          checks and runtime discovery, so one failing service never takes down the conversation.</p>
+      <article class="project reveal">
+        <p class="kicker">ARC · Orchestration</p>
+        <h3>Tool-calling orchestration</h3>
+        <p>Built the Claude tool-calling loop that routes each request across graph Q&amp;A, Google Maps location
+          search, Gemini-grounded web search, Grainger industrial supplies, YouTube, uploaded-file reading and
+          data export and email.</p>
+        <p>Single-campus and multi-campus sessions get separate tool sets, and every tool result is fed back into
+          the loop until the answer is grounded.</p>
         <div class="tags">
-          <span class="tag">MCP</span><span class="tag">Tool Calling</span><span class="tag">FastAPI</span>
-          <span class="tag">SSE</span><span class="tag">Docker</span><span class="tag">Guardrails</span>
+          <span class="tag">Tool Calling</span><span class="tag">Claude</span><span class="tag">FastAPI</span>
+          <span class="tag">NDJSON Streaming</span><span class="tag">Guardrails</span>
         </div>
       </article>
 
-      <article class="project">
+      <article class="project reveal">
         <p class="kicker">ARC · GraphRAG Assistant</p>
         <h3>Facilities AI assistant</h3>
         <p>Architected ARC Facilities AI, an enterprise assistant that answers natural-language questions over
-          buildings, assets, drawings, documents, forms and locations — every answer or action backed by graph
-          data, vector search, internal APIs or memory.</p>
-        <p>Hybrid search over Neo4j/Cypher and Qdrant finds relevant entities, graph traversal expands
-          connected context, and the LLM answers only from that evidence — with authenticated user context
-          forwarded to every tool call.</p>
+          campus buildings, assets, pins and locations, with every answer backed by graph data, vector search,
+          internal APIs or user memory.</p>
+        <p>Qdrant supplies entity and example hints, two Cypher chains run in parallel against Neo4j with every
+          query campus-scoped, and a bounded self-repair loop fixes queries Neo4j rejects.</p>
         <div class="tags">
           <span class="tag">GraphRAG</span><span class="tag">Neo4j</span><span class="tag">Qdrant</span>
-          <span class="tag">Redis</span><span class="tag">OpenAI / Gemini</span>
+          <span class="tag">Redis</span><span class="tag">Claude / Bedrock</span>
         </div>
       </article>
 
-      <article class="project">
-        <p class="kicker">ARC · Voice AI</p>
-        <h3>Real-time facilities voice agent</h3>
-        <p>Built a real-time AI voice agent on LiveKit with speech-to-text, turn detection and noise
-          cancellation, connected to facility search and the main assistant's history.</p>
-        <p>The agent brings the same facilities intelligence into a real-time conversational interface, while
-          keeping backend calls and frontend updates explicit and observable.</p>
+      <article class="project reveal">
+        <p class="kicker">ARC · Memory &amp; Voice</p>
+        <h3>Memory and voice assistant</h3>
+        <p>Added long-term user memory on mem0 with pgvector, with detect, confirm, override and delete flows for
+          preferences, backed by a benchmark that covers English, Spanish and Tagalog.</p>
+        <p>The voice endpoint (<em>/campusmetadata</em>) runs on the same tool-calling loop and memory layer as
+          text chat.</p>
         <div class="tags">
-          <span class="tag">LiveKit</span><span class="tag">Speech AI</span><span class="tag">OpenAI</span>
-          <span class="tag">Silero</span><span class="tag">Async Python</span>
+          <span class="tag">mem0</span><span class="tag">pgvector</span><span class="tag">Voice Endpoint</span>
+          <span class="tag">Preference Benchmark</span>
         </div>
       </article>
 
-      <article class="project">
+      <article class="project reveal">
         <p class="kicker">ARC · Drawing Intelligence</p>
         <h3>Document, OCR, and CV intelligence</h3>
         <p>Built OCR pipelines (Surya OCR, Tesseract, PDF text layers) for blueprints, technical manuals and
@@ -365,130 +430,142 @@
 
   <!-- 03 -->
   <section id="architecture">
-    <p class="sheet">03 · System design</p>
-    <div class="section-head">
-      <h2 style="margin:0">From question to grounded action</h2>
-      <p class="section-copy">The assistant is split into access, reasoning, retrieval, and domain tool
-        planes, so one failing dependency becomes a structured tool error instead of a platform outage.</p>
+    <p class="sheet reveal">03 · System design</p>
+    <div class="section-head reveal">
+      <h2 style="margin:0">Trace a question through the system</h2>
+      <p class="section-copy">Click any block to see what it does, or run a trace to watch one question move
+        through the stack.</p>
     </div>
 
-    <div class="scroll">
-      <div class="diagram">
-        <div class="band">
-          <div class="tier"><div class="box accent">Client / Agent<span class="s">chat, voice, API</span></div>
-            <div class="box accent">Authenticated Gateway<span class="s">JWT · request context</span></div></div>
-          <div class="tierlabel">access plane</div>
-          <div class="flowdown">↓</div>
-          <div class="tier"><div class="box accent">Reasoning Orchestrator<span class="s">tool-calling loop</span></div></div>
-          <div class="flowdown">↓</div>
-          <div class="tier">
-            <div class="box data">Neo4j / Cypher<span class="s">knowledge graph</span></div>
-            <div class="box data">Qdrant / pgvector<span class="s">semantic retrieval</span></div>
-            <div class="box data">Redis / Memory<span class="s">history + preferences</span></div>
-          </div>
-          <div class="tierlabel">retrieval plane</div>
-          <div class="flowdown">↓</div>
-          <div class="tier">
-            <div class="box">Graph MCP</div><div class="box">Actions MCP</div>
-            <div class="box">Document MCP</div><div class="box">Memory MCP</div>
-            <div class="box">Maps MCP</div><div class="box">Search MCP</div>
-            <div class="box">Export MCP</div><div class="box">Analytics MCP</div>
-            <div class="box">Guardrail MCP</div>
-          </div>
-          <div class="tierlabel">9 MCP tool services — isolated, independently deployable</div>
-          <div class="flowdown">↓</div>
-          <div class="tier"><div class="box edge">Enterprise APIs<span class="s">backend systems, object storage, external services</span></div></div>
-        </div>
+    <div class="arch reveal" id="arch">
+      <div class="arch-row">
+        <button class="node user" data-node="client" aria-pressed="false">Client<span class="s">chat · voice</span></button>
+      </div>
+      <div class="flowdown" aria-hidden="true">↓</div>
+      <div class="arch-row">
+        <button class="node" data-node="gateway" aria-pressed="false">FastAPI Gateway<span class="s">/chat · /campusmetadata</span></button>
+      </div>
+      <div class="flowdown" aria-hidden="true">↓</div>
+      <div class="arch-row">
+        <button class="node" data-node="loop" aria-pressed="false">Claude Tool Loop<span class="s">routes &amp; re-enters</span></button>
+      </div>
+      <div class="flowdown" aria-hidden="true">↓</div>
+      <div class="arch-row">
+        <button class="node" data-node="graph" aria-pressed="false">GraphRAG<span class="s">Qdrant → Cypher → Neo4j</span></button>
+        <button class="node edge" data-node="live" aria-pressed="false">Live sources<span class="s">Maps · Search · YouTube</span></button>
+        <button class="node data" data-node="state" aria-pressed="false">State &amp; memory<span class="s">Redis · mem0 · ES</span></button>
+      </div>
+      <div class="flowdown" aria-hidden="true">↓</div>
+      <div class="arch-row">
+        <button class="node data" data-node="out" aria-pressed="false">Streamed answer<span class="s">grounded · exportable</span></button>
+      </div>
+
+      <div class="arch-info" id="arch-info" aria-live="polite">
+        <b>Select a block.</b> Each stage is isolated, so a failing source becomes a tool error instead of an outage.
+      </div>
+      <div class="arch-controls">
+        <button class="btn dark" id="trace">▶ Trace a question</button>
+        <span class="hint" id="trace-hint">one request, seven hops</span>
       </div>
     </div>
-
-    <h3 style="margin-top:26px">Why it holds up under change</h3>
-    <p>Each MCP service is independently deployable and fails without taking the others down. The
-      orchestrator discovers tool catalogs dynamically, forwards authenticated request context, normalizes
-      results and errors, and keeps business capabilities behind explicit contracts.</p>
   </section>
 
   <!-- 04 -->
-  <section aria-label="Core strengths">
-    <p class="sheet">04 · Core strengths</p>
-    <div class="grid2">
-      <div class="card">
-        <div class="card-icon">AI</div>
-        <h3>Agentic AI Orchestration</h3>
-        <p>MCP servers, LLM tool-calling loops, multi-source retrieval fusion, conversational agent design,
-          and grounded actions that cite their source instead of guessing.</p>
+  <section id="ask">
+    <p class="sheet reveal">04 · Ask my resume</p>
+    <div class="section-head reveal">
+      <h2 style="margin:0">Ask a quick question</h2>
+      <p class="section-copy">A scripted demo, not a live model. Pick a question to see the answer.</p>
+    </div>
+    <div class="ask reveal">
+      <div class="ask-log" id="ask-log" role="log" aria-live="polite">
+        <div class="bubble bot"><span class="who">Resume bot</span>Hi, I'm a scripted stand-in for Joyvishek's CV. Pick a question below.</div>
       </div>
-      <div class="card">
-        <div class="card-icon">CV</div>
-        <h3>Vision &amp; Document Intelligence</h3>
-        <p>YOLO-based object and region detection, OCR pipelines, VLM classification, and drawing/manual
-          parsing that turn unstructured visual content into queryable facts.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">FS</div>
-        <h3>Full-Stack Delivery</h3>
-        <p>React, Next.js, Angular, NestJS, Node.js, PostgreSQL, MongoDB, Redis, Kafka, and Docker — shipped
-          in production, not prototypes.</p>
+      <div class="ask-q" id="ask-q">
+        <button data-q="what">What is ARC Facilities AI?</button>
+        <button data-q="graph">How does GraphRAG work here?</button>
+        <button data-q="safety">How is it kept safe?</button>
+        <button data-q="voice">Is there a voice assistant?</button>
+        <button data-q="team">What does the team look like?</button>
       </div>
     </div>
   </section>
 
   <!-- 05 -->
+  <section id="strengths">
+    <p class="sheet reveal">05 · Core strengths</p>
+    <div class="grid2">
+      <div class="card reveal">
+        <div class="card-icon">AI</div>
+        <h3>Agentic AI Orchestration</h3>
+        <p>LLM tool-calling loops, multi-source retrieval, conversational agent design, and grounded answers
+          that cite their source instead of guessing.</p>
+      </div>
+      <div class="card reveal">
+        <div class="card-icon">CV</div>
+        <h3>Vision &amp; Document Intelligence</h3>
+        <p>YOLO-based object and region detection, OCR pipelines, VLM classification, and drawing and manual
+          parsing that turns visual content into queryable facts.</p>
+      </div>
+      <div class="card reveal">
+        <div class="card-icon">FS</div>
+        <h3>Full-Stack Delivery</h3>
+        <p>React, Next.js, Angular, NestJS, Node.js, PostgreSQL, MongoDB, Redis and Docker, shipped in
+          production, not prototypes.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 -->
   <section id="rnd">
-    <p class="sheet">05 · Personal R&amp;D</p>
-    <div class="section-head">
-      <h2 style="margin:0">Research systems I am shaping for future product use</h2>
-      <p class="section-copy">Personal R&amp;D tracks: drawing-to-BIM conversion, AI testing, a
-        domain-agnostic cognitive runtime and an agent action protocol. All explore ideas that can feed back
-        into enterprise AI.</p>
+    <p class="sheet reveal">06 · Personal R&amp;D</p>
+    <div class="section-head reveal">
+      <h2 style="margin:0">Research systems for future product use</h2>
+      <p class="section-copy">Drawing-to-BIM conversion, AI testing, a domain-agnostic cognitive runtime and an
+        agent action protocol.</p>
     </div>
 
     <div class="projects">
-      <article class="project">
+      <article class="project reveal">
         <p class="kicker">Personal · arch3D</p>
         <h3>Drawing to 3D / BIM model</h3>
-        <p>Converts architectural drawings (PDF, image, DXF/DWG) into editable 3D/BIM models (GLB, IFC4)
-          through a 12-stage pipeline — OCR, wall/door/window detection, scale resolution and room
-          reconstruction — with confidence scores and human review.</p>
+        <p>Converts architectural drawings (PDF, image, DXF/DWG) into editable 3D/BIM models (GLB, IFC4) through a
+          12-stage pipeline with confidence scores and human review.</p>
         <p>Geometry comes from measured data, never from the LLM.</p>
         <div class="tags">
           <span class="tag">Next.js</span><span class="tag">NestJS</span><span class="tag">FastAPI</span>
           <span class="tag">OpenCV</span><span class="tag">Tesseract</span><span class="tag">IfcOpenShell</span>
-          <span class="tag">PostgreSQL</span><span class="tag">Redis</span>
         </div>
       </article>
 
-      <article class="project">
+      <article class="project reveal">
         <p class="kicker">Personal · AutomationOS</p>
         <h3>AI testing platform</h3>
-        <p>QA automation platform that runs Excel-based test suites against an AI assistant, keeps multi-turn
-          follow-up sessions, streams live results over SSE, and auto-validates responses with an LLM judge
-          (Ollama) using configurable QA rules and similarity scores.</p>
+        <p>Runs Excel-based test suites against an AI assistant, keeps multi-turn follow-up sessions, streams live
+          results over SSE, and auto-validates responses with an LLM judge (Ollama).</p>
         <p>Includes voice test automation via LiveKit and pass/fail and latency reports.</p>
         <div class="tags">
-          <span class="tag">FastAPI</span><span class="tag">React</span><span class="tag">PostgreSQL</span>
-          <span class="tag">Redis</span><span class="tag">Celery</span><span class="tag">Docker</span>
+          <span class="tag">FastAPI</span><span class="tag">React</span><span class="tag">Celery</span>
+          <span class="tag">LiveKit</span><span class="tag">Docker</span>
         </div>
       </article>
 
-      <article class="project">
+      <article class="project reveal">
         <p class="kicker">Personal · USCR</p>
         <h3>Cognitive runtime</h3>
-        <p>Domain-agnostic runtime that turns plain-language questions into Neo4j, SQL or vector queries,
-          driven by configurable ontology packs.</p>
-        <p>Multi-tier memory and planning/reasoning agents keep a continuous model of the domain between
-          requests.</p>
+        <p>Turns plain-language questions into Neo4j, SQL or vector queries, driven by configurable ontology packs,
+          with multi-tier memory and planning agents.</p>
         <div class="tags">
           <span class="tag">FastAPI</span><span class="tag">Neo4j</span><span class="tag">Qdrant</span>
-          <span class="tag">Redis</span><span class="tag">Ontology Packs</span>
+          <span class="tag">Redis</span>
         </div>
       </article>
 
-      <article class="project">
+      <article class="project reveal">
         <p class="kicker">Personal · AgentSync</p>
         <h3>Agent action protocol</h3>
-        <p>Protocol for AI agents to negotiate and complete real-world actions with secure sessions, policy
-          checks, confirmation gates and audit logs.</p>
+        <p>A protocol for AI agents to complete real-world actions with secure sessions, policy checks,
+          confirmation gates and audit logs.</p>
         <div class="tags">
           <span class="tag">FastAPI</span><span class="tag">React</span><span class="tag">Qdrant</span>
           <span class="tag">Redis</span><span class="tag">Celery</span>
@@ -497,200 +574,211 @@
     </div>
   </section>
 
-  <!-- 06 -->
+  <!-- 07 -->
   <section id="skills">
-    <p class="sheet">06 · Technical toolkit</p>
-    <h2>Built across AI, backend, and product layers</h2>
+    <p class="sheet reveal">07 · Technical toolkit</p>
+    <h2 class="reveal">Built across AI, backend, and product layers</h2>
     <div class="skills">
-      <div class="skill-band">
+      <div class="skill-band reveal">
         <h3>Generative AI</h3>
-        <div class="tags"><span class="tag">LLM Orchestration</span><span class="tag">Agentic AI</span><span class="tag">RAG</span><span class="tag">GraphRAG</span><span class="tag">MCP</span><span class="tag">Tool Calling</span><span class="tag">Prompt Engineering</span><span class="tag">AI Guardrails</span><span class="tag">OpenAI</span><span class="tag">Gemini</span><span class="tag">Ollama</span><span class="tag">Hugging Face</span><span class="tag">Rasa</span><span class="tag">LiveKit</span></div>
+        <div class="tags"><span class="tag">LLM Orchestration</span><span class="tag">Agentic AI</span><span class="tag">Tool Calling</span><span class="tag">RAG</span><span class="tag">GraphRAG</span><span class="tag">Prompt Engineering</span><span class="tag">AI Guardrails</span><span class="tag">Claude (Anthropic / Bedrock)</span><span class="tag">Gemini</span><span class="tag">OpenAI</span><span class="tag">Ollama</span><span class="tag">mem0</span><span class="tag">Rasa</span></div>
       </div>
-      <div class="skill-band">
+      <div class="skill-band reveal">
         <h3>Vision / Doc AI</h3>
         <div class="tags"><span class="tag">YOLOv8 / v11</span><span class="tag">Object Detection</span><span class="tag">Instance Segmentation</span><span class="tag">VLMs</span><span class="tag">OCR (Surya, Tesseract)</span><span class="tag">OpenCV</span></div>
       </div>
-      <div class="skill-band">
+      <div class="skill-band reveal">
         <h3>Data / Retrieval</h3>
         <div class="tags"><span class="tag">Neo4j (Cypher)</span><span class="tag">Qdrant</span><span class="tag">pgvector</span><span class="tag">PostgreSQL</span><span class="tag">MongoDB</span><span class="tag">Redis</span><span class="tag">ClickHouse</span><span class="tag">Elasticsearch</span><span class="tag">Solr</span></div>
       </div>
-      <div class="skill-band">
+      <div class="skill-band reveal">
         <h3>Backend</h3>
-        <div class="tags"><span class="tag">Python</span><span class="tag">FastAPI</span><span class="tag">Node.js</span><span class="tag">NestJS</span><span class="tag">Kafka</span><span class="tag">gRPC</span><span class="tag">Socket.IO</span><span class="tag">Docker</span><span class="tag">Microservices</span><span class="tag">Event-driven Architecture</span></div>
+        <div class="tags"><span class="tag">Python</span><span class="tag">FastAPI</span><span class="tag">Node.js</span><span class="tag">NestJS</span><span class="tag">gRPC</span><span class="tag">Socket.IO</span><span class="tag">Docker</span><span class="tag">Microservices</span><span class="tag">Event-driven Architecture</span></div>
       </div>
-      <div class="skill-band">
+      <div class="skill-band reveal">
         <h3>Frontend</h3>
         <div class="tags"><span class="tag">React.js</span><span class="tag">Next.js</span><span class="tag">Angular</span><span class="tag">TypeScript</span><span class="tag">Micro-frontends</span><span class="tag">PSPDFKit</span><span class="tag">PDF.js</span></div>
-      </div>
-      <div class="skill-band">
-        <h3>Languages</h3>
-        <div class="tags"><span class="tag">English</span><span class="tag">Hindi</span><span class="tag">Bengali</span></div>
       </div>
     </div>
   </section>
 
-  <!-- 06 -->
+  <!-- 08 -->
   <section id="timeline">
-    <p class="sheet">07 · Experience</p>
-    <h2>Engineering leadership with hands-on architecture</h2>
-    <div class="timeline">
-      <article class="timeline-item">
-        <div>
-          <div class="date">Sep 2024 — Present</div>
-          <div class="role">ARC Document Solutions</div>
-        </div>
-        <div>
-          <h3>Module Lead — AI Architect</h3>
-          <p>Architecting the enterprise AI layer while leading a 12–15 member engineering team on product
-            delivery.</p>
+    <p class="sheet reveal">08 · Experience</p>
+    <h2 class="reveal">Engineering leadership with hands-on architecture</h2>
 
-          <p class="subhead">Enterprise AI Assistant &amp; Orchestration</p>
-          <ul class="clean">
-            <li>Architected ARC Facilities AI, an enterprise assistant that answers natural-language questions over buildings, assets, drawings, documents, forms and locations — every answer or action backed by graph data, vector search, internal APIs or memory.</li>
-            <li>Built the orchestration layer that routes each request between Q&amp;A, graph retrieval, document lookup, location search, data export and action tools, forwarding authenticated user context to every call.</li>
-            <li>Migrated a monolithic RAG application into 9 independent MCP tool servers — Graph, Actions, Document, Memory, Maps, Search, Export, Analytics and Guardrail — without breaking existing product flows.</li>
-            <li>Standardised the servers on typed tool schemas, a shared tool registry, structured errors, health checks and runtime discovery, so one failing service never takes down the conversation.</li>
-          </ul>
+    <details class="role-block reveal" open>
+      <summary>
+        <div><div class="date">Sep 2024 — Present</div><div class="role">ARC Document Solutions</div></div>
+        <div><h3>Module Lead — AI Architect</h3><p class="sub" style="margin:0">Kolkata · architecting the enterprise AI layer</p></div>
+        <span class="chev" aria-hidden="true">▸</span>
+      </summary>
+      <div class="role-body">
+        <p class="subhead">Enterprise AI Assistant &amp; Orchestration</p>
+        <ul class="clean">
+          <li>Architected ARC Facilities AI, an enterprise assistant that answers natural-language questions over campus buildings, assets, pins and locations, with every answer backed by graph data, vector search, internal APIs or user memory.</li>
+          <li>Built the Claude tool-calling loop that routes each request across graph Q&amp;A, Google Maps, Gemini-grounded search, Grainger, YouTube, file reading and export/email tools, with separate tool sets for single-campus and multi-campus sessions.</li>
+          <li>Built the export and email tools to resolve "export this" against the last exportable answer in history, delivering files as S3 presigned links that expire.</li>
+          <li>Built the Redis-backed session layer for chat history, preferences and session state, with paged history and newline-delimited JSON streaming.</li>
+        </ul>
 
-          <p class="subhead">GraphRAG, Memory &amp; Voice</p>
-          <ul class="clean">
-            <li>Designed GraphRAG retrieval over Neo4j/Cypher and Qdrant: hybrid search finds relevant entities, graph traversal expands connected context, and the LLM (OpenAI, Gemini, Ollama) answers only from that evidence.</li>
-            <li>Used Redis as a distributed cache for session, history and retrieval state, and Kafka for event-driven messaging between AI agents and core services — lowering latency and LLM cost.</li>
-            <li>Added long-term user memory with confirm / update / delete controls, conversation history with paging, and session continuity, cutting token usage on repeat questions.</li>
-            <li>Built a real-time AI voice agent on LiveKit with speech-to-text, turn detection and noise cancellation, connected to facility search and the main assistant's history.</li>
-            <li>Built custom NLP components — feedback sentiment analysis and a context-aware spell checker for form data.</li>
-          </ul>
+        <p class="subhead">GraphRAG, Memory &amp; Voice</p>
+        <ul class="clean">
+          <li>Designed the GraphRAG pipeline: Qdrant supplies canonical entity, few-shot Cypher and past-failure hints, and two competing Cypher chains (asset-first and pin-first) run in parallel against Neo4j, with every query campus-scoped.</li>
+          <li>Added a bounded Cypher self-repair loop that feeds Neo4j errors back to the model, and rejects repaired queries that drop the campus filter or return hard-coded literals.</li>
+          <li>Built post-answer grounding verification and anti-example recording, so silent graph-query failures are measured and reusable as negative examples.</li>
+          <li>Added long-term user memory on mem0 with pgvector, with detect, confirm, override and delete flows, and a live-classifier benchmark covering English, Spanish and Tagalog.</li>
+          <li>Built the voice assistant endpoint (<em>/campusmetadata</em>) on the same tool-calling loop and memory layer as text chat.</li>
+          <li>Built fuzzy campus and building-name matching (RapidFuzz) so natural-language place names resolve to campus records.</li>
+          <li>Built per-query token-usage tracking that normalizes response shapes across Anthropic, Bedrock and Converse, cutting cost on repeat questions through prompt caching and history trimming.</li>
+        </ul>
 
-          <p class="subhead">Computer Vision &amp; Document AI</p>
-          <ul class="clean">
-            <li>Built OCR pipelines (Surya OCR, Tesseract, PDF text layers) for blueprints, technical manuals and facilities documents.</li>
-            <li>Trained and deployed YOLO models for building annotation and equipment detection, and YOLOv11 instance segmentation for floor-area and structural-boundary isolation.</li>
-            <li>Designed architectural-drawing intelligence that reads drawing sets (title blocks, legends, keynotes, schedules) using a VLM, knowledge graph and hybrid search, and cites the exact sheet in each answer.</li>
-          </ul>
+        <p class="subhead">Data, Safety &amp; Model Routing</p>
+        <ul class="clean">
+          <li>Operated the data layer across Redis, Neo4j, Qdrant, pgvector, Elasticsearch (support knowledge base) and ClickHouse (analytics), with Claude served through AWS Bedrock or the first-party API behind a single kill switch.</li>
+          <li>Built a three-layer content guard: prompt-injection filtering, an internals-extraction guard with an output sanitizer, and a multilingual hate and abuse filter for English, Spanish and Tagalog.</li>
+        </ul>
 
-          <p class="subhead">Security &amp; Production Readiness</p>
-          <ul class="clean">
-            <li>Led hardening before production rollout: closed authentication gaps, enforced user isolation, added prompt-injection guardrails, removed hard-coded secrets, set input-size limits and fixed dependency vulnerabilities.</li>
-            <li>Added retries, fallbacks and structured logging so the assistant degrades gracefully when memory, analytics or external services are unavailable.</li>
-          </ul>
+        <p class="subhead">Skysite Intelligence: AI Document Intelligence</p>
+        <ul class="clean">
+          <li>Architected <b>Skysite Intelligence</b>, an AI document-intelligence layer for facility management that ingests engineering drawings and project documents and answers natural-language questions with citations back to the source sheet.</li>
+          <li>Built a hexagonal, event-driven pipeline on Kafka: each stage (splitting, reading, knowledge graph, embeddings, retrieval) is an independent consumer, with domain logic kept separate from infrastructure adapters.</li>
+          <li>Built drawing understanding that reads title blocks, keynotes, legends, schedules and egress elements, and measures room areas from the drawn walls, using PyMuPDF and OCR with a vision LLM.</li>
+          <li>Built hybrid vector and graph retrieval with a reranker, and plans walking routes over the doorways in drawn walls.</li>
+          <li>Kept inference fully self-hosted (vision LLM, embeddings and reranker on vLLM and TEI in production), with no calls to a third-party model vendor.</li>
+        </ul>
 
-          <p class="subhead">Product Engineering &amp; Leadership</p>
-          <ul class="clean">
-            <li>Led a 12–15 member engineering team across requirements gathering, architecture, delivery and production support.</li>
-            <li>Implemented role-based access control across Equipment, Compliance, Forms and Pin; led the Compliance 1.0 → 2.0 data migration and added dynamic surveys.</li>
-            <li>Upgraded PSPDFKit in Forms (share links, report downloads, 1.0 → 2.0 conversion) and built a PDF viewer/signing tool with pdf-lib, PDF.js and Signature Pad.</li>
-            <li>Built a Mutation Observer bridge for real-time React (host) ↔ Angular (remote) micro-frontend communication; integrated Google Maps for campus location search.</li>
-            <li>Built NestJS services (clean/onion architecture) with PostgreSQL and Redis — Equipment bulk upload, Forms activity tracking, recurring task scheduling and email notifications.</li>
-          </ul>
-        </div>
-      </article>
-      <article class="timeline-item">
-        <div>
-          <div class="date">Jun 2023 — Sep 2024</div>
-          <div class="role">Trigent Software</div>
-        </div>
-        <div>
-          <h3>Full Stack Developer <span style="font-weight:400;color:var(--slate)">· client: ARC Document Solutions</span></h3>
+        <p class="subhead">Computer Vision &amp; Document AI</p>
+        <ul class="clean">
+          <li>Built OCR pipelines (Surya OCR, Tesseract, PDF text layers) for blueprints, technical manuals and facilities documents.</li>
+          <li>Trained and deployed YOLO models for building annotation and equipment detection, and YOLOv11 instance segmentation for floor-area and structural-boundary isolation.</li>
+          <li>Designed architectural-drawing intelligence that reads drawing sets using a VLM, knowledge graph and hybrid search, and cites the exact sheet in each answer.</li>
+        </ul>
+
+        <p class="subhead">Security &amp; Production Readiness</p>
+        <ul class="clean">
+          <li>Led hardening before production rollout: closed authentication gaps, enforced user isolation, added prompt-injection guardrails, moved secrets to AWS Secrets Manager with per-environment config, set input-size limits and per-user daily rate limits, and fixed dependency vulnerabilities.</li>
+          <li>Added retries, fallbacks and structured logging so the assistant degrades gracefully when memory, analytics or external services are unavailable.</li>
+        </ul>
+
+        <p class="subhead">Product Engineering &amp; Leadership</p>
+        <ul class="clean">
+          <li>Led a 12–15 member engineering team across requirements gathering, architecture, delivery and production support.</li>
+          <li>Implemented role-based access control across Equipment, Compliance, Forms and Pin; led the Compliance 1.0 to 2.0 data migration and added dynamic surveys.</li>
+          <li>Upgraded PSPDFKit in Forms (share links, report downloads, 1.0 to 2.0 conversion) and built a PDF viewer and signing tool with pdf-lib, PDF.js and Signature Pad.</li>
+          <li>Built a Mutation Observer bridge for real-time React (host) and Angular (remote) micro-frontend communication; integrated Google Maps for campus location search.</li>
+          <li>Built NestJS services (clean/onion architecture) with PostgreSQL and Redis: Equipment bulk upload, Forms activity tracking, recurring task scheduling and email notifications.</li>
+        </ul>
+      </div>
+    </details>
+
+    <div class="plain">
+      <details class="role-block reveal">
+        <summary>
+          <div><div class="date">Jun 2023 — Sep 2024</div><div class="role">Trigent Software</div></div>
+          <div><h3>Full Stack Developer</h3><p class="sub" style="margin:0">client: ARC Document Solutions</p></div>
+          <span class="chev" aria-hidden="true">▸</span>
+        </summary>
+        <div class="role-body">
           <ul class="clean">
             <li>Built client and server applications with React, Next.js, Redux, NestJS, Node.js, PostgreSQL and MongoDB, including YOLOv8 computer-vision features.</li>
             <li>Shipped features that drove a 20% increase in user engagement; resolved 15% more technical issues within deadlines and improved project completion time by 30% through agile practices.</li>
             <li>Integrated Redis, Socket.IO, Solr and Elasticsearch; used Moleculer microservices for job/worker nodes and Turbo.js for micro-frontends.</li>
           </ul>
         </div>
-      </article>
-      <article class="timeline-item">
-        <div>
-          <div class="date">Feb 2021 — Mar 2023</div>
-          <div class="role">Pemari Technology Pvt. Ltd.</div>
-        </div>
-        <div>
-          <h3>Artificial Intelligence Consultant</h3>
+      </details>
+
+      <details class="role-block reveal">
+        <summary>
+          <div><div class="date">Feb 2021 — Mar 2023</div><div class="role">Pemari Technology Pvt. Ltd.</div></div>
+          <div><h3>Artificial Intelligence Consultant</h3></div>
+          <span class="chev" aria-hidden="true">▸</span>
+        </summary>
+        <div class="role-body">
           <ul class="clean">
             <li>Built a Rasa-powered conversational AI chatbot for Broadcom's Clarity PPM, with a React front end and a Meteor/Node.js admin panel.</li>
-            <li>Designed rich chatbot responses — tables, charts, images, video, guided flows, ratings, buttons and carousels.</li>
+            <li>Designed rich chatbot responses: tables, charts, images, video, guided flows, ratings, buttons and carousels.</li>
             <li>Connected the admin panel to Rasa through GraphQL/Apollo Server; added multitenancy for per-client data isolation and multiprocessing for performance.</li>
             <li>Set up automated Docker image builds into a private registry; led delivery on a 6-person team.</li>
           </ul>
         </div>
-      </article>
-      <article class="timeline-item">
-        <div>
-          <div class="date">Mar 2019 — May 2019</div>
-          <div class="role">Fleapo Corporation</div>
-        </div>
-        <div>
-          <h3>Full Stack Developer</h3>
+      </details>
+
+      <details class="role-block reveal">
+        <summary>
+          <div><div class="date">Mar 2019 — May 2019</div><div class="role">Fleapo Corporation</div></div>
+          <div><h3>Full Stack Developer</h3></div>
+          <span class="chev" aria-hidden="true">▸</span>
+        </summary>
+        <div class="role-body">
           <ul class="clean">
             <li>Built web applications including Realbooks and a T-shirt e-commerce site with Angular, Node.js and MongoDB.</li>
             <li>Worked directly with customers on progress and feedback; reviewed code, debugged issues and shipped fixes.</li>
           </ul>
         </div>
-      </article>
-      <article class="timeline-item">
-        <div>
-          <div class="date">Mar 2017 — Mar 2019</div>
-          <div class="role">TheoreX Edutech LLP</div>
-        </div>
-        <div>
-          <h3>Full Stack Software Developer</h3>
+      </details>
+
+      <details class="role-block reveal">
+        <summary>
+          <div><div class="date">Mar 2017 — Mar 2019</div><div class="role">TheoreX Edutech LLP</div></div>
+          <div><h3>Full Stack Software Developer</h3></div>
+          <span class="chev" aria-hidden="true">▸</span>
+        </summary>
+        <div class="role-body">
           <ul class="clean">
             <li>Developed and maintained applications in AngularJS, Node.js, MongoDB, HTML5 and CSS3; reviewed code and debugged issues.</li>
             <li>Worked with clients across project stages and with engineers to improve software/hardware interfaces.</li>
           </ul>
         </div>
-      </article>
+      </details>
     </div>
   </section>
 
-  <!-- 06b -->
+  <!-- 09 -->
   <section id="education">
-    <p class="sheet">08 · Education</p>
-    <h2>Formal education</h2>
+    <p class="sheet reveal">09 · Education</p>
+    <h2 class="reveal">Formal education</h2>
     <div class="edu-grid">
-      <div class="edu-card">
-        <p class="yr">2023</p>
-        <h3>PG Diploma</h3>
-        <p>International Institute of Information Technology, Bangalore</p>
-      </div>
-      <div class="edu-card">
-        <p class="yr">2017</p>
-        <h3>B.Tech / B.E.</h3>
-        <p>West Bengal University of Technology (WBUT)</p>
-      </div>
-      <div class="edu-card">
-        <p class="yr">2013</p>
-        <h3>ISC (12th)</h3>
-        <p>CISCE</p>
-      </div>
-      <div class="edu-card">
-        <p class="yr">2011</p>
-        <h3>ICSE (10th)</h3>
-        <p>CISCE</p>
-      </div>
+      <div class="edu-card reveal"><p class="yr">2023</p><h3>PG Diploma</h3><p>International Institute of Information Technology, Bangalore</p></div>
+      <div class="edu-card reveal"><p class="yr">2017</p><h3>B.Tech / B.E.</h3><p>West Bengal University of Technology (WBUT)</p></div>
+      <div class="edu-card reveal"><p class="yr">2013</p><h3>ISC (12th)</h3><p>CISCE</p></div>
+      <div class="edu-card reveal"><p class="yr">2011</p><h3>ICSE (10th)</h3><p>CISCE</p></div>
     </div>
 
     <div class="misc-grid">
-      <div class="card">
-        <h3>Personal</h3>
-        <p>Kolkata, India</p>
-      </div>
-      <div class="card">
-        <h3>Hobbies</h3>
-        <p>POC on different AI models · Computer games</p>
-      </div>
+      <div class="card reveal"><h3>Personal</h3><p>Kolkata, India · English, Hindi, Bengali</p></div>
+      <div class="card reveal"><h3>Hobbies</h3><p>POC on different AI models · building small browser games</p></div>
     </div>
   </section>
 
-  <!-- 07 -->
+  <!-- 10 -->
+  <section id="play">
+    <div class="arcade reveal">
+      <div>
+        <h2>Take a break?</h2>
+        <p>I build small browser games in my spare time: tic-tac-toe, snake, 2048, memory match and more, all
+          in one arcade.</p>
+      </div>
+      <pre class="pix" aria-hidden="true">  ┌──────────┐
+  │ ▓▓  ▓▓   │
+  │    ▓▓▓▓  │
+  │ ▓▓      ▓│
+  └──────────┘
+   press start</pre>
+      <div style="grid-column:1/-1"><a class="btn game" href="games/index.html">Open the arcade →</a></div>
+    </div>
+  </section>
+
+  <!-- 11 -->
   <section aria-label="Contact">
-    <p class="sheet">09 · Get in touch</p>
-    <div class="contact">
+    <p class="sheet reveal">10 · Get in touch</p>
+    <div class="contact reveal">
       <div class="contact-grid">
         <div>
           <h2>AI architect mindset, module-lead ownership.</h2>
-          <p>I bring product delivery, GraphRAG, MCP servers, LLM orchestration, computer vision, voice AI,
-            full-stack engineering, and team leadership together — the mix it takes to turn enterprise AI
-            from a demo into a system people actually rely on.</p>
+          <p>I bring product delivery, GraphRAG, LLM tool orchestration, computer vision, voice assistants,
+            full-stack engineering and team leadership together, the mix it takes to turn enterprise AI from a
+            demo into a system people rely on.</p>
         </div>
         <div class="contact-actions">
           <a class="btn primary" href="mailto:joyvishekghosh@gmail.com">Email Me</a>
@@ -705,12 +793,162 @@
     <div class="footgrid">
       <div class="cell"><p class="k">Name</p><p class="v">Joyvishek Ghosh</p></div>
       <div class="cell"><p class="k">Base</p><p class="v">Kolkata, India</p></div>
-      <div class="cell"><p class="k">Focus</p><p class="v">GraphRAG · MCP · AI Platforms</p></div>
+      <div class="cell"><p class="k">Focus</p><p class="v">GraphRAG · Agents · AI Platforms</p></div>
     </div>
-    <p class="note">Agentic AI orchestration · GraphRAG · MCP · knowledge graphs · computer vision · voice AI ·
+    <p class="note">Agentic AI orchestration · GraphRAG · knowledge graphs · computer vision · voice assistants ·
       enterprise full-stack systems · English, Hindi, Bengali.</p>
   </footer>
 
 </div>
+
+<script>
+(() => {
+  const root = document.documentElement;
+  root.classList.add('js');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* scroll progress bar */
+  const bar = document.getElementById('progress');
+  const onScroll = () => {
+    const h = document.documentElement.scrollHeight - innerHeight;
+    bar.style.width = (h > 0 ? (scrollY / h) * 100 : 0) + '%';
+  };
+  addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* reveal on scroll */
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        e.target.querySelectorAll('[data-count]').forEach(countUp);
+        io.unobserve(e.target);
+      }
+    }
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+  /* count-up stats */
+  function countUp(el) {
+    if (el.dataset.done) return;
+    el.dataset.done = '1';
+    const to = +el.dataset.count;
+    if (reduce) return;
+    const start = performance.now(), dur = 900;
+    const tick = (now) => {
+      const t = Math.min(1, (now - start) / dur);
+      el.textContent = Math.round(to * (1 - Math.pow(1 - t, 3)));
+      if (t < 1) requestAnimationFrame(tick);
+    };
+    el.textContent = '0';
+    requestAnimationFrame(tick);
+  }
+  document.querySelectorAll('.stat [data-count]').forEach((el) => {
+    if (el.getBoundingClientRect().top < innerHeight) countUp(el);
+  });
+
+  /* typing demo in hero */
+  const typed = document.getElementById('typed');
+  const prompts = [
+    'Which pins on this campus have open work orders?',
+    'Show the floor plan for Building B, level 3.',
+    'Export the last result to Excel and email it to the team.',
+    'Where is the nearest parking to Gate 2?',
+  ];
+  if (reduce) {
+    typed.textContent = prompts[0];
+  } else {
+    let p = 0, c = 0, deleting = false;
+    const step = () => {
+      const word = prompts[p];
+      if (!deleting) {
+        typed.textContent = word.slice(0, ++c);
+        if (c === word.length) { deleting = true; return setTimeout(step, 1800); }
+        return setTimeout(step, 42);
+      }
+      typed.textContent = word.slice(0, --c);
+      if (c === 0) { deleting = false; p = (p + 1) % prompts.length; return setTimeout(step, 400); }
+      setTimeout(step, 18);
+    };
+    step();
+  }
+
+  /* pointer glow in hero */
+  const mast = document.querySelector('header.mast');
+  mast.addEventListener('pointermove', (e) => {
+    const r = mast.getBoundingClientRect();
+    mast.style.setProperty('--gx', ((e.clientX - r.left) / r.width * 60 - 30) + 'px');
+    mast.style.setProperty('--gy', ((e.clientY - r.top) / r.height * 40 - 20) + 'px');
+  });
+
+  /* architecture: inspect nodes and trace a question */
+  const info = {
+    client: '<b>Client.</b> Chat or voice input. The voice endpoint <i>/campusmetadata</i> reuses the same loop and memory as text.',
+    gateway: '<b>Gateway.</b> Validates and sanitizes input, applies prompt-injection and hate/abuse screening, enforces the daily rate limit and attaches user context.',
+    loop: '<b>Claude tool loop.</b> Picks one of 13 tool modules, dispatches it, appends the result to history and loops until a final grounded answer.',
+    graph: '<b>GraphRAG.</b> Qdrant returns entity and example hints; two Cypher chains race against Neo4j, scoped to the campus. Rejected queries get a bounded repair pass.',
+    live: '<b>Live sources.</b> Google Maps for places and routes, Gemini-grounded web search, Grainger via Custom Search, and YouTube. A failing source returns a structured error.',
+    state: '<b>State &amp; memory.</b> Redis holds sessions, history and caches; mem0 on pgvector holds per-user preferences; Elasticsearch serves the support knowledge base.',
+    out: '<b>Answer.</b> Streamed as NDJSON. Post-answer grounding checks are recorded, and exports leave as S3 links that expire.',
+  };
+  const order = ['client', 'gateway', 'loop', 'graph', 'live', 'state', 'out'];
+  const nodes = document.querySelectorAll('.node');
+  const infoBox = document.getElementById('arch-info');
+  const show = (key) => {
+    infoBox.innerHTML = info[key];
+    nodes.forEach((n) => n.setAttribute('aria-pressed', String(n.dataset.node === key)));
+  };
+  nodes.forEach((n) => n.addEventListener('click', () => show(n.dataset.node)));
+
+  let tracing = false;
+  document.getElementById('trace').addEventListener('click', async () => {
+    if (tracing) return;
+    tracing = true;
+    const hint = document.getElementById('trace-hint');
+    const wait = (ms) => new Promise((r) => setTimeout(r, reduce ? 0 : ms));
+    const hops = ['client', 'gateway', 'loop', 'graph', 'live', 'state', 'out'];
+    for (let i = 0; i < hops.length; i++) {
+      nodes.forEach((n) => n.classList.remove('lit'));
+      const node = document.querySelector(`.node[data-node="${hops[i]}"]`);
+      node.classList.add('lit');
+      show(hops[i]);
+      hint.textContent = `hop ${i + 1}/${hops.length}`;
+      await wait(900);
+    }
+    nodes.forEach((n) => n.classList.remove('lit'));
+    hint.textContent = 'done · one request, seven hops';
+    tracing = false;
+  });
+
+  /* ask-my-resume: scripted answers */
+  const answers = {
+    what: ['Enterprise assistant', 'ARC Facilities AI answers natural-language questions over campus buildings, assets, pins and locations. Every answer is backed by graph data, vector search, internal APIs or user memory.'],
+    graph: ['GraphRAG', 'Qdrant supplies entity and example hints. Two Cypher chains (asset-first and pin-first) run in parallel against Neo4j, every query is campus-scoped, and a bounded self-repair loop fixes queries Neo4j rejects.'],
+    safety: ['Guardrails', 'Three layers: prompt-injection filtering, an internals-extraction guard with an output sanitizer, and a multilingual hate and abuse filter for English, Spanish and Tagalog. Secrets live in AWS Secrets Manager.'],
+    voice: ['Voice', 'Yes. The /campusmetadata endpoint runs on the same Claude tool-calling loop and mem0 memory layer as text chat.'],
+    team: ['Team', 'I am a Module Lead guiding a 12–15 member engineering team across requirements, architecture, delivery and production support.'],
+  };
+  const log = document.getElementById('ask-log');
+  const qbtns = document.querySelectorAll('#ask-q button');
+  const addBubble = (cls, html) => {
+    const d = document.createElement('div');
+    d.className = 'bubble ' + cls;
+    d.innerHTML = html;
+    log.appendChild(d);
+    log.scrollTop = log.scrollHeight;
+    return d;
+  };
+  qbtns.forEach((b) => b.addEventListener('click', async () => {
+    const [topic, text] = answers[b.dataset.q];
+    b.disabled = true;
+    addBubble('me', b.textContent);
+    const typing = addBubble('bot', '<span class="who">Resume bot</span><span class="dots"><i></i><i></i><i></i></span>');
+    await new Promise((r) => setTimeout(r, reduce ? 0 : 700));
+    typing.innerHTML = `<span class="who">Resume bot · ${topic}</span>${text}`;
+    b.disabled = false;
+    log.scrollTop = log.scrollHeight;
+  }));
+})();
+</script>
 </body>
 </html>
